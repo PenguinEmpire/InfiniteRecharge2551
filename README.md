@@ -20,6 +20,12 @@ Hopefully lots. :smile:
 - API docs for C++ version of `CTRE_Phoenix` are at http://www.ctr-electronics.com/downloads/api/cpp/html/index.html. **Note that this is not yet up-to-date with the 2020 version of the library** (as of late on 2020-01-04), per https://phoenix-documentation.readthedocs.io/en/latest/blog/blog-kickoff-2020.html#online-api-documentation.
 - Examples of the API in use can be found at https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/tree/master/C%2B%2B
 
+### REV stuff (NEO and SPARK MAX)
+
+- Spark Max software resources: http://www.revrobotics.com/sparkmax-software/#cpp-api
+  - Includes download of the client application for the MAXs, firmware downloads, information about the API (including online and [offline](http://www.revrobotics.com/content/sw/max/sw-docs/cpp/index.html) versions of the reference docs), code examples, etc.
+- Spark Max User Manual: http://www.revrobotics.com/sparkmax-users-manual/
+
 ### Other stuff
 
 Coming soon, probably.
