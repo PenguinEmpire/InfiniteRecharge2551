@@ -9,7 +9,7 @@ Hopefully lots. :smile:
 
 ### General FRC stuff
 
-- **docs.wpilib.org**. This is a very useful website.
+- **http://docs.wpilib.org**. This is a very useful website.
 - Also useful are the WPILibC (they call it that, but it's the C++ version) API docs, at https://first.wpi.edu/FRC/roborio/release/docs/cpp/index.html.
 - More coming soon, probably.
 
