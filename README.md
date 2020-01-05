@@ -26,6 +26,10 @@ Hopefully lots. :smile:
   - Includes download of the client application for the MAXs, firmware downloads, information about the API (including online and [offline](http://www.revrobotics.com/content/sw/max/sw-docs/cpp/index.html) versions of the reference docs), code examples, etc.
 - Spark Max User Manual: http://www.revrobotics.com/sparkmax-users-manual/
 
+### Kauai Labs NavX
+
+Coming soon
+
 ### Other stuff
 
 Coming soon, probably.
