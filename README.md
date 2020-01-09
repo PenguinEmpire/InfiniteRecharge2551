@@ -30,7 +30,10 @@ This is an incomplete list - more coming soon.
 
 ### Kauai Labs NavX
 
-Coming soon
+- https://pdocs.kauailabs.com/navx-mxp/software/roborio-libraries/c/
+  - Software install is linked at "latest build" in the third paragraph. This installs "RoboRIO Libraries and Examples, the navXUI and the navX Tools"; see the readme in the downloaded zip for more information.
+  - The example are also available online [here](https://pdocs.kauailabs.com/navx-mxp/examples/).
+  - API docs are available online at https://www.kauailabs.com/public_files/navx-mxp/apidocs/c++/.
 
 ### Other stuff
 
