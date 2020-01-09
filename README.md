@@ -25,7 +25,7 @@ This is an incomplete list - more coming soon.
 
 ### REV stuff (NEO and SPARK MAX)
 
-- Spark Max software resources: http://www.revrobotics.com/sparkmax-software/#cpp-api. Includes download of the client application for the MAXs, firmware downloads, information about the API (including [online](http://www.revrobotics.com/content/sw/max/sw-docs/cpp/index.html) and offline versions of the reference docs), code examples, etc.
+- Spark Max software resources: http://www.revrobotics.com/sparkmax-software/#cpp-api. Includes download of the client application for the MAXs (which you need), firmware downloads, information about the API (including [online](http://www.revrobotics.com/content/sw/max/sw-docs/cpp/index.html) and offline versions of the reference docs), code examples, etc.
 - Spark Max User Manual: http://www.revrobotics.com/sparkmax-users-manual/
 
 ### Kauai Labs NavX
