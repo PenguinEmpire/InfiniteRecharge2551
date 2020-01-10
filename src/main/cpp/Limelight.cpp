@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Limelight.h"
+// #include "PenguinConstants.h"
 
 Limelight::Limelight() : 
     table{nt::NetworkTableInstance::GetDefault().GetTable("limelight")} {}
@@ -21,10 +22,12 @@ void Limelight::SetDriveCamMode() {
 }
 
 LimelightValues Limelight::GetInfo() {
-    auto t = Penguin::Constants::LIMELIGHT_DEFAULT_VALUE;
+    // using Constants::LIMELIGHT_DEFAULT_VALUE;
 
-    return {table->GetNumber("tx", t),
-            table->GetNumber("ty", t)
-           };
-};
+    // return {table->GetNumber("tx", LIMELIGHT_DEFAULT_VALUE),
+    //         table->GetNumber("ty", LIMELIGHT_DEFAULT_VALUE)            
+    //        };
+    LimelightValues ret{table->GetNumber("tx", 0.0), table->GetNumber("ty", 0.0)};
+    return ret;
+}
     

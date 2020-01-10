@@ -17,6 +17,14 @@
  * Limelight documentation is available [here](http://docs.limelightvision.io/en/latest/index.html).
  */
 
+struct LimelightValues {
+  // LimelightValues();
+  LimelightValues(double _tx, double _ty) :
+    tx{_tx}, ty{_ty} {}
+  double tx;
+  double ty;
+};
+
 class Limelight {
  public:
   Limelight();
@@ -26,12 +34,4 @@ class Limelight {
 
  private:
   std::shared_ptr<NetworkTable> table;
-};
-
-struct LimelightValues {
-  // LimelightValues();
-  LimelightValues(double _tx, double _ty) :
-    tx{_tx}, ty{_ty} {}
-  double tx;
-  double ty;
 };
