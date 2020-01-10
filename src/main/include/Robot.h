@@ -12,6 +12,8 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
+#include "Limelight.h"
+
 class Robot : public frc::TimedRobot {
  public:
   void RobotInit() override;
@@ -27,4 +29,6 @@ class Robot : public frc::TimedRobot {
   const std::string kAutoNameDefault = "Default";
   const std::string kAutoNameCustom = "My Auto";
   std::string m_autoSelected;
+
+  Limelight limelight;
 };
