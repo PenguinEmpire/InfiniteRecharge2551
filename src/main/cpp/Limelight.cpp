@@ -7,4 +7,18 @@
 
 #include "Limelight.h"
 
-Limelight::Limelight() : table{nt::NetworkTableInstance::GetDefault().GetTable("limelight")} {}
+Limelight::Limelight() : 
+    table{nt::NetworkTableInstance::GetDefault().GetTable("limelight")} 
+    {
+
+    }
+
+void Limelight::SetVisionCamMode() {
+    table->PutNumber("ledMode", 3); // force LEDs on
+    table->PutNumber("camMode", 0); // vision processor
+}
+
+void Limelight::SetDriveCamMode() {
+    table->PutNumber("ledMode", 1); // force LEDs off
+    table->PutNumber("camMode", 1); // drive cam (increases exposure, disables vision processing)
+}
