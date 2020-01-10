@@ -12,6 +12,7 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
+#include "PenguinConstants.h"
 #include "Limelight.h"
 
 class Robot : public frc::TimedRobot {

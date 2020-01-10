@@ -25,7 +25,9 @@ void Robot::RobotInit() {
  * <p> This runs after the mode specific periodic functions, but before
  * LiveWindow and SmartDashboard integrated updating.
  */
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() {
+  limelight.GetInfo(); // Just to force the limelight to be used
+}
 
 /**
  * This autonomous (along with the chooser code above) shows how to select

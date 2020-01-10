@@ -11,6 +11,8 @@
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
 
+#include "PenguinConstants.h"
+
 /** 
  * Limelight documentation is available [here](http://docs.limelightvision.io/en/latest/index.html).
  */
@@ -20,7 +22,16 @@ class Limelight {
   Limelight();
   void SetVisionCamMode();
   void SetDriveCamMode();
+  LimelightValues GetInfo();
 
  private:
   std::shared_ptr<NetworkTable> table;
+};
+
+struct LimelightValues {
+  // LimelightValues();
+  LimelightValues(double _tx, double _ty) :
+    tx{_tx}, ty{_ty} {}
+  double tx;
+  double ty;
 };
