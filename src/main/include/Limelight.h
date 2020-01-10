@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "frc/smartdashboard/Smartdashboard.h"
+#include "frc/smartdashboard/SmartDashboard.h"
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
 
