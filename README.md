@@ -35,6 +35,19 @@ This is an incomplete list - more coming soon.
   - The example are also available online [here](https://pdocs.kauailabs.com/navx-mxp/examples/).
   - API docs are available online at https://www.kauailabs.com/public_files/navx-mxp/apidocs/c++/.
 
+### CI/Azure Pipelines Resources
+
+These are not things you have to download or that you're going to be looking at every day, like most of the other subheadings, but it's useful stuff to have as institutional knowledge, I think, so it needs to go somewhere.
+
+- WPILib's roboRIO docker images: https://hub.docker.com/r/wpilib/roborio-cross-ubuntu/tags
+- Not sure which, if any, of these are important:
+  - [Announcing Azure Pipelines with unlimited CI/CD minutes for open source | Microsoft Azure Blog](https://azure.microsoft.com/en-us/blog/announcing-azure-pipelines-with-unlimited-ci-cd-minutes-for-open-source/)
+  - [Tutorial: Create a CI/CD pipeline for your existing code by using Azure DevOps Projects | Azure Docs](https://docs.microsoft.com/en-us/azure/devops-project/azure-devops-project-github)
+  - [Azure Pipelines documentation](https://docs.microsoft.com/en-us/azure/devops/pipelines/?view=azure-devops) seems useful. Specifically, looked at:
+    - [Build GitHub repositories](https://docs.microsoft.com/en-us/azure/devops/pipelines/repos/github?tabs=yaml&view=azure-devops)
+    - [Create your first pipeline](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=browser%2Ctfs-2018-2)
+  - [Defining the mergeability of pull requests | GitHub Help](https://help.github.com/en/github/administering-a-repository/defining-the-mergeability-of-pull-requests)
+
 ### Other stuff
 
 - _Controls Engineering in the FIRST Robotics Competition: Graduate-level control theory for high schoolers_ by Tyler Veness (a 3512 mentor) is an entire book about ways to model (robot) systems and write better code for them, and the latest version is always available at https://file.tavsys.net/control/controls-engineering-in-frc.pdf. (The introduction explains it better.)
