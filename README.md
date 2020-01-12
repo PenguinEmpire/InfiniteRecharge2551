@@ -48,6 +48,11 @@ These are not things you have to download or that you're going to be looking at 
     - [Create your first pipeline](https://docs.microsoft.com/en-us/azure/devops/pipelines/create-first-pipeline?view=azure-devops&tabs=browser%2Ctfs-2018-2)
   - [Defining the mergeability of pull requests | GitHub Help](https://help.github.com/en/github/administering-a-repository/defining-the-mergeability-of-pull-requests)
 
+### Limelight Resources
+
+- Docs: http://docs.limelightvision.io/en/latest/
+- Downloads: https://limelightvision.io/pages/downloads (nothing here is necessary for day-to-day usage of the LL, I think. It's all tools for flashing it (which should happen at least once a year, and possibly whenever a new image is released).
+
 ### Other stuff
 
 - _Controls Engineering in the FIRST Robotics Competition: Graduate-level control theory for high schoolers_ by Tyler Veness (a 3512 mentor) is an entire book about ways to model (robot) systems and write better code for them, and the latest version is always available at https://file.tavsys.net/control/controls-engineering-in-frc.pdf. (The introduction explains it better.)
