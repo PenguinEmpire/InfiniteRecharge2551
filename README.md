@@ -13,6 +13,8 @@ This is an incomplete list - more coming soon.
 
 ### General FRC stuff
 
+- **Game manual: https://firstfrc.blob.core.windows.net/frc2020/Manual/2020FRCGameSeasonManual.pdf**
+
 - **http://docs.wpilib.org**. This is a very useful website.
 - Also useful are the WPILibC (they call it that, but it's the C++ version) API docs, at https://first.wpi.edu/FRC/roborio/release/docs/cpp/index.html.
 
