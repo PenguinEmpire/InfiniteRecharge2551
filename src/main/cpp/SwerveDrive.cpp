@@ -7,7 +7,14 @@
 
 #include "SwerveDrive.h"
 
-SwerveDrive::SwerveDrive() {}
+SwerveDrive::SwerveDrive() {
+  m_navX->Reset();
+  // m_navX->SetInverted(true); // just have to take the opposite of the result every time, I guess
+}
 
 void SwerveDrive::Drive(double fwd, double stf, double rot, bool fieldOriented) {}
+
+void SwerveDrive::ResetGyroscope() {
+  m_navX->SetAngleAdjustment(m_navX->GetAngle());
+}
 

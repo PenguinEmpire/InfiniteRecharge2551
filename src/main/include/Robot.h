@@ -8,11 +8,9 @@
 #pragma once
 
 #include <string>
-
 #include <math.h>
 
 #include <frc/TimedRobot.h>
-#include <frc/smartdashboard/SendableChooser.h>
 
 #include "AHRS.h"
 
@@ -36,10 +34,7 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_rightJoystick{1};
   frc::Joystick m_gamerJoystick{2};
 
-  SwerveDrive m_drivetrain;
-
-  AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
-
+  SwerveDrive m_drivetrain = SwerveDrive();
 
   void ProcessJoysticks();
 

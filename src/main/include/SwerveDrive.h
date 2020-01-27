@@ -8,8 +8,11 @@
 #pragma once
 
 #include <units/units.h>
+#include "AHRS.h"
 
 #include "frc/geometry/Translation2d.h"
+#include <frc/kinematics/SwerveDriveKinematics.h>
+#include <frc/kinematics/SwerveDriveOdometry.h>
 
 #include "SwerveModule.h"
 
@@ -18,6 +21,11 @@ class SwerveDrive {
   SwerveDrive();
 
   void Drive(double fwd, double stf, double rot, bool fieldOriented);
+
+
+
+  AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
+  void ResetGyroscope();
 
 
 
@@ -35,8 +43,16 @@ class SwerveDrive {
   const frc::Translation2d BACK_LEFT_LOCATION  {-TRACKWIDTH / 2.0, +WHEELBASE / 2.0}; 
   const frc::Translation2d BACK_RIGHT_LOCATION {-TRACKWIDTH / 2.0, -WHEELBASE / 2.0};
 
+  frc::SwerveDriveKinematics<4> m_kinematics{
+    FRONT_LEFT_LOCATION,
+    FRONT_RIGHT_LOCATION,
+    BACK_LEFT_LOCATION,
+    BACK_RIGHT_LOCATION
+  };
+
   SwerveModule frontLeftModule {FRONT_LEFT_LOCATION};
   SwerveModule frontRightModule{FRONT_RIGHT_LOCATION};
   SwerveModule backLeftModule  {BACK_LEFT_LOCATION};
   SwerveModule backRightModule {BACK_RIGHT_LOCATION};
+
 };
