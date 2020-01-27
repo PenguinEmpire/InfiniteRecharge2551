@@ -6,7 +6,14 @@
 #include "frc/AnalogInput.h"
 #include "frc/AnalogEncoder.h"
 
-#include "PenguinUtil.h"
+/** For some reason, the linker complains about multiple definitions when this is included.
+ * (Even though I have `#pragma once`! I even tried an if guard. No dice.)
+ * It was only included so the 2pi could be a constant the couple times it's used.
+ * PenguinUtil::TWO is defined as `2.0 * wpi::math::pi`, and I've replaced the three places
+ * it occured with that expression.
+ */
+// #include "PenguinUtil.h"
+#include <wpi/math>
 
 struct TurnEncoder {
   int port;
@@ -21,11 +28,11 @@ struct TurnEncoder {
     encoderAsAnalogEncoder{encoderAsAnalogInput} {}
 
   units::radian_t getAngle_SDS() const {
-    double angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * PenguinUtil::TWO_PI;
+    double angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * (2.0 * wpi::math::pi);
     angle += offset.to<double>();
-    angle = fmod(angle, PenguinUtil::TWO_PI);
+    angle = fmod(angle, (2.0 * wpi::math::pi));
     if (angle < 0) {
-      angle += PenguinUtil::TWO_PI;
+      angle += (2.0 * wpi::math::pi);
     }
     return units::radian_t(angle);
   }

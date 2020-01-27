@@ -8,5 +8,5 @@
 #include "SwerveModule.h"
 
 SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units::radian_t analogEncoderOffset)
-                          : m_modulePosition{pos} {}//,
-                            // m_turnEncoder{analogEncoderPort, analogEncoderOffset} {}
+                          : m_modulePosition{pos},
+                            m_turnEncoder{analogEncoderPort, analogEncoderOffset} {}

@@ -1,8 +1,5 @@
 #pragma once
 
-#ifndef _PENGUIN_UTIL_H__
-#define _PENGUIN_UTIL_H__
-
 #include <math.h>
 #include <wpi/math>
 
@@ -38,6 +35,4 @@ namespace PenguinUtil {
   }
 
   constexpr double TWO_PI = 2.0 * wpi::math::pi;
-}
-
-#endif // _PENGUIN_UTIL_H__
+} // PenguinUtil namespace
