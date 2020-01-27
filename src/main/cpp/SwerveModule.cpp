@@ -7,4 +7,5 @@
 
 #include "SwerveModule.h"
 
-SwerveModule::SwerveModule() {}
+SwerveModule::SwerveModule(frc::Translation2d pos) :
+                            modulePosition{pos} {}

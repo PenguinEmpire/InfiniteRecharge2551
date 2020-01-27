@@ -8,3 +8,6 @@
 #include "SwerveDrive.h"
 
 SwerveDrive::SwerveDrive() {}
+
+void SwerveDrive::Drive(double fwd, double stf, double rot, bool fieldOriented) {}
+

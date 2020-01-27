@@ -7,7 +7,13 @@
 
 #pragma once
 
+#include "frc/geometry/Translation2d.h"
+
 class SwerveModule {
  public:
-  SwerveModule();
+  SwerveModule(frc::Translation2d pos);
+
+
+ private:
+  frc::Translation2d modulePosition;
 };

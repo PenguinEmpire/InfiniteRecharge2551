@@ -25,6 +25,25 @@ void Robot::TeleopPeriodic() {}
 
 void Robot::TestPeriodic() {}
 
+void Robot::ProcessJoysticks() {
+  constexpr double driveDeadband = 0.09;
+  bool fieldOrient = !m_rightJoystick.GetRawButton(3);
+
+  double forward = m_rightJoystick.GetRawAxis(1);
+  forward = PenguinUtil::deadband(forward, driveDeadband);
+  forward = copysign(pow(forward, 2), forward);
+
+  double strafe = m_rightJoystick.GetRawAxis(0);
+  strafe = PenguinUtil::deadband(strafe, driveDeadband);
+  strafe = copysign(pow(strafe, 2), strafe);
+
+  double rotation = m_leftJoystick.GetRawAxis(2);
+  rotation = PenguinUtil::smartDeadband(rotation, -0.25, 0, 0.1);
+  rotation = copysign(pow(rotation, 2), rotation);
+
+  m_drivetrain.Drive(forward, strafe, rotation, fieldOrient);
+}
+
 #ifndef RUNNING_FRC_TESTS
 int main() { return frc::StartRobot<Robot>(); }
 #endif

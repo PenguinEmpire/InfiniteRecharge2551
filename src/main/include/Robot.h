@@ -9,6 +9,8 @@
 
 #include <string>
 
+#include <math.h>
+
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
@@ -18,6 +20,7 @@
 #include "frc/SPI.h"
 
 #include "SwerveDrive.h"
+#include "PenguinUtil.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -36,6 +39,11 @@ class Robot : public frc::TimedRobot {
   SwerveDrive m_drivetrain;
 
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
+
+
+  void ProcessJoysticks();
+
+  
 
  private:
 };
