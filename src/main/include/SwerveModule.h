@@ -9,11 +9,17 @@
 
 #include "frc/geometry/Translation2d.h"
 
+// #include "TurnEncoder.h"
+
 class SwerveModule {
  public:
-  SwerveModule(frc::Translation2d pos);
+  SwerveModule(frc::Translation2d pos,
+               int analogEncoderPort,
+               units::radian_t analogEncoderOffset);
 
+  // TurnEncoder m_turnEncoder;
 
  private:
-  frc::Translation2d modulePosition;
+  frc::Translation2d m_modulePosition;
+
 };

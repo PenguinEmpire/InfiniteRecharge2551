@@ -6,6 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "Robot.h"
+#include "PenguinUtil.h"
 
 #include <iostream>
 

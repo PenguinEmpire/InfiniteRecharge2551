@@ -20,8 +20,7 @@ class SwerveDrive {
  public:
   SwerveDrive();
 
-  void Drive(double fwd, double stf, double rot, bool fieldOriented);
-
+  void Drive(double fwd, double str, double rot, bool fieldOriented);
 
 
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
@@ -50,9 +49,21 @@ class SwerveDrive {
     BACK_RIGHT_LOCATION
   };
 
-  SwerveModule frontLeftModule {FRONT_LEFT_LOCATION};
-  SwerveModule frontRightModule{FRONT_RIGHT_LOCATION};
-  SwerveModule backLeftModule  {BACK_LEFT_LOCATION};
-  SwerveModule backRightModule {BACK_RIGHT_LOCATION};
+  SwerveModule m_frontLeftModule {
+    FRONT_LEFT_LOCATION,
+    3, // analog input port. TODO: factor out into constants file/namespace/class.
+    FRONT_LEFT_ANGLE_OFFSET};
+  SwerveModule m_frontRightModule{
+    FRONT_RIGHT_LOCATION,
+    2,
+    FRONT_RIGHT_ANGLE_OFFSET};
+  SwerveModule m_backLeftModule  {
+    BACK_LEFT_LOCATION,
+    0,
+    BACK_LEFT_ANGLE_OFFSET};
+  SwerveModule m_backRightModule {
+    BACK_RIGHT_LOCATION,
+    1,
+    BACK_RIGHT_ANGLE_OFFSET};
 
 };

@@ -18,7 +18,6 @@
 #include "frc/SPI.h"
 
 #include "SwerveDrive.h"
-#include "PenguinUtil.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -34,11 +33,8 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_rightJoystick{1};
   frc::Joystick m_gamerJoystick{2};
 
-  SwerveDrive m_drivetrain = SwerveDrive();
+  SwerveDrive m_drivetrain;
 
   void ProcessJoysticks();
 
-  
-
- private:
 };

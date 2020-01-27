@@ -1,9 +1,14 @@
 #pragma once
 
+#ifndef _PENGUIN_UTIL_H__
+#define _PENGUIN_UTIL_H__
+
 #include <math.h>
+#include <wpi/math>
 
 namespace PenguinUtil {
   double linearMap(double n, double start1, double stop1, double start2, double stop2) {
+    // Credit to the Processing Foundation and p5.js: https://github.com/processing/p5.js/blob/86d6b67707965526ce11cf893e26be5d53a1ad4c/src/math/calculation.js#L461
     return (n - start1) / (stop1 - start1) * (stop2 - start2) + start2;
   }
 
@@ -24,7 +29,7 @@ namespace PenguinUtil {
       return linearMap(input, deadbandEnd, 1, rightRangeStart, rightRangeEnd);
     } else {
       return 0.0;
-      printf("Line %i: !!! Invalid input (abs(input) > 1) being passed to `tooSmartDeadband`. Returned 0.", __LINE__);
+      printf("Line %i: !!! Invalid input (abs(input) > 1) being passed to `PenguinUtil::tooSmartDeadband`. Returned 0.", __LINE__);
     }
   }
 
@@ -32,4 +37,7 @@ namespace PenguinUtil {
     return tooSmartDeadband(input, deadbandStart, deadbandEnd, -1, -valueAtDeadBandEdge, 0, valueAtDeadBandEdge, 1);
   }
 
+  constexpr double TWO_PI = 2.0 * wpi::math::pi;
 }
+
+#endif // _PENGUIN_UTIL_H__
