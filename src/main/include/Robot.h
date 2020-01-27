@@ -12,7 +12,10 @@
 #include <frc/TimedRobot.h>
 #include <frc/smartdashboard/SendableChooser.h>
 
+#include "AHRS.h"
+
 #include "frc/Joystick.h"
+#include "frc/SPI.h"
 
 #include "SwerveDrive.h"
 
@@ -31,6 +34,8 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_gamerJoystick{2};
 
   SwerveDrive m_drivetrain;
+
+  AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
 
  private:
 };
