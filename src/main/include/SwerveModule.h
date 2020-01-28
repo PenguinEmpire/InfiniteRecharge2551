@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <units/units.h>
 
 #include "frc/geometry/Translation2d.h"
@@ -15,6 +17,7 @@
 #include "rev/CANEncoder.h"
 
 #include "TurnEncoder.h"
+#include "SwerveModuleName.h"
 
 class SwerveModule {
  public:
@@ -22,7 +25,8 @@ class SwerveModule {
                int analogEncoderPort,
                units::radian_t analogEncoderOffset,
                int driveMotorCANID,
-               int turnMotorCANID);
+               int turnMotorCANID,
+               SwerveModuleName moduleName);
 
   rev::CANSparkMax m_driveMotor;
   rev::CANSparkMax m_turnMotor;
@@ -36,7 +40,12 @@ class SwerveModule {
   units::radian_t GetAngle() {
     return m_turnEncoder.getAngle_SDS();
   }
-  
+
+  units::radian_t GetCurrentAngle();
+  void PutDiagnostics();
+  void UpdateState();
+
+  SwerveModuleName m_moduleName;
 
  private:
   TurnEncoder m_turnEncoder;

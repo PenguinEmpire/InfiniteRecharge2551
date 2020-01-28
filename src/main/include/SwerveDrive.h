@@ -7,14 +7,18 @@
 
 #pragma once
 
+#include <array>
+
 #include <units/units.h>
 #include "AHRS.h"
 
 #include "frc/geometry/Translation2d.h"
 #include <frc/kinematics/SwerveDriveKinematics.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
+#include "frc/smartdashboard/SmartDashboard.h"
 
 #include "SwerveModule.h"
+#include "SwerveModuleName.h"
 
 class SwerveDrive {
  public:
@@ -25,6 +29,8 @@ class SwerveDrive {
 
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
   void ResetGyroscope();
+
+  void PutDiagnostics();
 
 
 
@@ -53,21 +59,26 @@ class SwerveDrive {
     FRONT_LEFT_LOCATION,
     3, // analog input port. TODO: factor out into constants file/namespace/class.
     FRONT_LEFT_ANGLE_OFFSET,
-    8, 7}; // CAN ID of drive motor. TODO: factor out into constants file/etc
+    8, 7,
+    SwerveModuleName("f", "l")}; // CAN ID of drive motor. TODO: factor out into constants file/etc
   SwerveModule m_frontRightModule{
     FRONT_RIGHT_LOCATION,
     2,
     FRONT_RIGHT_ANGLE_OFFSET,
-    6, 5};
+    6, 5,
+    SwerveModuleName("f", "r")};
   SwerveModule m_backLeftModule  {
     BACK_LEFT_LOCATION,
     0,
     BACK_LEFT_ANGLE_OFFSET,
-    2, 1};
+    2, 1,
+    SwerveModuleName("b", "l")};
   SwerveModule m_backRightModule {
     BACK_RIGHT_LOCATION,
     1,
     BACK_RIGHT_ANGLE_OFFSET,
-    4, 3};
+    4, 3,
+    SwerveModuleName("b", "r")};
 
+  // std::array<SwerveModule, 4> m_swerveModules = {m_backLeftModule, m_backRightModule, m_frontLeftModule, m_frontRightModule};
 };

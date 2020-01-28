@@ -14,7 +14,9 @@
 
 void Robot::RobotInit() {}
 
-void Robot::RobotPeriodic() {}
+void Robot::RobotPeriodic() {
+  m_drivetrain.PutDiagnostics();
+}
 
 void Robot::AutonomousInit() {}
 

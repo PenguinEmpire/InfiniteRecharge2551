@@ -14,6 +14,25 @@ SwerveDrive::SwerveDrive() {
 
 void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented) {}
 
+void SwerveDrive::PutDiagnostics() {
+  using SD = frc::SmartDashboard;
+
+  m_backLeftModule.PutDiagnostics();
+  m_backRightModule.PutDiagnostics();
+  m_frontLeftModule.PutDiagnostics();
+  m_frontRightModule.PutDiagnostics();
+
+  SD::PutNumber("Gryoscope Angle", m_navX->GetAngle()); // TODO: probably this is the right function?
+
+  m_backLeftModule.UpdateState();
+  m_backRightModule.UpdateState();
+  m_frontLeftModule.UpdateState();
+  m_frontRightModule.UpdateState();
+
+
+  
+}
+
 void SwerveDrive::ResetGyroscope() {
   m_navX->SetAngleAdjustment(m_navX->GetAngle());
 }
