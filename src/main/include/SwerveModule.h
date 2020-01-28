@@ -32,6 +32,10 @@ class SwerveModule {
   rev::CANSparkMax m_driveMotor;
   rev::CANSparkMax m_turnMotor;
 
+  /**
+   * This is called `setTargetVelocity` in the SDS code (which I use the algorithm from) and `SetDesiredState` in the WPILib code. Sets member variables SDS_targetSpeed and SDS_targetAngle.
+   * @param state: the desired frc::SwerveModuleState
+   */
   void SetDesiredState(const frc::SwerveModuleState& state);
 
   double GetDriveDistance() {
