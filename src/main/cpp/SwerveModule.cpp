@@ -36,3 +36,34 @@ void SwerveModule::UpdateState() {
 units::radian_t SwerveModule::GetCurrentAngle() {
   return units::radian_t(wpi::math::pi); // TODO: actually return current angle
 }
+
+void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
+  units::meters_per_second_t speed = state.speed;
+  frc::Rotation2d angle = state.angle;
+
+  const frc::Rotation2d rot_pi = frc::Rotation2d(units::radian_t(wpi::math::pi));
+
+  if (speed < 0_mps) {
+    speed *= -1;
+    angle.RotateBy(rot_pi);
+  }
+  
+  /** SDS has:
+   *   angle %= 2.0 * Math.PI;
+       if (angle < 0.0) {
+           angle += 2.0 * Math.PI;
+       }
+   *
+   * Assuming/hoping that frc::Rotation2d::Degrees() automatically returns the terminal (?) angle (within `[0, 2pi)`).
+   * Update: pretty sure it doesn't.
+   */
+
+  double temp_angle = angle.Degrees().to<double>();
+  temp_angle = fmod(temp_angle, 360);
+  if (temp_angle < 0) {
+    angle.RotateBy(rot_pi);
+  }
+
+  SDS_targetSpeed = speed.to<double>();
+  SDS_targetAngle = angle.Radians().to<double>();
+}

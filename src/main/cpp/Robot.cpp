@@ -5,6 +5,8 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+#include <units/units.h>
+
 #include "Robot.h"
 #include "PenguinUtil.h"
 
@@ -44,7 +46,11 @@ void Robot::ProcessJoysticks() {
   rotation = PenguinUtil::smartDeadband(rotation, -0.25, 0, 0.1);
   rotation = copysign(pow(rotation, 2), rotation);
 
-  m_drivetrain.Drive(forward, strafe, rotation, fieldOrient);
+  m_drivetrain.Drive(
+    units::meters_per_second_t(forward),
+    units::meters_per_second_t(strafe),
+    units::radians_per_second_t(rotation),
+    fieldOrient);
 }
 
 #ifndef RUNNING_FRC_TESTS

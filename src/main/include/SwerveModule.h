@@ -12,6 +12,7 @@
 #include <units/units.h>
 
 #include "frc/geometry/Translation2d.h"
+#include <frc/kinematics/SwerveModuleState.h>
 
 #include "rev/CANSparkMax.h"
 #include "rev/CANEncoder.h"
@@ -31,6 +32,8 @@ class SwerveModule {
   rev::CANSparkMax m_driveMotor;
   rev::CANSparkMax m_turnMotor;
 
+  void SetDesiredState(const frc::SwerveModuleState& state);
+
   double GetDriveDistance() {
     return m_driveEncoder.GetPosition();
   }
@@ -46,6 +49,10 @@ class SwerveModule {
   void UpdateState();
 
   SwerveModuleName m_moduleName;
+
+
+  double SDS_targetSpeed;
+  double SDS_targetAngle;
 
  private:
   TurnEncoder m_turnEncoder;
