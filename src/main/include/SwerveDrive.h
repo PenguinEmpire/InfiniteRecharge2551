@@ -38,7 +38,7 @@ class SwerveDrive {
  private:
   const units::inch_t TRACKWIDTH = 21.25_in;
   const units::inch_t WHEELBASE = 24_in;
-  const double HYPOT = sqrt(pow(WHEELBASE.to<double>(), 2) + pow(TRACKWIDTH.to<double>(), 2));
+  const double HYPOT = hypot(WHEELBASE.to<double>(), TRACKWIDTH.to<double>());
 
   const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(134.5_deg);
   const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(122.4_deg);
@@ -61,8 +61,8 @@ class SwerveDrive {
     FRONT_LEFT_LOCATION,
     3, // analog input port. TODO: factor out into constants file/namespace/class.
     FRONT_LEFT_ANGLE_OFFSET,
-    8, 7,
-    SwerveModuleName("f", "l")}; // CAN ID of drive motor. TODO: factor out into constants file/etc
+    8, 7, // CAN ID of drive and angle motors. TODO: factor out into constants file/etc
+    SwerveModuleName("f", "l")}; 
   SwerveModule m_frontRightModule{
     FRONT_RIGHT_LOCATION,
     2,

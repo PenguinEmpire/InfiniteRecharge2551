@@ -12,6 +12,7 @@
 #include <units/units.h>
 
 #include "frc/geometry/Translation2d.h"
+#include "frc/Vector2d.h"
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/controller/PIDController.h>
 
@@ -59,8 +60,11 @@ class SwerveModule {
 
   double SDS_targetSpeed;
   double SDS_targetAngle;
+  double SDS_currentAngle;
 
- private:
+
+
+
   TurnEncoder m_turnEncoder;
   rev::CANEncoder m_driveEncoder = m_driveMotor.GetEncoder();
 
@@ -69,6 +73,56 @@ class SwerveModule {
   };
 
   frc::Translation2d m_modulePosition;
+
+  // SDS stuff
+  frc::Vector2d SDS_modulePosition;
+  units::radian_t SDS_currentAngle2 = 0_rad;
+  units::inch_t SDS_currentDistance = 0_in;
+  units::meters_per_second_t SDS_targetSpeed2 = 0_mps;
+  units::radian_t SDS_targetAngle2 = 0_rad;
+  frc::Vector2d SDS_currentPosition{0, 0};
+  units::inch_t SDS_previousDistance;
+  units::radian_t SDS_ReadAngle() {
+    return m_turnEncoder.GetAngle_SDS();
+  }
+  double SDS_ReadDistance() { // see `SwerveModule::SDS_UpdateSensors()`
+    return m_driveEncoder.GetPosition();
+  }
+  void SDS_SetTargetAngle(units::radian_t angle);
+  frc2::PIDController angleMotorController{1.5, 0.0, 0.5};
+  void SDS_SetDriveOutput(double output) {
+    m_driveMotor.Set(output);
+  }
+  frc::Vector2d SDS_GetModulePosition() {
+    return SDS_modulePosition;
+  }
+  units::radian_t SDS_GetCurrentAngle() {
+    return SDS_currentAngle2;
+  }
+  units::inch_t SDS_GetCurrentDistance() {
+    return SDS_currentDistance();
+  }
+  units::meters_per_second_t SDS_GetCurrentVelocity() {
+    return SDS_velocity;
+  }
+  units::current::ampere_t SDS_GetDriveCurrent() {
+    return SDS_currentDraw;
+  }
+  frc::SwerveModuleState SDS_GetTargetVelocity() {
+    frc::SwerveModuleState ret;
+    ret.angle = SDS_targetAngle2;
+    ret.speed = SDS_targetSpeed2;
+    return ret;
+  }
+  // frc::Vector2d SDS_GetCurrentPosition(); // AFAICT used exactly zero places
+  // void SDS_ResetKinematics(); // Also not used. Set SDS_currentPosition to the <0, 0> vector
+  
+
+
+
+
+
+
 
   // copied from SDS
   const double DRIVE_REDUCTION = 8.31 / 1.0; // (gear ratio)

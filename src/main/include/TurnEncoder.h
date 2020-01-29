@@ -15,17 +15,24 @@
 // #include "PenguinUtil.h"
 #include <wpi/math>
 
+#include "rev/CANEncoder.h"
+
 struct TurnEncoder {
   int port;
   units::radian_t offset;
   frc::AnalogInput encoderAsAnalogInput;
   frc::AnalogEncoder encoderAsAnalogEncoder;
+  rev::CANEncoder builtInMotorEncoder;
 
-  TurnEncoder(int port, units::radian_t offset) : 
+  TurnEncoder(int port, units::radian_t offset, rev::CANEncoder sparkMaxEncoder) : 
     port{port},
     offset{offset},
     encoderAsAnalogInput{port},
-    encoderAsAnalogEncoder{encoderAsAnalogInput} {}
+    encoderAsAnalogEncoder{encoderAsAnalogInput},
+    builtInMotorEncoder{sparkMaxEncoder} {
+      builtInMotorEncoder.SetPositionConversionFactor(2.0 * wpi::math::pi / (18. / 1.)); // 18:1 is the default angle reduction
+      builtInMotorEncoder.SetPosition(GetAngle_SDS().to<double>());
+    }
 
   units::radian_t GetAngle_SDS() const {
     double angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * (2.0 * wpi::math::pi);

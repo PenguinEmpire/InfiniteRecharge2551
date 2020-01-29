@@ -18,7 +18,7 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   : m_driveMotor(driveMotorCANID, rev::CANSparkMax::MotorType::kBrushless), 
     m_turnMotor(turnMotorCANID, rev::CANSparkMax::MotorType::kBrushless),
     m_moduleName{moduleName},
-    m_turnEncoder{analogEncoderPort, analogEncoderOffset},
+    m_turnEncoder{analogEncoderPort, analogEncoderOffset, m_turnMotor.GetEncoder()},
     m_modulePosition{pos} {
 
   m_driveEncoder.SetPositionConversionFactor(WHEEL_DIAMETER * wpi::math::pi / DRIVE_REDUCTION);
@@ -36,7 +36,7 @@ void SwerveModule::UpdateState() {
 
   // ---
 
-  m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS()));
+  m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS().to<double>()));
 }
 
 units::radian_t SwerveModule::GetCurrentAngle() {
@@ -64,33 +64,57 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
    * Update: pretty sure it doesn't.
    */
 
-  double temp_angle = angle.Degrees().to<double>();
-  temp_angle = fmod(temp_angle, 360);
-  angle = frc::Rotation2d(units::degree_t(temp_angle));
-  if (temp_angle < 0) {
+  double temp_angle = angle.Radians().to<double>();
+  temp_angle = fmod(temp_angle, 2 * wpi::math::pi);
+  angle = frc::Rotation2d(units::degree_t(temp_angle)).;
+  if (angle.Radians() < 0) {
     angle.RotateBy(rot_pi.operator*(2));
   }
 
-  SDS_targetSpeed = speed.to<double>();           // in SDS, under `synchronized (stateMutex)`
-  SDS_targetAngle = angle.Radians().to<double>(); // ditto
+  SDS_targetSpeed2 = speed;           // in SDS, under `synchronized (stateMutex)`
+  SDS_targetAngle2 = angle.Radians(); // ditto
 }
 
 void SwerveModule::SDS_UpdateSensors() {
-  SDS_currentAngle = m_turnEncoder.GetAngle_SDS();
-    // use in steeringMotor.set(angleController.calculate(getCurrentAngle(), dt)); -- dt is .02 seconds
-    // 
+  /*
+    SDS_currentAngle = m_turnEncoder.GetAngle_SDS().to<double>();
+      // use in steeringMotor.set(angleController.calculate(getCurrentAngle(), dt)); -- dt is .02 seconds
+      // 
 
 
-  // SDS_currentDistance = ReadDistance();
-    // driveEncoder.GetPosition() (with the position conversion factor set to (wheelDiameter * Math.PI / reduction))
-    // driveEncoder.GetPosition() * (1.0 / DEFAULT_DRIVE_ROTATIONS_PER_UNIT)
-    // pretty sure these are not the same, and I don't know which one wins
-    // currentDistance is used in `updateKinematics` to update `currentPosition`, but afaict `currentPosition` isn't used anywhere???
+    // SDS_currentDistance = ReadDistance();
+      // driveEncoder.GetPosition() (with the position conversion factor set to (wheelDiameter * Math.PI / reduction))
+      // driveEncoder.GetPosition() * (1.0 / DEFAULT_DRIVE_ROTATIONS_PER_UNIT)
+      // pretty sure these are not the same, and I don't know which one wins
+      // currentDistance is used in `updateKinematics` to update `currentPosition`, but afaict `currentPosition` isn't used anywhere???
 
-  // SDS_currentDraw = ReadCurrentDraw();
-    // driveMotor.getOutputCurrent()
-    // I think also not used anywhere??
-  // SDS_velocity = ReadVelocity();
-    // driveEncoder.GetVelocity() (with the velocity conversion factor set to (wheelDiameter * Math.PI / reduction * (1.0 / 60.0)) )
-    // I think also not used anywhere?
+    // SDS_currentDraw = ReadCurrentDraw();
+      // driveMotor.getOutputCurrent()
+      // I think also not used anywhere??
+    // SDS_velocity = ReadVelocity();
+      // driveEncoder.GetVelocity() (with the velocity conversion factor set to (wheelDiameter * Math.PI / reduction * (1.0 / 60.0)) )
+      // I think also not used anywhere?
+  */
+  SDS_currentAngle2 = SDS_ReadAngle();
+  SDS_currentDistance = SDS_ReadDistance();
+  // SDS_currentDraw = SDS_ReadCurrentDraw() // guess it doesn't exist because it wasn't used?
+  // SDS_velocity = SDS_ReadVelocity() // also can't find it being used
+}
+
+void SwerveModule::SDS_SetTargetAngle() {
+  double targetAngle = angle.to<double>();
+
+  double currentAngle = m_turnEncoder.builtInMotorEncoder.GetPosition();
+  double currentAngleMod = fmod(currentAngle, 2 * wpi::math::pi);
+  if (currentAngleMod < 0) {
+    currentAngleMod += 2 * wpi::math::pi;
+  }
+  double newTarget = targetAngle + currentAngle - currentAngleMod;
+  if (targetAngle - currentAngleMod > wpi::math::pi) {
+    newTarget -= 2.0 * wpi::math::pi;
+  } else if (targetAngle - currentAngleMod < wpi::math::pi) {
+    newTarget += 2.0 * wpi::math::pi;
+  }
+
+  angleMotorController.setReference(newTarget, ControlType.kPosition);
 }
