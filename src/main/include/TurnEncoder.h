@@ -27,7 +27,7 @@ struct TurnEncoder {
     encoderAsAnalogInput{port},
     encoderAsAnalogEncoder{encoderAsAnalogInput} {}
 
-  units::radian_t getAngle_SDS() const {
+  units::radian_t GetAngle_SDS() const {
     double angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * (2.0 * wpi::math::pi);
     angle += offset.to<double>();
     angle = fmod(angle, (2.0 * wpi::math::pi));

@@ -13,6 +13,7 @@
 
 #include "frc/geometry/Translation2d.h"
 #include <frc/kinematics/SwerveModuleState.h>
+#include <frc/controller/PIDController.h>
 
 #include "rev/CANSparkMax.h"
 #include "rev/CANEncoder.h"
@@ -45,12 +46,13 @@ class SwerveModule {
     return m_driveEncoder.GetVelocity();
   }
   units::radian_t GetAngle() {
-    return m_turnEncoder.getAngle_SDS();
+    return m_turnEncoder.GetAngle_SDS();
   }
 
   units::radian_t GetCurrentAngle();
   void PutDiagnostics();
   void UpdateState();
+  void SDS_UpdateSensors();
 
   SwerveModuleName m_moduleName;
 
@@ -62,10 +64,15 @@ class SwerveModule {
   TurnEncoder m_turnEncoder;
   rev::CANEncoder m_driveEncoder = m_driveMotor.GetEncoder();
 
+  frc2::PIDController m_turnPIDController{
+    0.5, 0.0, 0.0001
+  };
+
   frc::Translation2d m_modulePosition;
 
   // copied from SDS
   const double DRIVE_REDUCTION = 8.31 / 1.0; // (gear ratio)
   const double WHEEL_DIAMETER = 4.0; // (in)
+  const double DEFAULT_DRIVE_ROTATIONS_PER_UNIT = (1.0 / (4.0 * wpi::math::pi)) * (60.0 / 15.0) * (18.0 / 26.0) * (42.0 / 14.0);
 
 };

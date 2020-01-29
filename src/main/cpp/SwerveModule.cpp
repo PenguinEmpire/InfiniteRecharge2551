@@ -15,22 +15,28 @@
 using SD = frc::SmartDashboard;
 
 SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units::radian_t analogEncoderOffset, int driveMotorCANID, int turnMotorCANID, SwerveModuleName moduleName)
-                          : m_driveMotor(driveMotorCANID, rev::CANSparkMax::MotorType::kBrushless), 
-                            m_turnMotor(turnMotorCANID, rev::CANSparkMax::MotorType::kBrushless),
-                            m_moduleName{moduleName},
-                            m_turnEncoder{analogEncoderPort, analogEncoderOffset},
-                            m_modulePosition{pos} {
+  : m_driveMotor(driveMotorCANID, rev::CANSparkMax::MotorType::kBrushless), 
+    m_turnMotor(turnMotorCANID, rev::CANSparkMax::MotorType::kBrushless),
+    m_moduleName{moduleName},
+    m_turnEncoder{analogEncoderPort, analogEncoderOffset},
+    m_modulePosition{pos} {
 
   m_driveEncoder.SetPositionConversionFactor(WHEEL_DIAMETER * wpi::math::pi / DRIVE_REDUCTION);
   m_driveEncoder.SetVelocityConversionFactor(WHEEL_DIAMETER * wpi::math::pi / DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec"
-                            }
+
+  m_turnPIDController.EnableContinuousInput(0, 2 * wpi::math::pi); // TODO: necessay/correct? If so, [-pi, pi) instead?
+}
 
 void SwerveModule::PutDiagnostics() {
   SD::PutNumber(m_moduleName.GetFullTitle() + " Angle", GetCurrentAngle().to<double>());
 }
 
 void SwerveModule::UpdateState() {
-  // TODO
+  m_turnPIDController.SetSetpoint(adjustedTargetAngle);
+
+  // ---
+
+  m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS()));
 }
 
 units::radian_t SwerveModule::GetCurrentAngle() {
@@ -60,10 +66,31 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
 
   double temp_angle = angle.Degrees().to<double>();
   temp_angle = fmod(temp_angle, 360);
+  angle = frc::Rotation2d(units::degree_t(temp_angle));
   if (temp_angle < 0) {
-    angle.RotateBy(rot_pi);
+    angle.RotateBy(rot_pi.operator*(2));
   }
 
-  SDS_targetSpeed = speed.to<double>();
-  SDS_targetAngle = angle.Radians().to<double>();
+  SDS_targetSpeed = speed.to<double>();           // in SDS, under `synchronized (stateMutex)`
+  SDS_targetAngle = angle.Radians().to<double>(); // ditto
+}
+
+void SwerveModule::SDS_UpdateSensors() {
+  SDS_currentAngle = m_turnEncoder.GetAngle_SDS();
+    // use in steeringMotor.set(angleController.calculate(getCurrentAngle(), dt)); -- dt is .02 seconds
+    // 
+
+
+  // SDS_currentDistance = ReadDistance();
+    // driveEncoder.GetPosition() (with the position conversion factor set to (wheelDiameter * Math.PI / reduction))
+    // driveEncoder.GetPosition() * (1.0 / DEFAULT_DRIVE_ROTATIONS_PER_UNIT)
+    // pretty sure these are not the same, and I don't know which one wins
+    // currentDistance is used in `updateKinematics` to update `currentPosition`, but afaict `currentPosition` isn't used anywhere???
+
+  // SDS_currentDraw = ReadCurrentDraw();
+    // driveMotor.getOutputCurrent()
+    // I think also not used anywhere??
+  // SDS_velocity = ReadVelocity();
+    // driveEncoder.GetVelocity() (with the velocity conversion factor set to (wheelDiameter * Math.PI / reduction * (1.0 / 60.0)) )
+    // I think also not used anywhere?
 }
