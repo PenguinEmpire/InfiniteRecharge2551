@@ -43,7 +43,7 @@ void Robot::ProcessJoysticks() {
   strafe = copysign(pow(strafe, 2), strafe);
 
   double rotation = m_leftJoystick.GetRawAxis(2);
-  rotation = PenguinUtil::smartDeadband(rotation, -0.25, 0, 0.1);
+  rotation = PenguinUtil::smartDeadband(rotation, -0.25, 0.05, 0.1);
   rotation = copysign(pow(rotation, 2), rotation);
 
   m_drivetrain.Drive(
