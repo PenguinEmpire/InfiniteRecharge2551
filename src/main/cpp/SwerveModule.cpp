@@ -31,18 +31,13 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   SDS_angleMotorPIDController.SetP(1.5);
   SDS_angleMotorPIDController.SetI(0);
   SDS_angleMotorPIDController.SetD(0.5);
-
 }
 
 void SwerveModule::PutDiagnostics() {
-  SD::PutNumber(m_moduleName.GetFullTitle() + " Angle", GetCurrentAngle().to<double>());
+  SD::PutNumber(m_moduleName.GetFullTitle() + " Angle", SDS_GetCurrentAngle().to<double>());
 }
 
 // void SwerveModule::UpdateState() {m_turnPIDController.SetSetpoint(adjustedTargetAngle); m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS().to<double>()));}
-
-units::radian_t SwerveModule::GetCurrentAngle() {
-  return units::radian_t(wpi::math::pi); // TODO: actually return current angle
-}
 
 void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
   units::meters_per_second_t speed = state.speed;
@@ -55,22 +50,23 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
     angle.RotateBy(rot_pi);
   }
   
-  /** SDS has:
-   *   angle %= 2.0 * Math.PI;
-       if (angle < 0.0) {
-           angle += 2.0 * Math.PI;
-       }
-   *
-   * Assuming/hoping that frc::Rotation2d::Degrees() automatically returns the terminal (?) angle (within `[0, 2pi)`).
-   * Update: pretty sure it doesn't.
-   */
+  // TODO : I think all of this is unnecessary?
+    /** SDS has:
+     *   angle %= 2.0 * Math.PI;
+         if (angle < 0.0) {
+             angle += 2.0 * Math.PI;
+        }
+     *
+     * Assuming/hoping that frc::Rotation2d::Degrees() automatically returns the terminal (?) angle (within `[0, 2pi)`).
+     * Update: pretty sure it doesn't.
+    */
 
-  double temp_angle = angle.Radians().to<double>();
-  temp_angle = fmod(temp_angle, 2 * wpi::math::pi);
-  angle = frc::Rotation2d(units::degree_t(temp_angle));
-  if (angle.Radians() < 0_rad) {
-    angle.RotateBy(rot_pi.operator*(2));
-  }
+    double temp_angle = angle.Radians().to<double>();
+    temp_angle = fmod(temp_angle, 2 * wpi::math::pi);
+    angle = frc::Rotation2d(units::degree_t(temp_angle));
+    if (angle.Radians() < 0_rad) {
+      angle.RotateBy(rot_pi.operator*(2));
+    }
 
   SDS_targetSpeed2 = speed;           // in SDS, under `synchronized (stateMutex)`
   SDS_targetAngle2 = angle.Radians(); // ditto

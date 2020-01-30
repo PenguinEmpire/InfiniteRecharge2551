@@ -36,8 +36,7 @@ class SwerveModule {
   rev::CANSparkMax m_driveMotor;
   rev::CANSparkMax m_turnMotor;
 
-  /**
-   * This is called `setTargetVelocity` in the SDS code (which I use the algorithm from) and `SetDesiredState` in the WPILib code. Sets member variables SDS_targetSpeed and SDS_targetAngle.
+  /** This is called `setTargetVelocity` in the SDS code (which I use the algorithm from) and `SetDesiredState` in the WPILib code. Sets member variables SDS_targetSpeed and SDS_targetAngle.
    * @param state: the desired frc::SwerveModuleState
    */
   void SetDesiredState(const frc::SwerveModuleState& state);
@@ -47,9 +46,6 @@ class SwerveModule {
   }
   double GetDriveVelocity() {
     return m_driveEncoder.GetVelocity();
-  }
-  units::radian_t GetAngle() {
-    return m_turnEncoder.GetAngle_SDS();
   }
 
   units::radian_t GetCurrentAngle();
@@ -110,10 +106,10 @@ class SwerveModule {
     // SDS_velocity = SDS_ReadVelocity(); // (TODO?: might need to put this back)
   }
   // void SDS_UpdateKinematics(double robotRotation) { [stuff] } // Seems unused
-  void SDS_UpdateState(units::second_t dt) {
+  void SDS_UpdateState() {
     double targetAngle_ = SDS_targetAngle2.to<double>();
     double targetSpeed_ = SDS_targetSpeed2.to<double>();
-    double currentAngle_ = SDS_GetCurrentAngle2().to<double>();
+    double currentAngle_ = SDS_GetCurrentAngle().to<double>();
 
     double delta = targetAngle_ - currentAngle_;
     if (delta >= wpi::math::pi) {
