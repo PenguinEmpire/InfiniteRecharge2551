@@ -31,7 +31,6 @@ struct TurnEncoder {
     encoderAsAnalogEncoder{encoderAsAnalogInput},
     builtInMotorEncoder{sparkMaxEncoder} {
       builtInMotorEncoder.SetPositionConversionFactor(2.0 * wpi::math::pi / (18. / 1.)); // 18:1 is the default angle reduction
-      builtInMotorEncoder.SetPosition(GetAngle_SDS().to<double>());
     }
 
   units::radian_t GetAngle_SDS() const {

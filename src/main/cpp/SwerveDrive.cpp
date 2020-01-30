@@ -37,13 +37,15 @@ void SwerveDrive::PutDiagnostics() {
 
   SD::PutNumber("Gryoscope Angle", m_navX->GetAngle()); // TODO: probably this is the right function?
 
-  m_backLeftModule.UpdateState();
-  m_backRightModule.UpdateState();
-  m_frontLeftModule.UpdateState();
-  m_frontRightModule.UpdateState();
+  m_backLeftModule.SDS_UpdateState(units::millisecond_t(20));
+  m_backRightModule.SDS_UpdateState(units::millisecond_t(20));
+  m_frontLeftModule.SDS_UpdateState(units::millisecond_t(20));
+  m_frontRightModule.SDS_UpdateState(units::millisecond_t(20));
 
-
-
+  m_backLeftModule.SDS_UpdateSensors();
+  m_backRightModule.SDS_UpdateSensors();
+  m_frontLeftModule.SDS_UpdateSensors();
+  m_frontRightModule.SDS_UpdateSensors();
 }
 
 void SwerveDrive::ResetGyroscope() {
