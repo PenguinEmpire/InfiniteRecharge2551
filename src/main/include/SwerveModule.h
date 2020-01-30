@@ -12,6 +12,7 @@
 #include <units/units.h>
 
 #include "frc/geometry/Translation2d.h"
+#include "frc/geometry/Rotation2d.h"
 #include "frc/drive/Vector2d.h"
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/controller/PIDController.h>
@@ -112,7 +113,7 @@ class SwerveModule {
   void SDS_UpdateState(units::second_t dt) {
     double targetAngle_ = SDS_targetAngle2.to<double>();
     double targetSpeed_ = SDS_targetSpeed2.to<double>();
-    double currentAngle_ = SDS_GetCurrentAngle().to<double>();
+    double currentAngle_ = SDS_GetCurrentAngle2().to<double>();
 
     double delta = targetAngle_ - currentAngle_;
     if (delta >= wpi::math::pi) {
