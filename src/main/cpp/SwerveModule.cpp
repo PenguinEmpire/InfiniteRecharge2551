@@ -85,7 +85,7 @@ void SwerveModule::SDS_UpdateSensors() {
 
     // SDS_currentDistance = ReadDistance();
       // driveEncoder.GetPosition() (with the position conversion factor set to (wheelDiameter * Math.PI / reduction))
-      // driveEncoder.GetPosition() * (1.0 / DEFAULT_DRIVE_ROTATIONS_PER_UNIT)
+      // driveEncoder.GetPosition() * (1.0 / SDS_DEFAULT_DRIVE_ROTATIONS_PER_UNIT)
       // pretty sure these are not the same, and I don't know which one wins
       // currentDistance is used in `updateKinematics` to update `currentPosition`, but afaict `currentPosition` isn't used anywhere???
 

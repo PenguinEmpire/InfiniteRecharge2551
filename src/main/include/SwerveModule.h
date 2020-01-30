@@ -162,6 +162,6 @@ class SwerveModule {
   // copied from SDS
   const double SDS_DRIVE_REDUCTION = 8.31 / 1.0; // (gear ratio)
   const double SDS_WHEEL_DIAMETER = 4.0; // (in)
-  const double DEFAULT_DRIVE_ROTATIONS_PER_UNIT = (1.0 / (4.0 * wpi::math::pi)) * (60.0 / 15.0) * (18.0 / 26.0) * (42.0 / 14.0);
+  const double SDS_DEFAULT_DRIVE_ROTATIONS_PER_UNIT = (1.0 / (4.0 * wpi::math::pi)) * (60.0 / 15.0) * (18.0 / 26.0) * (42.0 / 14.0);
 
 };
