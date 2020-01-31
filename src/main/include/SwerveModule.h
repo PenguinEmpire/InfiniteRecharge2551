@@ -50,7 +50,6 @@ class SwerveModule {
 
   units::radian_t GetCurrentAngle();
   void PutDiagnostics();
-  // void UpdateState();
   void SDS_UpdateSensors();
 
   SwerveModuleName m_moduleName;
@@ -110,7 +109,7 @@ class SwerveModule {
     double targetAngle_ = SDS_targetAngle2.to<double>();
     double targetSpeed_ = SDS_targetSpeed2.to<double>();
     double currentAngle_ = SDS_GetCurrentAngle().to<double>();
-
+/*
     double delta = targetAngle_ - currentAngle_;
     if (delta >= wpi::math::pi) {
         targetAngle_ -= 2.0 * wpi::math::pi;
@@ -130,7 +129,9 @@ class SwerveModule {
     if (targetAngle_ < 0.0) {
         targetAngle_ += 2.0 * wpi::math::pi;
     }
+    */
 
+    frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " targetAngle_", targetAngle_);
     SDS_SetTargetAngle(units::radian_t(targetAngle_));
     SDS_SetDriveOutput(targetSpeed_);
 
@@ -142,11 +143,10 @@ class SwerveModule {
      * 
      * Something like this?:
      *  m_turnMotor.Set(m_turnPIDController.Calculate(SDS_GetCurrentAngle()));
-     */
-    
+     */    
   }
   // units::current::ampere_t SDS_currentDraw = units::current::ampere_t(0);
-  units::meters_per_second_t SDS_velocity = 0_mps;
+  // units::meters_per_second_t SDS_velocity = 0_mps;
   // units::current::ampere_t SDS_GetCurrentDraw() {return units::current::ampere_t(m_driveMotor.GetOutputCurrent());}
   double SDS_ReadVelocity() {
     return m_driveEncoder.GetVelocity();
