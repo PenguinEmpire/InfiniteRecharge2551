@@ -75,10 +75,7 @@ class SwerveModule {
     return m_driveEncoder.GetPosition();
   }
   void SDS_SetTargetAngle(units::radian_t angle);
-  frc2::PIDController angleMotorController{1.5, 0.0, 0.5}; // I think this is the bad one
-  void SDS_SetDriveOutput(double output) {
-    m_driveMotor.Set(output);
-  }
+  // void SDS_SetDriveOutput(double output) {m_driveMotor.Set(output);}
   frc::Vector2d SDS_GetModulePosition() {
     return SDS_modulePosition;
   }
@@ -90,12 +87,7 @@ class SwerveModule {
   }
   // units::meters_per_second_t SDS_GetCurrentVelocity() {return SDS_velocity;}
   // units::current::ampere_t SDS_GetDriveCurrent() {return SDS_currentDraw;}
-  frc::SwerveModuleState SDS_GetTargetVelocity() {
-    frc::SwerveModuleState ret;
-    ret.angle = SDS_targetAngle2;
-    ret.speed = SDS_targetSpeed2;
-    return ret;
-  }
+  // frc::SwerveModuleState SDS_GetTargetVelocity() {frc::SwerveModuleState ret; ret.angle = SDS_targetAngle2; ret.speed = SDS_targetSpeed2; return ret;}
   // frc::Vector2d SDS_GetCurrentPosition(); // AFAICT used exactly zero places
   // void SDS_ResetKinematics(); // Also not used. Set SDS_currentPosition to the <0, 0> vector
   void SDS_UpdateSensors2() {
@@ -108,32 +100,33 @@ class SwerveModule {
   void SDS_UpdateState() {
     double targetAngle_ = SDS_targetAngle2.to<double>();
     double targetSpeed_ = SDS_targetSpeed2.to<double>();
-    double currentAngle_ = SDS_GetCurrentAngle().to<double>();
-/*
-    double delta = targetAngle_ - currentAngle_;
-    if (delta >= wpi::math::pi) {
-        targetAngle_ -= 2.0 * wpi::math::pi;
-    } else if (delta < -wpi::math::pi) {
-        targetAngle_ += 2.0 * wpi::math::pi;
-    }
+    // double currentAngle_ = SDS_GetCurrentAngle().to<double>();
+    /*
+        double delta = targetAngle_ - currentAngle_;
+        if (delta >= wpi::math::pi) {
+            targetAngle_ -= 2.0 * wpi::math::pi;
+        } else if (delta < -wpi::math::pi) {
+            targetAngle_ += 2.0 * wpi::math::pi;
+        }
 
-    delta = targetAngle_ - currentAngle_;
-    if (delta > wpi::math::pi / 2.0 || delta < -wpi::math::pi / 2.0) {
-      // Only need to add pi here because the target angle will be put back into the range [0, 2pi)
-      targetAngle_ += wpi::math::pi;
+        delta = targetAngle_ - currentAngle_;
+        if (delta > wpi::math::pi / 2.0 || delta < -wpi::math::pi / 2.0) {
+          // Only need to add pi here because the target angle will be put back into the range [0, 2pi)
+          targetAngle_ += wpi::math::pi;
 
-      targetSpeed_ *= -1.0;
-    }
+          targetSpeed_ *= -1.0;
+        }
 
-    targetAngle_ = fmod(targetAngle_, 2.0 * wpi::math::pi);
-    if (targetAngle_ < 0.0) {
-        targetAngle_ += 2.0 * wpi::math::pi;
-    }
+        targetAngle_ = fmod(targetAngle_, 2.0 * wpi::math::pi);
+        if (targetAngle_ < 0.0) {
+            targetAngle_ += 2.0 * wpi::math::pi;
+        }
     */
 
     frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " targetAngle_", targetAngle_);
+    frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " targetSpeed_", targetSpeed_);
     SDS_SetTargetAngle(units::radian_t(targetAngle_));
-    SDS_SetDriveOutput(targetSpeed_);
+    m_driveMotor.Set(targetSpeed_);
 
     /** TODO: updateCallbacks, from the SwerveModuleImpl
      * which is this:
@@ -152,6 +145,7 @@ class SwerveModule {
     return m_driveEncoder.GetVelocity();
   }
   frc2::PIDController SDS_DEFAULT_ONBOARD_NEO_ANGLE_PIDController{0.5, 0.0, 0.0001};
+  frc2::PIDController m_turnPIDController{0.5, 0.0, 0.5};
   frc2::PIDController SDS_DEFAULT_CAN_SPARK_MAX_ANGLE_PIDController{1.5, 0.0, 0.5};
   rev::CANPIDController SDS_angleMotorPIDController = m_turnMotor.GetPIDController();
 
@@ -160,5 +154,4 @@ class SwerveModule {
   const double SDS_DRIVE_REDUCTION = 8.31 / 1.0; // (gear ratio)
   const double SDS_WHEEL_DIAMETER = 4.0; // (in)
   const double SDS_DEFAULT_DRIVE_ROTATIONS_PER_UNIT = (1.0 / (4.0 * wpi::math::pi)) * (60.0 / 15.0) * (18.0 / 26.0) * (42.0 / 14.0);
-
 };

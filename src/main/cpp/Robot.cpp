@@ -16,8 +16,10 @@
 
 void Robot::RobotInit() {}
 
-void Robot::RobotPeriodic() {
+void Robot::RobotPeriodic()
+{
   m_drivetrain.PutDiagnostics();
+  ProcessJoysticks();
 }
 
 void Robot::AutonomousInit() {}
@@ -34,7 +36,7 @@ void Robot::ProcessJoysticks() {
   constexpr double driveDeadband = 0.09;
   bool fieldOrient = !m_rightJoystick.GetRawButton(3);
 
-  double forward = m_rightJoystick.GetRawAxis(1);
+  double forward = -m_rightJoystick.GetRawAxis(1);
   forward = PenguinUtil::deadband(forward, driveDeadband);
   forward = copysign(pow(forward, 2), forward);
 
@@ -47,12 +49,16 @@ void Robot::ProcessJoysticks() {
   rotation = copysign(pow(rotation, 2), rotation);
 
   m_drivetrain.Drive(
-    units::meters_per_second_t(forward),
-    units::meters_per_second_t(strafe),
-    units::radians_per_second_t(rotation),
-    fieldOrient);
+      units::meters_per_second_t(forward),
+      units::meters_per_second_t(strafe),
+      units::radians_per_second_t(rotation),
+      fieldOrient);
+
+  frc::SmartDashboard::PutNumber("joy fwd post-db", forward);
+  frc::SmartDashboard::PutNumber("joy str post-db", strafe);
+  frc::SmartDashboard::PutNumber("joy rot post-db", rotation);
 }
 
 #ifndef RUNNING_FRC_TESTS
-int main() { return frc::StartRobot<Robot>(); }
+int main() {return frc::StartRobot<Robot>();}
 #endif

@@ -10,7 +10,7 @@ namespace PenguinUtil {
   }
 
   double deadband(double input, double deadband = 0.05) {
-    if (fabs(input < deadband)) {
+    if (fabs(input) < deadband) {
       return 0;
     } else {
       return input;

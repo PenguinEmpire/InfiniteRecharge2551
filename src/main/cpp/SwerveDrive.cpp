@@ -13,7 +13,7 @@ SwerveDrive::SwerveDrive() {
 }
 
 void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented) {
-  rot *= 2. / HYPOT; // pythagorean theorem
+  // rot *= 2. / HYPOT; // pythagorean theorem
 
   auto states = m_kinematics.ToSwerveModuleStates(
       fieldOriented ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, frc::Rotation2d(units::degree_t(m_navX->GetAngle())))
