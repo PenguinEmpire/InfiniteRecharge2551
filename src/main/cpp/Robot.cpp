@@ -50,7 +50,7 @@ void Robot::ProcessJoysticks() {
   rotation = PenguinUtil::smartDeadband(rotation, -0.25, 0.05, 0.1);
   rotation = copysign(pow(rotation, 2), rotation);
 
-  if(m_leftJoystick.GetTopPressed() == 1) {
+  if(m_leftJoystick.GetRawButtonPressed(4)) {
     m_drivetrain.ResetGyroscope();
   }
 

@@ -58,5 +58,6 @@ void SwerveDrive::Update() {
 
 void SwerveDrive::ResetGyroscope() {
   m_navX->SetAngleAdjustment(m_navX->GetAngle());
+  // m_navX->Reset();
 }
 
