@@ -26,6 +26,7 @@ class SwerveDrive {
 
   void Drive(double fwd, double str, double rot, bool fieldOriented);
   void Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented);
+  void Update();
 
 
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
@@ -36,8 +37,8 @@ class SwerveDrive {
 
 
  private:
-  const units::inch_t TRACKWIDTH = 21.25_in;
-  const units::inch_t WHEELBASE = 24_in;
+  const units::inch_t TRACKWIDTH = units::inch_t(21.25);
+  const units::inch_t WHEELBASE = units::inch_t(24);
   const double HYPOT = hypot(WHEELBASE.to<double>(), TRACKWIDTH.to<double>());
 
   const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(134.5_deg);
@@ -82,5 +83,4 @@ class SwerveDrive {
     4, 3,
     SwerveModuleName("b", "r")};
 
-  // std::array<SwerveModule, 4> m_swerveModules = {m_backLeftModule, m_backRightModule, m_frontLeftModule, m_frontRightModule};
 };

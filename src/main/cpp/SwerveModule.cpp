@@ -21,13 +21,16 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
     m_turnEncoder{analogEncoderPort, analogEncoderOffset, m_turnMotor.GetEncoder()},
     m_modulePosition{pos} {
 
-  m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION);
+  m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION); // so this is meters, right?
   m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec"
 
-  SDS_DEFAULT_CAN_SPARK_MAX_ANGLE_PIDController.EnableContinuousInput(0, 2 * wpi::math::pi); // TODO: necessay/correct? If so, [-pi, pi) instead? // --> think this is correct // nevermind?
-  SDS_DEFAULT_ONBOARD_NEO_ANGLE_PIDController.EnableContinuousInput(0, 2 * wpi::math::pi);
-  m_turnPIDController.EnableContinuousInput(0, 2 * wpi::math::pi);
-  m_turnPIDController.SetTolerance(0.5);
+  // SDS_DEFAULT_CAN_SPARK_MAX_ANGLE_PIDController.EnableContinuousInput(0, 2 * wpi::math::pi); // TODO: necessay/correct? If so, [-pi, pi) instead? // --> think this is correct // nevermind?
+  // SDS_DEFAULT_ONBOARD_NEO_ANGLE_PIDController.EnableContinuousInput(0, 2 * wpi::math::pi);
+  // m_turnPIDController.EnableContinuousInput(0, 2 * wpi::math::pi);
+  SDS_DEFAULT_CAN_SPARK_MAX_ANGLE_PIDController.EnableContinuousInput(-wpi::math::pi, wpi::math::pi); // TODO: necessay/correct? If so, [-pi, pi) instead? // --> think this is correct // nevermind?
+  SDS_DEFAULT_ONBOARD_NEO_ANGLE_PIDController.EnableContinuousInput(-wpi::math::pi, wpi::math::pi);
+  m_turnPIDController.EnableContinuousInput(-wpi::math::pi, wpi::math::pi);
+  // m_turnPIDController.SetTolerance(0.5);
 
   m_turnEncoder.builtInMotorEncoder.SetPosition(m_turnEncoder.GetAngle_SDS().to<double>());
 
@@ -37,10 +40,12 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
 }
 
 void SwerveModule::PutDiagnostics() {
+  using SD = frc::SmartDashboard;
+
   SD::PutNumber(m_moduleName.GetFullTitle() + " SDS_GetCurrentAngle", SDS_GetCurrentAngle().to<double>());
   SD::PutNumber(m_moduleName.GetFullTitle() + " angleMotorEncoder", m_turnEncoder.builtInMotorEncoder.GetPosition());
-  SD::PutNumber(m_moduleName.GetFullTitle() + " driveMotorEncoderPosition", m_driveEncoder.GetPosition());
-  SD::PutNumber(m_moduleName.GetFullTitle() + " driveMotorEncoderVelocity", m_driveEncoder.GetVelocity());
+  // SD::PutNumber(m_moduleName.GetFullTitle() + " driveMotorEncoderPosition", m_driveEncoder.GetPosition());
+  // SD::PutNumber(m_moduleName.GetFullTitle() + " driveMotorEncoderVelocity", m_driveEncoder.GetVelocity());
 
 
 
@@ -49,8 +54,8 @@ void SwerveModule::PutDiagnostics() {
 // [almost certainly depr] void SwerveModule::UpdateState() {m_turnPIDController.SetSetpoint(adjustedTargetAngle); m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS().to<double>()));}
 
 void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
-  units::meters_per_second_t speed = state.speed;
-  frc::Rotation2d angle = state.angle;
+  // units::meters_per_second_t speed = state.speed;
+  // frc::Rotation2d angle = state.angle;
   /*
     const frc::Rotation2d rot_pi = frc::Rotation2d(units::radian_t(wpi::math::pi));
 
@@ -77,8 +82,49 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
         angle.RotateBy(rot_pi.operator*(2));
       }
   */
-  SDS_targetSpeed2 = speed;           // in SDS, under `synchronized (stateMutex)`
-  SDS_targetAngle2 = angle.Radians(); // ditto
+  // SDS_targetSpeed2 = speed;           // in SDS, under `synchronized (stateMutex)`
+  // SDS_targetAngle2 = angle.Radians(); // ditto
+
+  double speed_ = state.speed.to<double>();
+  double angle_ = state.angle.Radians().to<double>();
+
+  // frc::Rotation2d desiredAngle = state.angle;
+  // desiredAngle += frc::Rotation2d(units::radian_t(0));
+  // double angle_ = desiredAngle.Radians().to<double>();
+
+  // if (angle_ < 0) {
+  //   angle_ += 2 * wpi::math::pi;
+  // }
+
+  /*
+    // copied from `UpdateState`
+    double delta = targetAngle_ - currentAngle_;
+    if (delta >= wpi::math::pi) {
+        targetAngle_ -= 2.0 * wpi::math::pi;
+    } else if (delta < -wpi::math::pi) {
+        targetAngle_ += 2.0 * wpi::math::pi;
+    }
+
+    delta = targetAngle_ - currentAngle_;
+    if (delta > wpi::math::pi / 2.0 || delta < -wpi::math::pi / 2.0) {
+      // Only need to add pi here because the target angle will be put back into the range [0, 2pi)
+      targetAngle_ += wpi::math::pi;
+
+      targetSpeed_ *= -1.0;
+    }
+
+    targetAngle_ = fmod(targetAngle_, 2.0 * wpi::math::pi);
+    if (targetAngle_ < 0.0) {
+        targetAngle_ += 2.0 * wpi::math::pi;
+    }
+  */
+
+  frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + "Desired State : speed", speed_);
+  frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + "Desired State : angle", angle_);
+  
+
+  m_driveMotor.Set(speed_);
+  m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS().to<double>(), angle_)); // used to be `SDS_SetTargetAngle(units::radian_t(targetAngle_));`
 }
 
 void SwerveModule::SDS_UpdateSensors() {
@@ -122,7 +168,6 @@ void SwerveModule::SDS_SetTargetAngle(units::radian_t angle) {
     newTarget += 2.0 * wpi::math::pi;
   }
 */
-
   // SDS_angleMotorPIDController.SetReference(newTarget, rev::ControlType::kPosition);
-  m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS().to<double>(), targetAngle));
+  // m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS().to<double>(), targetAngle.to<double>()));
 }

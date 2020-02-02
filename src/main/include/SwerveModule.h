@@ -125,7 +125,8 @@ class SwerveModule {
 
     frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " targetAngle_", targetAngle_);
     frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " targetSpeed_", targetSpeed_);
-    SDS_SetTargetAngle(units::radian_t(targetAngle_));
+    m_turnMotor.Set(m_turnPIDController.Calculate(m_turnEncoder.GetAngle_SDS().to<double>(), targetAngle_)); // used to be `SDS_SetTargetAngle(units::radian_t(targetAngle_));`
+
     m_driveMotor.Set(targetSpeed_);
 
     /** TODO: updateCallbacks, from the SwerveModuleImpl
@@ -145,7 +146,7 @@ class SwerveModule {
     return m_driveEncoder.GetVelocity();
   }
   frc2::PIDController SDS_DEFAULT_ONBOARD_NEO_ANGLE_PIDController{0.5, 0.0, 0.0001};
-  frc2::PIDController m_turnPIDController{0.5, 0.0, 0.5};
+  frc2::PIDController m_turnPIDController{0.7, 0.0, 0.2};
   frc2::PIDController SDS_DEFAULT_CAN_SPARK_MAX_ANGLE_PIDController{1.5, 0.0, 0.5};
   rev::CANPIDController SDS_angleMotorPIDController = m_turnMotor.GetPIDController();
 

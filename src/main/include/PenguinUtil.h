@@ -3,6 +3,9 @@
 #include <math.h>
 #include <wpi/math>
 
+#include <units/units.h>
+#include "frc/geometry/Rotation2d.h"
+
 namespace PenguinUtil {
   double linearMap(double n, double start1, double stop1, double start2, double stop2) {
     // Credit to the Processing Foundation and p5.js: https://github.com/processing/p5.js/blob/86d6b67707965526ce11cf893e26be5d53a1ad4c/src/math/calculation.js#L461
@@ -35,4 +38,5 @@ namespace PenguinUtil {
   }
 
   constexpr double TWO_PI = 2.0 * wpi::math::pi;
+  // constexpr frc::Rotation2d ZERO_ROT = frc::Rotation2d(units::radian_t(0)); // TODO: this would be nice to have
 } // PenguinUtil namespace

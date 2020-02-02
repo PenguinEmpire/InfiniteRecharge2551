@@ -20,6 +20,8 @@ void Robot::RobotPeriodic()
 {
   m_drivetrain.PutDiagnostics();
   ProcessJoysticks();
+  m_drivetrain.Update();
+
 }
 
 void Robot::AutonomousInit() {}
@@ -49,10 +51,10 @@ void Robot::ProcessJoysticks() {
   rotation = copysign(pow(rotation, 2), rotation);
 
   m_drivetrain.Drive(
-      units::meters_per_second_t(forward),
-      units::meters_per_second_t(strafe),
-      units::radians_per_second_t(rotation),
-      fieldOrient);
+    units::meters_per_second_t(forward),
+    units::meters_per_second_t(strafe),
+    units::radians_per_second_t(rotation),
+    true);
 
   frc::SmartDashboard::PutNumber("joy fwd post-db", forward);
   frc::SmartDashboard::PutNumber("joy str post-db", strafe);
