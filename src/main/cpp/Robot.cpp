@@ -48,6 +48,10 @@ void Robot::ProcessJoysticks() {
   rotation = PenguinUtil::smartDeadband(rotation, -0.25, 0.05, 0.1);
   rotation = copysign(pow(rotation, 2), rotation);
 
+  if(m_leftJoystick.GetTopPressed() == 1) {
+    m_drivetrain.ResetGyroscope();
+  }
+
   m_drivetrain.Drive(
       units::meters_per_second_t(forward),
       units::meters_per_second_t(strafe),
@@ -57,6 +61,7 @@ void Robot::ProcessJoysticks() {
   frc::SmartDashboard::PutNumber("joy fwd post-db", forward);
   frc::SmartDashboard::PutNumber("joy str post-db", strafe);
   frc::SmartDashboard::PutNumber("joy rot post-db", rotation);
+
 }
 
 #ifndef RUNNING_FRC_TESTS

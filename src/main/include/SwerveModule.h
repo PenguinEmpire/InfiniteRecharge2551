@@ -100,28 +100,28 @@ class SwerveModule {
   void SDS_UpdateState() {
     double targetAngle_ = SDS_targetAngle2.to<double>();
     double targetSpeed_ = SDS_targetSpeed2.to<double>();
-    // double currentAngle_ = SDS_GetCurrentAngle().to<double>();
-    /*
+     double currentAngle_ = SDS_GetCurrentAngle().to<double>();
+    
         double delta = targetAngle_ - currentAngle_;
         if (delta >= wpi::math::pi) {
             targetAngle_ -= 2.0 * wpi::math::pi;
         } else if (delta < -wpi::math::pi) {
             targetAngle_ += 2.0 * wpi::math::pi;
         }
-
+      
         delta = targetAngle_ - currentAngle_;
         if (delta > wpi::math::pi / 2.0 || delta < -wpi::math::pi / 2.0) {
           // Only need to add pi here because the target angle will be put back into the range [0, 2pi)
           targetAngle_ += wpi::math::pi;
 
           targetSpeed_ *= -1.0;
-        }
+        *
 
         targetAngle_ = fmod(targetAngle_, 2.0 * wpi::math::pi);
         if (targetAngle_ < 0.0) {
             targetAngle_ += 2.0 * wpi::math::pi;
         }
-    */
+    
 
     frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " targetAngle_", targetAngle_);
     frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " targetSpeed_", targetSpeed_);
