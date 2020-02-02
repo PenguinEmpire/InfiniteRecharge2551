@@ -23,13 +23,15 @@ struct TurnEncoder {
   frc::AnalogInput encoderAsAnalogInput;
   frc::AnalogEncoder encoderAsAnalogEncoder;
   rev::CANEncoder builtInMotorEncoder;
+  frc::Rotation2d offsetRot;
 
   TurnEncoder(int port, units::radian_t offset, rev::CANEncoder sparkMaxEncoder) : 
     port{port},
     offset{offset},
     encoderAsAnalogInput{port},
     encoderAsAnalogEncoder{encoderAsAnalogInput},
-    builtInMotorEncoder{sparkMaxEncoder} {
+    builtInMotorEncoder{sparkMaxEncoder},
+    offsetRot{offset} {
       builtInMotorEncoder.SetPositionConversionFactor(2.0 * wpi::math::pi / (18. / 1.)); // 18:1 is the default angle reduction
     }
 
@@ -41,5 +43,12 @@ struct TurnEncoder {
       angle += (2.0 * wpi::math::pi);
     }
     return units::radian_t(angle);
+  }
+
+  units::radian_t GetAngle2() const {
+    double angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * (2.0 * wpi::math::pi);
+    frc::Rotation2d ret = frc::Rotation2d(units::radian_t(angle));
+    ret += offsetRot;
+    return ret.Radians();
   }
 };

@@ -8,15 +8,21 @@
 #include "SwerveDrive.h"
 
 SwerveDrive::SwerveDrive() {
-  m_navX->Reset();
+  // m_navX->Reset();
+  m_navX->SetAngleAdjustment(m_navX->GetAngle());
   // m_navX->SetInverted(true); // just have to take the opposite of the result every time, I guess
+
+  printf("front left angle offset: %f", FRONT_LEFT_ANGLE_OFFSET.to<double>());
+  printf("front left angle offset: %f", FRONT_RIGHT_ANGLE_OFFSET.to<double>());
+  printf("front left angle offset: %f", BACK_LEFT_ANGLE_OFFSET.to<double>());
+  printf("front left angle offset: %f", BACK_RIGHT_ANGLE_OFFSET.to<double>());
 }
 
 void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented) {
   // rot *= 2. / HYPOT; // pythagorean theorem
 
   auto states = m_kinematics.ToSwerveModuleStates(
-      fieldOriented ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, frc::Rotation2d(units::degree_t(m_navX->GetAngle())))
+      fieldOriented ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, frc::Rotation2d(units::degree_t(fmod(-m_navX->GetAngle(), 360))))
                     : frc::ChassisSpeeds{fwd, str, rot});
 
   auto [fl, fr, bl, br] = states;
@@ -36,11 +42,13 @@ void SwerveDrive::PutDiagnostics() {
   m_frontRightModule.PutDiagnostics();
 
   SD::PutNumber("Gryoscope Angle", m_navX->GetAngle()); // TODO: probably this is the right function?
+}
 
-  m_backLeftModule.SDS_UpdateState();
-  m_backRightModule.SDS_UpdateState();
-  m_frontLeftModule.SDS_UpdateState();
-  m_frontRightModule.SDS_UpdateState();
+void SwerveDrive::Update() {
+  // m_backLeftModule.SDS_UpdateState();
+  // m_backRightModule.SDS_UpdateState();
+  // m_frontLeftModule.SDS_UpdateState();
+  // m_frontRightModule.SDS_UpdateState();
 
   m_backLeftModule.SDS_UpdateSensors();
   m_backRightModule.SDS_UpdateSensors();
