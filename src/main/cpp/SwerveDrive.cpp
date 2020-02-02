@@ -50,14 +50,14 @@ void SwerveDrive::Update() {
   // m_frontLeftModule.SDS_UpdateState();
   // m_frontRightModule.SDS_UpdateState();
 
-  m_backLeftModule.SDS_UpdateSensors();
-  m_backRightModule.SDS_UpdateSensors();
-  m_frontLeftModule.SDS_UpdateSensors();
-  m_frontRightModule.SDS_UpdateSensors();
+  m_backLeftModule.UpdateSensors();
+  m_backRightModule.UpdateSensors();
+  m_frontLeftModule.UpdateSensors();
+  m_frontRightModule.UpdateSensors();
 }
 
 void SwerveDrive::ResetGyroscope() {
-  m_navX->SetAngleAdjustment(m_navX->GetAngle());
-  // m_navX->Reset();
+  // m_navX->SetAngleAdjustment(m_navX->GetAngle());
+  m_navX->Reset();
 }
 

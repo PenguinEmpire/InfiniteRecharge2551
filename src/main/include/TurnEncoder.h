@@ -39,9 +39,9 @@ struct TurnEncoder {
     double angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * (2.0 * wpi::math::pi);
     angle += offset.to<double>();
     angle = fmod(angle, (2.0 * wpi::math::pi));
-    if (angle < 0) {
-      angle += (2.0 * wpi::math::pi);
-    }
+    // if (angle < 0) {
+    //   angle += (2.0 * wpi::math::pi);
+    // }
     return units::radian_t(angle);
   }
 

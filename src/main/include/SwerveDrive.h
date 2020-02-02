@@ -31,10 +31,7 @@ class SwerveDrive {
 
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
   void ResetGyroscope();
-
   void PutDiagnostics();
-
-
 
  private:
   const units::inch_t TRACKWIDTH = units::inch_t(21.25);

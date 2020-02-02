@@ -38,7 +38,7 @@ void Robot::ProcessJoysticks() {
   constexpr double driveDeadband = 0.09;
   bool fieldOrient = !m_rightJoystick.GetRawButton(3);
 
-  double forward = -m_rightJoystick.GetRawAxis(1);
+  double forward = m_rightJoystick.GetRawAxis(1);
   forward = PenguinUtil::deadband(forward, driveDeadband);
   forward = copysign(pow(forward, 2), forward);
 
@@ -55,10 +55,10 @@ void Robot::ProcessJoysticks() {
   }
 
   m_drivetrain.Drive(
-    units::meters_per_second_t(forward),
-    units::meters_per_second_t(strafe),
-    units::radians_per_second_t(rotation),
-    true);
+    units::meters_per_second_t(forward * 3),
+    units::meters_per_second_t(strafe * 3),
+    units::radians_per_second_t(rotation * 3),
+    fieldOrient);
 
   frc::SmartDashboard::PutNumber("joy fwd post-db", forward);
   frc::SmartDashboard::PutNumber("joy str post-db", strafe);

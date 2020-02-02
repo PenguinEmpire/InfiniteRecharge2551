@@ -50,7 +50,7 @@ class SwerveModule {
 
   units::radian_t GetCurrentAngle();
   void PutDiagnostics();
-  void SDS_UpdateSensors();
+  void UpdateSensors();
 
   SwerveModuleName m_moduleName;
 
@@ -71,7 +71,7 @@ class SwerveModule {
   units::radian_t SDS_ReadAngle() {
     return m_turnEncoder.GetAngle_SDS();
   }
-  double SDS_ReadDistance() { // see `SwerveModule::SDS_UpdateSensors()`
+  double SDS_ReadDistance() { // see `SwerveModule::UpdateSensors()`
     return m_driveEncoder.GetPosition();
   }
   void SDS_SetTargetAngle(units::radian_t angle);
@@ -145,10 +145,11 @@ class SwerveModule {
   double SDS_ReadVelocity() {
     return m_driveEncoder.GetVelocity();
   }
-  frc2::PIDController SDS_DEFAULT_ONBOARD_NEO_ANGLE_PIDController{0.5, 0.0, 0.0001};
-  frc2::PIDController m_turnPIDController{0.7, 0.0, 0.2};
-  frc2::PIDController SDS_DEFAULT_CAN_SPARK_MAX_ANGLE_PIDController{1.5, 0.0, 0.5};
+  // frc2::PIDController SDS_DEFAULT_ONBOARD_NEO_ANGLE_PIDController{0.5, 0.0, 0.0001};
+  // frc2::PIDController SDS_DEFAULT_CAN_SPARK_MAX_ANGLE_PIDController{1.5, 0.0, 0.5};
   rev::CANPIDController SDS_angleMotorPIDController = m_turnMotor.GetPIDController();
+  frc2::PIDController m_turnPIDController{2, 0, 1};
+
 
 
   // copied from SDS
