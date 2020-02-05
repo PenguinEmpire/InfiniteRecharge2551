@@ -28,7 +28,6 @@ class SwerveDrive {
   void Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented);
   void Update();
 
-
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
   void ResetGyroscope();
   void PutDiagnostics();
@@ -37,6 +36,9 @@ class SwerveDrive {
   const units::inch_t TRACKWIDTH = units::inch_t(21.25);
   const units::inch_t WHEELBASE = units::inch_t(24);
   const double HYPOT = hypot(WHEELBASE.to<double>(), TRACKWIDTH.to<double>());
+
+  const units::meters_per_second_t K_MAX_VELOCITY = 3_mps;
+  const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(3);
 
   const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(134.5_deg);
   const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(122.4_deg);

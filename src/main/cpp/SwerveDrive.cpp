@@ -19,7 +19,7 @@ SwerveDrive::SwerveDrive() {
 }
 
 void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented) {
-  // rot *= 2. / HYPOT; // pythagorean theorem
+  rot *= 2. / HYPOT;
 
   auto states = m_kinematics.ToSwerveModuleStates(
       fieldOriented ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, frc::Rotation2d(units::degree_t(fmod(-m_navX->GetAngle(), 360))))
@@ -31,6 +31,15 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
   m_backRightModule.SetDesiredState(br);
   m_frontLeftModule.SetDesiredState(fl);
   m_frontRightModule.SetDesiredState(fr);
+}
+
+void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented) {
+  Drive(
+    fwd * K_MAX_VELOCITY,
+    str * K_MAX_VELOCITY,
+    rot * K_MAX_ANGULAR_VELOCITY,
+    fieldOriented
+  );
 }
 
 void SwerveDrive::PutDiagnostics() {

@@ -38,5 +38,5 @@ namespace PenguinUtil {
   }
 
   constexpr double TWO_PI = 2.0 * wpi::math::pi;
-  // constexpr frc::Rotation2d ZERO_ROT = frc::Rotation2d(units::radian_t(0)); // TODO: this would be nice to have
+  constexpr frc::Rotation2d ZERO_ROT = frc::Rotation2d(); // TODO: this would be nice to have
 } // PenguinUtil namespace

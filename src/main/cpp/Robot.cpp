@@ -35,15 +35,15 @@ void Robot::TeleopPeriodic() {}
 void Robot::TestPeriodic() {}
 
 void Robot::ProcessJoysticks() {
-  constexpr double driveDeadband = 0.09;
+  constexpr double DRIVE_DEADBAND = 0.09;
   bool fieldOrient = !m_rightJoystick.GetRawButton(3);
 
   double forward = m_rightJoystick.GetRawAxis(1);
-  forward = PenguinUtil::deadband(forward, driveDeadband);
+  forward = PenguinUtil::deadband(forward, DRIVE_DEADBAND);
   forward = copysign(pow(forward, 2), forward);
 
   double strafe = m_rightJoystick.GetRawAxis(0);
-  strafe = PenguinUtil::deadband(strafe, driveDeadband);
+  strafe = PenguinUtil::deadband(strafe, DRIVE_DEADBAND);
   strafe = copysign(pow(strafe, 2), strafe);
 
   double rotation = m_leftJoystick.GetRawAxis(2);
@@ -54,16 +54,11 @@ void Robot::ProcessJoysticks() {
     m_drivetrain.ResetGyroscope();
   }
 
-  m_drivetrain.Drive(
-    units::meters_per_second_t(forward * 3),
-    units::meters_per_second_t(strafe * 3),
-    units::radians_per_second_t(rotation * 3),
-    fieldOrient);
+  m_drivetrain.Drive(forward, strafe, rotation, fieldOrient);
 
-  frc::SmartDashboard::PutNumber("joy fwd post-db", forward);
-  frc::SmartDashboard::PutNumber("joy str post-db", strafe);
-  frc::SmartDashboard::PutNumber("joy rot post-db", rotation);
-
+  frc::SmartDashboard::PutNumber("fwd command", forward);
+  frc::SmartDashboard::PutNumber("str command", strafe);
+  frc::SmartDashboard::PutNumber("rot command", rotation);
 }
 
 #ifndef RUNNING_FRC_TESTS

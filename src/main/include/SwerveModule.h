@@ -39,8 +39,8 @@ class SwerveModule {
   /** This is called `setTargetVelocity` in the SDS code (which I use the algorithm from) and `SetDesiredState` in the WPILib code. Sets member variables SDS_targetSpeed and SDS_targetAngle.
    * @param state: the desired frc::SwerveModuleState
    */
-  void SetDesiredState(const frc::SwerveModuleState& state);
-  frc::SwerveModuleState NormalizeState(const frc::SwerveModuleState& state);
+  void SetDesiredState(frc::SwerveModuleState& state);
+  void NormalizeState(frc::SwerveModuleState& state);
 
   void PutDiagnostics();
   void UpdateSensors();
@@ -57,7 +57,7 @@ class SwerveModule {
   // deprecated. See implementation in SwerveModule.cpp for (I think) some algorithms for dealing with "turn 180 or run backwards?" 
   void SDS_UpdateState();
   
-  rev::CANPIDController SDS_angleMotorPIDController = m_turnMotor.GetPIDController();
+  rev::CANPIDController m_onboardTurnMotorPIDController = m_turnMotor.GetPIDController();
   frc2::PIDController m_turnPIDController{2, 0, 1};
   /** Other (possible, I think wrong/not-necessary) PID constants:
    * `DEFAULT_ONBOARD_NEO_ANGLE_PID` is {0.5, 0.0, 0.0001}

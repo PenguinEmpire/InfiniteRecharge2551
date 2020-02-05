@@ -22,7 +22,11 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION); // so this is meters, right?
   m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec"
 
-  SDS_angleMotorPIDController.SetP(1.5); SDS_angleMotorPIDController.SetI(0); SDS_angleMotorPIDController.SetD(0.5);
+  m_onboardTurnMotorPIDController.SetP(1.5);
+  m_onboardTurnMotorPIDController.SetI(0);
+  m_onboardTurnMotorPIDController.SetD(0.5);
+  // SDS_AngleMotorPIDController.SetOutputRange(TODO);
+
   // m_turnPIDController.EnableContinuousInput(-wpi::math::pi, wpi::math::pi);
   // m_turnPIDController.SetTolerance(wpi::math::pi / 180);
 
@@ -39,38 +43,28 @@ void SwerveModule::PutDiagnostics() {
 
 }
 
-void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
-  // units::meters_per_second_t speed = state.speed;
-  // frc::Rotation2d angle = state.angle;
-  /*
-    const frc::Rotation2d rot_pi = frc::Rotation2d(units::radian_t(wpi::math::pi));
+/** This is a function to do the calculations to solve the "rotate 180 or drive backwards?" problem.
+ * It's badly named; we're not normalizing anything.
+ * I *think* it modifies the `SwerveModuleState` in-place (using pass-by reference).
+ * @param state The `frc::SwerveModuleState` to modify to make things more efficient.
+ * @return Nothing: this function modifies `state` in-place (hopefully).
+ */
+void SwerveModule::NormalizeState(frc::SwerveModuleState& state) {
+  units::meters_per_second_t speed = state.speed;
+  frc::Rotation2d angle = state.angle;
 
-    if (speed < 0_mps) {
-      speed *= -1;
-      angle.RotateBy(rot_pi);
-    }
-    
-    // TODO : I think all of this is unnecessary?
-      /** SDS has:
-       *   angle %= 2.0 * Math.PI;
-           if (angle < 0.0) {
-               angle += 2.0 * Math.PI;
-          }
-      *
-      * Assuming/hoping that frc::Rotation2d::Degrees() automatically returns the terminal (?) angle (within `[0, 2pi)`).
-      * Update: pretty sure it doesn't.
-      * /
+  // TODO: add the actual code
 
-      double temp_angle = angle.Radians().to<double>();
-      temp_angle = fmod(temp_angle, 2 * wpi::math::pi);
-      angle = frc::Rotation2d(units::degree_t(temp_angle));
-      if (angle.Radians() < 0_rad) {
-        angle.RotateBy(rot_pi.operator*(2));
-      }
-  */
+  state.speed = speed;
+  state.angle = angle;
+}
 
-  double speed_ = state.speed.to<double>();
-  double angle_ = state.angle.Radians().to<double>();
+void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
+  frc::SwerveModuleState state_ = state;
+  NormalizeState(state_);
+
+  double speed_ = state_.speed.to<double>();
+  double angle_ = state_.angle.Radians().to<double>();
 
   frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + "Desired State : speed", speed_);
   frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + "Desired State : angle", angle_);
@@ -79,7 +73,7 @@ void SwerveModule::SetDesiredState(const frc::SwerveModuleState& state) {
   // double turnInstruction = m_turnPIDController.Calculate(m_currentAngle.to<double>(), angle_);
   // frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " : to turn motor", turnInstruction);
   // m_turnMotor.Set(turnInstruction); // used to be `SDS_SetTargetAngle(units::radian_t(targetAngle_));`
-  SDS_angleMotorPIDController.SetReference(angle_, rev::ControlType::kPosition);
+  m_onboardTurnMotorPIDController.SetReference(angle_, rev::ControlType::kPosition);
 }
 
 void SwerveModule::UpdateSensors() {
@@ -111,6 +105,8 @@ void SwerveModule::UpdateSensors() {
 
 /** Deprecated. Has a lot of the "rotate 180 or drive backwards?" logic. */
 void SwerveModule::SDS_UpdateState() {
+
+  // ## 1 -----------------------------------------
   
   // double targetAngle_ = SDS_targetAngle2.to<double>(); // `SDS_targetAngle2` doesn't exist anymore
   // double targetSpeed_ = SDS_targetSpeed2.to<double>(); // `SDS_targetSpeed2` doesn't exist anymore
@@ -139,6 +135,8 @@ void SwerveModule::SDS_UpdateState() {
 
    */
 
+  // ## 2 ------------------
+
   /** This is.. also "spin or reverse?" logic, I think?
    * As you can see, this used to be `SetTargetAngle`, in SDS.
    * Think this was actually called before the code in the comment above.
@@ -160,7 +158,7 @@ void SwerveModule::SDS_UpdateState() {
       newTarget += 2.0 * wpi::math::pi;
     }
 
-    // SDS_angleMotorPIDController.SetReference(newTarget, rev::ControlType::kPosition);
+    // m_onboardTurnMotorPIDController.SetReference(newTarget, rev::ControlType::kPosition);
     // m_turnMotor.Set(m_turnPIDController.Calculate(m_currentAngle.to<double>(), targetAngle.to<double>()));
   }
 
@@ -171,5 +169,35 @@ void SwerveModule::SDS_UpdateState() {
     frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + " targetSpeed_", targetSpeed_);
     m_turnMotor.Set(m_turnPIDController.Calculate(m_currentAngle.to<double>(), targetAngle_));
     m_driveMotor.Set(targetSpeed_);
+  */
+
+  // ## 3 --------------------------
+  // This one is from `SetDesiredState`:
+
+  /*
+    const frc::Rotation2d rot_pi = frc::Rotation2d(units::radian_t(wpi::math::pi));
+
+    if (speed < 0_mps) {
+      speed *= -1;
+      angle.RotateBy(rot_pi);
+    }
+    
+    // TODO : I think all of this is unnecessary?
+      /** SDS has:
+       *   angle %= 2.0 * Math.PI;
+           if (angle < 0.0) {
+               angle += 2.0 * Math.PI;
+          }
+      *
+      * Assuming/hoping that frc::Rotation2d::Degrees() automatically returns the terminal (?) angle (within `[0, 2pi)`).
+      * Update: pretty sure it doesn't.
+      * /
+
+      double temp_angle = angle.Radians().to<double>();
+      temp_angle = fmod(temp_angle, 2 * wpi::math::pi);
+      angle = frc::Rotation2d(units::degree_t(temp_angle));
+      if (angle.Radians() < 0_rad) {
+        angle.RotateBy(rot_pi.operator*(2));
+      }
   */
 }
