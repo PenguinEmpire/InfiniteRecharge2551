@@ -36,6 +36,7 @@ void Robot::TestPeriodic() {}
 
 void Robot::ProcessJoysticks() {
   constexpr double DRIVE_DEADBAND = 0.09;
+
   bool fieldOrient = !m_rightJoystick.GetRawButton(3);
 
   double forward = m_rightJoystick.GetRawAxis(1);
@@ -50,15 +51,17 @@ void Robot::ProcessJoysticks() {
   rotation = PenguinUtil::smartDeadband(rotation, -0.25, 0.05, 0.1);
   rotation = copysign(pow(rotation, 2), rotation);
 
-  if(m_leftJoystick.GetRawButtonPressed(4)) {
-    m_drivetrain.ResetGyroscope();
-  }
-
   m_drivetrain.Drive(forward, strafe, rotation, fieldOrient);
 
   frc::SmartDashboard::PutNumber("fwd command", forward);
   frc::SmartDashboard::PutNumber("str command", strafe);
   frc::SmartDashboard::PutNumber("rot command", rotation);
+
+
+  if(m_leftJoystick.GetRawButtonPressed(4)) {
+    m_drivetrain.ResetGyroscope();
+  }
+
 }
 
 #ifndef RUNNING_FRC_TESTS

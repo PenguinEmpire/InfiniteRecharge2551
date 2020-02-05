@@ -19,6 +19,15 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
     m_turnEncoder{analogEncoderPort, analogEncoderOffset, m_turnMotor.GetEncoder()},
     m_modulePosition{pos} {
 
+  m_turnMotor.RestoreFactoryDefaults();
+  m_driveMotor.RestoreFactoryDefaults();
+  
+  // TODO: current limits.
+  // m_turnMotor.SetSmartCurrentLimit();
+  // m_driveMotor.SetSmartCurrentLimit();
+  // m_turnMotor.SetSecondaryCurrentLimit();
+  // m_driveMotor.SetSecondaryCurrentLimit();
+
   m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION); // so this is meters, right?
   m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec"
 
@@ -29,6 +38,8 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
 
   // m_turnPIDController.EnableContinuousInput(-wpi::math::pi, wpi::math::pi);
   // m_turnPIDController.SetTolerance(wpi::math::pi / 180);
+
+  UpdateSensors();
 
   m_turnEncoder.builtInMotorEncoder.SetPosition(m_currentAngle.to<double>());
 }
