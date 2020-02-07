@@ -16,12 +16,10 @@
 
 void Robot::RobotInit() {}
 
-void Robot::RobotPeriodic()
-{
+void Robot::RobotPeriodic() {
   m_drivetrain.PutDiagnostics();
   ProcessJoysticks();
   m_drivetrain.Update();
-
 }
 
 void Robot::AutonomousInit() {}
@@ -42,25 +40,26 @@ void Robot::ProcessJoysticks() {
   bool fieldOrient = !m_rightJoystick.GetRawButton(3);
 
   double forward = m_rightJoystick.GetRawAxis(1);
-  forward = PenguinUtil::deadband(forward, DRIVE_DEADBAND);
+  // SD::PutNumber("fwd raw", forward);
+  forward = PenguinUtil::smartDeadband(forward, -0.055, 0.079, 0.1);
+  // forward = PenguinUtil::deadband(forward, DRIVE_DEADBAND);
   forward = copysign(pow(forward, 2), forward);
 
   double strafe = m_rightJoystick.GetRawAxis(0);
-  strafe = PenguinUtil::deadband(strafe, DRIVE_DEADBAND);
+  // SD::PutNumber("str raw", strafe);
+  strafe = PenguinUtil::smartDeadband(strafe, -0.109, 0.126, 0.1);
+  // strafe = PenguinUtil::deadband(strafe, DRIVE_DEADBAND);
   strafe = copysign(pow(strafe, 2), strafe);
 
   double rotation = m_leftJoystick.GetRawAxis(2);
-  SD::PutNumber("rot joy raw", rotation);
-  // rotation = PenguinUtil::smartDeadband(rotation, -0.25, 0.05, 0.1);
   rotation = PenguinUtil::smartDeadband(rotation, 0.09, 0.34, 0.1);
   rotation = copysign(pow(rotation, 2), rotation);
 
   m_drivetrain.Drive(forward, strafe, rotation, fieldOrient);
 
-  frc::SmartDashboard::PutNumber("fwd command", forward);
-  frc::SmartDashboard::PutNumber("str command", strafe);
-  frc::SmartDashboard::PutNumber("rot command", rotation);
-
+  SD::PutNumber("fwd command", forward);
+  SD::PutNumber("str command", strafe);
+  SD::PutNumber("rot command", rotation);
 
   if(m_leftJoystick.GetRawButtonPressed(4)) {
     m_drivetrain.ResetGyroscope();

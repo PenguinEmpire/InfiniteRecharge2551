@@ -8,8 +8,7 @@
 #include "SwerveDrive.h"
 
 SwerveDrive::SwerveDrive() {
-  // m_navX->Reset();
-  m_navX->SetAngleAdjustment(m_navX->GetAngle());
+  ResetGyroscope();
   // m_navX->SetInverted(true); // just have to take the opposite of the result every time, I guess
 
   printf("front left angle offset: %f", FRONT_LEFT_ANGLE_OFFSET.to<double>());
