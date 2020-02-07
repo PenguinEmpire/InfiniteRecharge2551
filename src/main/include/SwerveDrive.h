@@ -37,8 +37,8 @@ class SwerveDrive {
   const units::inch_t WHEELBASE = units::inch_t(24);
   const double HYPOT = hypot(WHEELBASE.to<double>(), TRACKWIDTH.to<double>());
 
-  const units::meters_per_second_t K_MAX_VELOCITY = 3_mps;
-  const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(3);
+  const units::meters_per_second_t K_MAX_VELOCITY = 1_mps;
+  const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(1);
 
   const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(134.5_deg);
   const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(122.4_deg);

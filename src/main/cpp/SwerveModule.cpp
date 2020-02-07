@@ -19,9 +19,9 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
     m_turnEncoder{analogEncoderPort, analogEncoderOffset, m_turnMotor.GetEncoder()},
     m_modulePosition{pos} {
 
-  m_turnMotor.RestoreFactoryDefaults();
-  m_driveMotor.RestoreFactoryDefaults();
-  
+  // m_turnMotor.RestoreFactoryDefaults();
+  // m_driveMotor.RestoreFactoryDefaults();
+   
   // TODO: current limits.
   // m_turnMotor.SetSmartCurrentLimit();
   // m_driveMotor.SetSmartCurrentLimit();
@@ -72,10 +72,14 @@ void SwerveModule::NormalizeState(frc::SwerveModuleState& state) {
 
 void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
   frc::SwerveModuleState state_ = state;
-  NormalizeState(state_);
+  // NormalizeState(state_);
 
   double speed_ = state_.speed.to<double>();
   double angle_ = state_.angle.Radians().to<double>();
+
+  // if (angle_ < 0) {
+  //   angle_ += 2 * wpi::math::pi;
+  // }
 
   frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + "Desired State : speed", speed_);
   frc::SmartDashboard::PutNumber(m_moduleName.GetFullTitle() + "Desired State : angle", angle_);
