@@ -47,7 +47,7 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
 void SwerveModule::PutDiagnostics() {
   using SD = frc::SmartDashboard;
 
-  SD::PutNumber(m_moduleName.GetFullTitle() + " module angle (analog)", m_currentAngle.to<double>());
+  SD::PutNumber(m_moduleName.GetFullTitle() + " module angle (analog)", units::degree_t(m_currentAngle).to<double>());
   SD::PutNumber(m_moduleName.GetFullTitle() + " angleMotorEncoder", m_turnEncoder.builtInMotorEncoder.GetPosition());
   // SD::PutNumber(m_moduleName.GetFullTitle() + " driveMotorEncoderPosition", m_driveEncoder.GetPosition());
   // SD::PutNumber(m_moduleName.GetFullTitle() + " driveMotorEncoderVelocity", m_driveEncoder.GetVelocity());

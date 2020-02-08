@@ -22,26 +22,40 @@
 
 class SwerveDrive {
  public:
+
+  enum ModuleLocation {
+    FRONT_LEFT,
+    FRONT_RIGHT,
+    BACK_LEFT,
+    BACK_RIGHT,
+    NONE // TODO: this seems bad and unclear
+  };
+
+
   SwerveDrive();
 
-  void Drive(double fwd, double str, double rot, bool fieldOriented);
-  void Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented);
+  void Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation centerOfRotation);
+  void Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation);
   void Update();
 
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
   void ResetGyroscope();
   void PutDiagnostics();
 
+
  private:
   const units::inch_t TRACKWIDTH = units::inch_t(21.25);
   const units::inch_t WHEELBASE = units::inch_t(24);
   const double HYPOT = hypot(WHEELBASE.to<double>(), TRACKWIDTH.to<double>());
 
+  const units::inch_t CHASSIS_WIDTH = units::inch_t(27.625);
+  const units::inch_t CHASSIS_LENGTH = units::inch_t(32.25);
+
   const units::meters_per_second_t K_MAX_VELOCITY = 1_mps;
   const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(1);
 
   const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(134.5_deg);
-  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(122.4_deg);
+  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(150.0_deg);
   const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(268.7_deg);
   const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(243.6_deg);
 
@@ -49,6 +63,11 @@ class SwerveDrive {
   const frc::Translation2d FRONT_RIGHT_LOCATION{+TRACKWIDTH / 2.0, -WHEELBASE / 2.0}; 
   const frc::Translation2d BACK_LEFT_LOCATION  {-TRACKWIDTH / 2.0, +WHEELBASE / 2.0}; 
   const frc::Translation2d BACK_RIGHT_LOCATION {-TRACKWIDTH / 2.0, -WHEELBASE / 2.0};
+
+  const frc::Translation2d FRONT_LEFT_CORNER_LOCATION {+CHASSIS_WIDTH / 2.0, +CHASSIS_LENGTH / 2.0};
+  const frc::Translation2d FRONT_RIGHT_CORNER_LOCATION{+CHASSIS_WIDTH / 2.0, -CHASSIS_LENGTH / 2.0};
+  const frc::Translation2d BACK_LEFT_CORNER_LOCATION  {-CHASSIS_WIDTH / 2.0, +CHASSIS_LENGTH / 2.0};
+  const frc::Translation2d BACK_RIGHT_CORNER_LOCATION {-CHASSIS_WIDTH / 2.0, -CHASSIS_LENGTH / 2.0};
 
   frc::SwerveDriveKinematics<4> m_kinematics{
     FRONT_LEFT_LOCATION,

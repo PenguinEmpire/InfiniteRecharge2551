@@ -17,12 +17,13 @@ SwerveDrive::SwerveDrive() {
   printf("front left angle offset: %f", BACK_RIGHT_ANGLE_OFFSET.to<double>());
 }
 
-void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented) {
+void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation = frc::Translation2d()) {
   // rot *= 2. / HYPOT;
 
   auto states = m_kinematics.ToSwerveModuleStates(
       fieldOriented ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, frc::Rotation2d(units::degree_t(fmod(-m_navX->GetAngle(), 360))))
-                    : frc::ChassisSpeeds{fwd, str, rot});
+                    : frc::ChassisSpeeds{fwd, str, rot},
+      centerOfRotation);
 
   auto [fl, fr, bl, br] = states;
 
@@ -32,12 +33,32 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
   m_frontRightModule.SetDesiredState(fr);
 }
 
-void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented) {
+void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation COR) {
+
+  frc::Translation2d centerOfRotation;
+  switch (COR) {
+    case BACK_LEFT:
+      centerOfRotation = BACK_LEFT_CORNER_LOCATION;
+      break;
+    case BACK_RIGHT:
+      centerOfRotation = BACK_RIGHT_CORNER_LOCATION;
+      break;
+    case FRONT_LEFT:
+      centerOfRotation = FRONT_LEFT_CORNER_LOCATION;
+      break;
+    case FRONT_RIGHT:
+      centerOfRotation = FRONT_RIGHT_CORNER_LOCATION;
+      break;
+    default:
+      centerOfRotation = Translation2d();
+  }
+
   Drive(
     fwd * K_MAX_VELOCITY,
     str * K_MAX_VELOCITY,
     rot * K_MAX_ANGULAR_VELOCITY,
-    fieldOriented
+    fieldOriented,
+    centerOfRotation
   );
 }
 
