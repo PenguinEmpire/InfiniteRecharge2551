@@ -41,18 +41,18 @@ void Robot::ProcessJoysticks() {
 
   double forward = m_rightJoystick.GetRawAxis(1);
   // SD::PutNumber("fwd raw", forward);
-  forward = PenguinUtil::smartDeadband(forward, -0.055, 0.079, 0.1);
+  forward = PenguinUtil::smartDeadband(forward, -0.055, 0.079);
   // forward = PenguinUtil::deadband(forward, DRIVE_DEADBAND);
   forward = copysign(pow(forward, 2), forward);
 
   double strafe = m_rightJoystick.GetRawAxis(0);
   // SD::PutNumber("str raw", strafe);
-  strafe = PenguinUtil::smartDeadband(strafe, -0.109, 0.126, 0.1);
+  strafe = PenguinUtil::smartDeadband(strafe, -0.109, 0.126);
   // strafe = PenguinUtil::deadband(strafe, DRIVE_DEADBAND);
   strafe = copysign(pow(strafe, 2), strafe);
 
   double rotation = m_leftJoystick.GetRawAxis(2);
-  rotation = PenguinUtil::smartDeadband(rotation, 0.09, 0.34, 0.1);
+  rotation = PenguinUtil::smartDeadband(rotation, 0.09, 0.34);
   rotation = copysign(pow(rotation, 2), rotation);
 
   m_drivetrain.Drive(forward, strafe, rotation, fieldOrient);

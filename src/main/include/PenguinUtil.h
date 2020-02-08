@@ -33,7 +33,7 @@ namespace PenguinUtil {
     }
   }
 
-  double smartDeadband(double input, double deadbandStart, double deadbandEnd, double valueAtDeadBandEdge) {
+  double smartDeadband(double input, double deadbandStart, double deadbandEnd, double valueAtDeadBandEdge = 0.1) {
     return tooSmartDeadband(input, deadbandStart, deadbandEnd, -1, -valueAtDeadBandEdge, 0, valueAtDeadBandEdge, 1);
   }
 
