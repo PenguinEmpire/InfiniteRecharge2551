@@ -54,6 +54,10 @@ struct SwerveModuleName {
     return m_title + " Module";
   }
 
+  std::string GetTitleCase() {
+    return m_title;
+  }
+
  private:
   
   std::string m_front_back;

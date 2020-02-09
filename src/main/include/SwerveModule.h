@@ -41,6 +41,10 @@ class SwerveModule {
    */
   void SetDesiredState(frc::SwerveModuleState& state);
   void NormalizeState(frc::SwerveModuleState& state);
+  void NormalizeState2(frc::SwerveModuleState&);
+  void NormalizeState3(frc::SwerveModuleState&);
+
+  void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
 
   void PutDiagnostics();
   void UpdateSensors();

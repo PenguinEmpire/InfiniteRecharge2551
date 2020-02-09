@@ -88,5 +88,6 @@ void SwerveDrive::Update() {
 void SwerveDrive::ResetGyroscope() {
   // m_navX->SetAngleAdjustment(m_navX->GetAngle());
   m_navX->Reset();
+  // m_navX->SetAngleAdjustment(m_navX->GetUnadjustedAngle()); // that's not a real function, but it's how they do it in SDS
 }
 
