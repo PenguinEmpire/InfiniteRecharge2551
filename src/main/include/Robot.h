@@ -17,7 +17,7 @@
 #include "frc/Joystick.h"
 #include "frc/SPI.h"
 
-// #include "PenguinUtil.h"
+#include "PenguinUtil.h"
 #include "SwerveDrive.h"
 
 class Robot : public frc::TimedRobot {

@@ -29,8 +29,8 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   // m_turnMotor.SetSecondaryCurrentLimit();
   // m_driveMotor.SetSecondaryCurrentLimit();
 
-  m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * PenguinUtil::PI / SDS_DRIVE_REDUCTION); // so this is meters, right?
-  m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER * PenguinUtil::PI / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec"
+  m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION); // so this is meters, right?
+  m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER * wpi::math::pi / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec"
 
   m_onboardTurnMotorPIDController.SetP(1.5);
   m_onboardTurnMotorPIDController.SetI(0);
