@@ -21,6 +21,7 @@
 #include "rev/CANEncoder.h"
 #include "rev/CANPIDController.h"
 
+#include "PenguinUtil.h"
 #include "TurnEncoder.h"
 #include "SwerveModuleName.h"
 

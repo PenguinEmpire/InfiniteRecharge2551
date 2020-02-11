@@ -21,9 +21,11 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
   // rot *= 2. / HYPOT;
 
   auto states = m_kinematics.ToSwerveModuleStates(
-      fieldOriented ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, frc::Rotation2d(units::degree_t(fmod(-m_navX->GetAngle(), 360))))
-                    : frc::ChassisSpeeds{fwd, str, rot},
-      centerOfRotation);
+    fieldOriented
+      ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, frc::Rotation2d(units::degree_t(fmod(-m_navX->GetAngle(), 360))))
+      : frc::ChassisSpeeds{fwd, str, rot},
+    centerOfRotation
+  );
 
   m_kinematics.NormalizeWheelSpeeds(&states, K_MAX_VELOCITY);
 
