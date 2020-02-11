@@ -19,6 +19,7 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
     m_turnEncoder{analogEncoderPort, analogEncoderOffset, m_turnMotor.GetEncoder()},
     m_modulePosition{pos} {
 
+  // TODO: Figure out why this broke it
   // m_turnMotor.RestoreFactoryDefaults();
   // m_driveMotor.RestoreFactoryDefaults();
    
@@ -34,10 +35,6 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   m_onboardTurnMotorPIDController.SetP(1.5);
   m_onboardTurnMotorPIDController.SetI(0);
   m_onboardTurnMotorPIDController.SetD(0.5);
-  // SDS_AngleMotorPIDController.SetOutputRange(TODO);
-
-  // m_turnPIDController.EnableContinuousInput(-wpi::math::pi, wpi::math::pi);
-  // m_turnPIDController.SetTolerance(wpi::math::pi / 180);
 
   UpdateSensors();
 
