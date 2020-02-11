@@ -41,7 +41,7 @@ class SwerveModule {
    * @param state: the desired frc::SwerveModuleState
    */
   void SetDesiredState(frc::SwerveModuleState& state);
-  
+
   void NormalizeState(frc::SwerveModuleState& state);
   void NormalizeState2(frc::SwerveModuleState&);
   void NormalizeState3(frc::SwerveModuleState&);
