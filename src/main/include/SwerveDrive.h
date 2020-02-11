@@ -51,13 +51,13 @@ class SwerveDrive {
   const units::inch_t CHASSIS_WIDTH = units::inch_t(27.625);
   const units::inch_t CHASSIS_LENGTH = units::inch_t(32.25);
 
-  const units::meters_per_second_t K_MAX_VELOCITY = 2.5_mps;
+  const units::meters_per_second_t K_MAX_VELOCITY = 3.5_mps;
   const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(2.5);
 
-  const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(134.9_deg); // 134.5_deg);
-  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(148.3_deg); // 150.0_deg);
-  const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(270.05_deg); // 268.7_deg);
-  const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(243.63_deg); // 243.6_deg);
+  const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(135.05_deg); // 0_deg); // 138.9_deg); // 134.9_deg); // 134.5_deg);
+  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(140.4_deg); // 0_deg); // 141.2_deg); // 148.3_deg); // 150.0_deg);
+  const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(269.9_deg); // 0_deg); // 267.5_deg); // 270.05_deg); // 268.7_deg);
+  const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(244.1_deg); // 0_deg); // 244.03_deg); // 243.63_deg); // 243.6_deg);
 
   const frc::Translation2d FRONT_LEFT_LOCATION {+TRACKWIDTH / 2.0, +WHEELBASE / 2.0};
   const frc::Translation2d FRONT_RIGHT_LOCATION{+TRACKWIDTH / 2.0, -WHEELBASE / 2.0}; 

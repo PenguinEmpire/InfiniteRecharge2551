@@ -25,6 +25,8 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
                     : frc::ChassisSpeeds{fwd, str, rot},
       centerOfRotation);
 
+  m_kinematics.NormalizeWheelSpeeds(&states, K_MAX_VELOCITY);
+
   auto [fl, fr, bl, br] = states;
 
   m_backLeftModule.SetDesiredState(bl);
