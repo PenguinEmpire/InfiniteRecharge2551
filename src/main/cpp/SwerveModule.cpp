@@ -181,8 +181,21 @@ void SwerveModule::NormalizeState2(frc::SwerveModuleState& state) {
   tempState.angle = targetAngle3;
   PutSwerveModuleState("3rd norm", tempState);  
 
+  units::radian_t targetAngle4_r = targetAngle3_r;
+
+  if (units::math::abs(targetAngle4_r - 6.2833185_rad) < PenguinUtil::PI_RAD / 90) { // if delta is less than 2 degrees
+    targetAngle4_r = 0_rad;
+  }
+  frc::Rotation2d targetAngle4 = frc::Rotation2d(targetAngle4_r);
+
+  tempState.speed = targetSpeed;
+  tempState.angle = targetAngle4;
+  PutSwerveModuleState("4th norm", tempState);
+   
+
+
   state.speed = targetSpeed;
-  state.angle = targetAngle3;
+  state.angle = targetAngle4;
 }
 
 /** Deprecated, I guess? Sets the module to a constant speed and direction. Just testing that the pass-by-reference thing works. It does!
