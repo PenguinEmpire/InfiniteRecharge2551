@@ -55,7 +55,7 @@ class SwerveDrive {
   const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(2.5);
 
   const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(135.05_deg);
-  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(140.4_deg);
+  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(106.1_deg);
   const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(269.9_deg);
   const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(244.1_deg);
 
