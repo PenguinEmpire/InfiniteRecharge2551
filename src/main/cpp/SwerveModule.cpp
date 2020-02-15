@@ -183,7 +183,7 @@ void SwerveModule::NormalizeState2(frc::SwerveModuleState& state) {
 
   units::radian_t targetAngle4_r = targetAngle3_r;
 
-  if (units::math::abs(targetAngle4_r - 6.2833185_rad) < PenguinUtil::PI_RAD / 90) { // if delta is less than 2 degrees
+  if (units::math::abs(targetAngle4_r - 6.2833185_rad) < 1_deg) {
     targetAngle4_r = 0_rad;
   }
   frc::Rotation2d targetAngle4 = frc::Rotation2d(targetAngle4_r);
@@ -191,8 +191,6 @@ void SwerveModule::NormalizeState2(frc::SwerveModuleState& state) {
   tempState.speed = targetSpeed;
   tempState.angle = targetAngle4;
   PutSwerveModuleState("4th norm", tempState);
-   
-
 
   state.speed = targetSpeed;
   state.angle = targetAngle4;
