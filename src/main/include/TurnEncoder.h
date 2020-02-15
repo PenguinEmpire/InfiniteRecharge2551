@@ -6,13 +6,7 @@
 #include "frc/AnalogInput.h"
 #include "frc/AnalogEncoder.h"
 
-/** For some reason, the linker complains about multiple definitions when this is included.
- * (Even though I have `#pragma once`! I even tried an if guard. No dice.)
- * It was only included so the 2pi could be a constant the couple times it's used.
- * PenguinUtil::TWO is defined as `2.0 * wpi::math::pi`, and I've replaced the three places
- * it occured with that expression.
- */
-// #include "PenguinUtil.h" // TODO
+#include "PenguinUtil.h"
 #include <wpi/math>
 
 #include "rev/CANEncoder.h"
@@ -32,17 +26,28 @@ struct TurnEncoder {
     encoderAsAnalogEncoder{encoderAsAnalogInput},
     builtInMotorEncoder{sparkMaxEncoder},
     offsetRot{offset} {
-      builtInMotorEncoder.SetPositionConversionFactor(2.0 * wpi::math::pi / (18. / 1.)); // 18:1 is the default angle reduction
+      builtInMotorEncoder.SetPositionConversionFactor(PenguinUtil::TWO_PI / (18. / 1.)); // 18:1 is the default angle reduction
   }
 
   units::radian_t GetAngle_SDS() const {
-    double angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * (2.0 * wpi::math::pi);
-    angle += offset.to<double>();
-    angle = fmod(angle, (2.0 * wpi::math::pi));
-    // if (angle < 0) { // TODO: why is this commented out?
-    //   angle += (2.0 * wpi::math::pi);
+    units::radian_t angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * PenguinUtil::TWO_PI_RAD;
+    angle += offset;
+
+    double angle_d = fmod(angle.to<double>(), PenguinUtil::TWO_PI);
+
+    angle = units::radian_t(angle_d);
+
+    while (angle > PenguinUtil::PI_RAD) {
+      angle -= PenguinUtil::TWO_PI_RAD;
+    }
+    while (angle < -PenguinUtil::PI_RAD) {
+      angle += PenguinUtil::TWO_PI_RAD;
+    }
+    // if (angle < 0_rad) { // TODO: why is this commented out?
+    //   angle += 360_deg;
     // }
-    return units::radian_t(angle);
+    
+    return angle;
   }
 
   units::radian_t GetAngle2() const {

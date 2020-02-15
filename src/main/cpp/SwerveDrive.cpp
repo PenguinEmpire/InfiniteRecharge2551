@@ -83,10 +83,10 @@ void SwerveDrive::Update() {
   // m_frontLeftModule.SDS_UpdateState();
   // m_frontRightModule.SDS_UpdateState();
 
-  m_backLeftModule.UpdateSensors();
-  m_backRightModule.UpdateSensors();
-  m_frontLeftModule.UpdateSensors();
-  m_frontRightModule.UpdateSensors();
+  m_backLeftModule.ReadSensors();
+  m_backRightModule.ReadSensors();
+  m_frontLeftModule.ReadSensors();
+  m_frontRightModule.ReadSensors();
 }
 
 void SwerveDrive::ResetGyroscope() {

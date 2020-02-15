@@ -49,7 +49,7 @@ class SwerveModule {
   void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
 
   void PutDiagnostics();
-  void UpdateSensors();
+  void ReadSensors();
 
   void UpdateAnalogOffset();
 

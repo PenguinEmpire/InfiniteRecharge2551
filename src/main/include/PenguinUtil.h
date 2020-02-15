@@ -36,6 +36,10 @@ namespace PenguinUtil {
   inline double smartDeadband(double input, double deadbandStart, double deadbandEnd, double valueAtDeadBandEdge = 0.1) {
     return tooSmartDeadband(input, deadbandStart, deadbandEnd, -1, -valueAtDeadBandEdge, 0, valueAtDeadBandEdge, 1);
   }
+
+  inline bool approxEqual(double value1, double value2, double tolerance = 0.01) {
+    return fabs(value1 - value2) < tolerance;
+  }
   
   inline constexpr double PI = wpi::math::pi;
   inline constexpr double TWO_PI = 2.0 * wpi::math::pi;

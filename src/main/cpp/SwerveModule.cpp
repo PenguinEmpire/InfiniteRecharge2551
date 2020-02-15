@@ -36,7 +36,7 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   m_onboardTurnMotorPIDController.SetI(0);
   m_onboardTurnMotorPIDController.SetD(0.5);
 
-  UpdateSensors();
+  ReadSensors();
 
   m_turnEncoder.builtInMotorEncoder.SetPosition(m_currentAngle.to<double>());
 }
@@ -136,7 +136,7 @@ void SwerveModule::SolveTurn180Problem2(frc::SwerveModuleState& state) {
   PutSwerveModuleState("1st norm", tempState);
 
 
-  // Section in SDS' `SwerveModule.java::updateState`
+  // 2nd norm: Section in SDS' `SwerveModule.java::updateState`
 
   units::radian_t targetAngle2_r = targetAngle.Radians();
 
@@ -163,7 +163,7 @@ void SwerveModule::SolveTurn180Problem2(frc::SwerveModuleState& state) {
   PutSwerveModuleState("2nd norm", tempState);
 
   
-  // Section in SDS' `Mk2SwerveModuleBuilder.java::angleMotor::targetAngleconsumer`
+  // 3rd norm: Section in SDS' `Mk2SwerveModuleBuilder.java::angleMotor::targetAngleconsumer`
 
   units::radian_t targetAngle3_r = targetAngle2.Radians();
 
@@ -185,6 +185,8 @@ void SwerveModule::SolveTurn180Problem2(frc::SwerveModuleState& state) {
   tempState.angle = targetAngle3;
   PutSwerveModuleState("3rd norm", tempState);  
 
+  // 4th norm: fixing jitter
+  
   units::radian_t targetAngle4_r = targetAngle3_r;
 
   if (units::math::abs(targetAngle4_r - PenguinUtil::TWO_PI_RAD) < 0.1_deg) {
@@ -212,16 +214,24 @@ void SwerveModule::ToConstantState3(frc::SwerveModuleState& state) {
   state.speed = targetSpeed;
   state.angle = angle;
 }
-
+  
 void SwerveModule::SolveTurn180Problem4(frc::SwerveModuleState& state) {
   PutSwerveModuleState("(1) pre-norm", state);
 
   units::meters_per_second_t targetSpeed = state.speed;
   frc::Rotation2d targetAngle = state.angle;
 
-  // units::radian_t currentPos = units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition());
-  units::radian_t currentPos = m_currentAngle;
-  if (units::math::abs(currentPos - targetAngle.Radians()) > 90_deg) {
+  // units::radian_t currentAngle = units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition());
+  units::radian_t currentAngle = m_currentAngle;
+  units::radian_t targetAngle_r = targetAngle.Radians();
+  if ((units::math::abs(currentAngle - targetAngle_r) > 90_deg) //&&
+      // !(
+      //   ( (units::math::abs(targetAngle_r - 0_rad) < 0.5_deg) && (units::math::abs(currentAngle - -PenguinUtil::PI_RAD) < 0.5_deg) ) ||
+      //   ( (units::math::abs(targetAngle_r - 0_rad) < 0.5_deg) && (units::math::abs(currentAngle - PenguinUtil::PI_RAD) < 0.5_deg) ) ||
+      //   ( (units::math::abs(targetAngle_r - -PenguinUtil::PI_RAD) < 0.5_deg) && (units::math::abs(currentAngle - -PenguinUtil::PI_RAD) < 0.5_deg) ) ||
+      //   ( (units::math::abs(targetAngle_r - PenguinUtil::PI_RAD) < 0.5_deg) && (units::math::abs(currentAngle - PenguinUtil::PI_RAD) < 0.5_deg) )
+      //  )
+  ) {
     targetSpeed *= -1;
     targetAngle += PenguinUtil::PI_ROT;
   }
@@ -231,7 +241,7 @@ void SwerveModule::SolveTurn180Problem4(frc::SwerveModuleState& state) {
   while (targetAngle.Radians() < -PenguinUtil::PI_RAD) {
     targetAngle += PenguinUtil::TWO_PI_ROT;
   }
-
+  
   state.speed = targetSpeed;
   state.angle = targetAngle;
 
@@ -252,7 +262,7 @@ void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
   m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
 }
 
-void SwerveModule::UpdateSensors() {
+void SwerveModule::ReadSensors() {
   /* Original discussion when I was porting of the four different variable writes in this function, and where each of them are coming from/going to
 
     SDS_currentAngle = m_currentAngle.to<double>();
