@@ -80,9 +80,9 @@ void Robot::ProcessJoysticks() {
   if(m_leftJoystick.GetRawButtonPressed(11)) {
     m_drivetrain.ResetGyroscope();
   }
-  if (m_leftJoystick.GetRawButtonPressed(12)) {
-    m_drivetrain.UpdateModuleEncoderOFfsetAngles();
-  }
+  // if (m_leftJoystick.GetRawButtonPressed(12)) {
+  //   m_drivetrain.UpdateModuleEncoderOFfsetAngles();
+  // }
 
 }
 
