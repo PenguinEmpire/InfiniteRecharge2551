@@ -44,7 +44,7 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
 void SwerveModule::PutDiagnostics() {
   using SD = frc::SmartDashboard;
 
-  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog)", units::degree_t(m_currentAngle).to<double>());
+  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog)", units::radian_t(m_currentAngle).to<double>());
   SD::PutNumber(m_moduleName.GetAbbrUpper() + " angleMotorEncoder", m_turnEncoder.builtInMotorEncoder.GetPosition());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderPosition", m_driveEncoder.GetPosition());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderVelocity", m_driveEncoder.GetVelocity());
@@ -103,13 +103,17 @@ void SwerveModule::NormalizeState(frc::SwerveModuleState& state) {
   state.angle = angle;
 }
 
-void SwerveModule::NormalizeState2(frc::SwerveModuleState& state) {
+void SwerveModule::SolveTurn180Problem2(frc::SwerveModuleState& state) {
   frc::SwerveModuleState tempState;
 
   units::meters_per_second_t targetSpeed = state.speed;
   frc::Rotation2d targetAngle = state.angle;
 
-  // Section in SDS' `SwerveModule.java::setTargetVelocity`
+  tempState.speed = targetSpeed;
+  tempState.angle = targetAngle;
+  PutSwerveModuleState("0th norm", tempState);
+
+  // 1st norm: Section in SDS' `SwerveModule.java::setTargetVelocity`
 
   if (targetSpeed < 0_mps) {
     targetSpeed *= -1;
@@ -183,7 +187,7 @@ void SwerveModule::NormalizeState2(frc::SwerveModuleState& state) {
 
   units::radian_t targetAngle4_r = targetAngle3_r;
 
-  if (units::math::abs(targetAngle4_r - 6.2833185_rad) < 1_deg) {
+  if (units::math::abs(targetAngle4_r - PenguinUtil::TWO_PI_RAD) < 0.1_deg) {
     targetAngle4_r = 0_rad;
   }
   frc::Rotation2d targetAngle4 = frc::Rotation2d(targetAngle4_r);
@@ -198,7 +202,7 @@ void SwerveModule::NormalizeState2(frc::SwerveModuleState& state) {
 
 /** Deprecated, I guess? Sets the module to a constant speed and direction. Just testing that the pass-by-reference thing works. It does!
  */
-void SwerveModule::NormalizeState3(frc::SwerveModuleState& state) {
+void SwerveModule::ToConstantState3(frc::SwerveModuleState& state) {
   units::meters_per_second_t targetSpeed = state.speed;
   frc::Rotation2d angle = state.angle;
 
@@ -209,20 +213,43 @@ void SwerveModule::NormalizeState3(frc::SwerveModuleState& state) {
   state.angle = angle;
 }
 
-void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
-  frc::SwerveModuleState state_ = state;
+void SwerveModule::SolveTurn180Problem4(frc::SwerveModuleState& state) {
+  PutSwerveModuleState("(1) pre-norm", state);
 
+  units::meters_per_second_t targetSpeed = state.speed;
+  frc::Rotation2d targetAngle = state.angle;
+
+  // units::radian_t currentPos = units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition());
+  units::radian_t currentPos = m_currentAngle;
+  if (units::math::abs(currentPos - targetAngle.Radians()) > 90_deg) {
+    targetSpeed *= -1;
+    targetAngle += PenguinUtil::PI_ROT;
+  }
+  while (targetAngle.Radians() > PenguinUtil::PI_RAD) {
+    targetAngle -= PenguinUtil::TWO_PI_ROT;
+  }
+  while (targetAngle.Radians() < -PenguinUtil::PI_RAD) {
+    targetAngle += PenguinUtil::TWO_PI_ROT;
+  }
+
+  state.speed = targetSpeed;
+  state.angle = targetAngle;
+
+  PutSwerveModuleState("(2) post-norm", state);
+}
+
+void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
   // PutSwerveModuleState("pre-norm", state_);
 
-  NormalizeState2(state_);
+  SolveTurn180Problem4(state);
 
-  PutSwerveModuleState("to-motor", state_);
+  PutSwerveModuleState("to-motor", state);
 
-  double speed_ = state_.speed.to<double>();
-  double angle_ = state_.angle.Radians().to<double>();
+  double speed = state.speed.to<double>();
+  double angle = state.angle.Radians().to<double>();
 
-  m_driveMotor.Set(speed_);
-  m_onboardTurnMotorPIDController.SetReference(angle_, rev::ControlType::kPosition);
+  m_driveMotor.Set(speed);
+  m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
 }
 
 void SwerveModule::UpdateSensors() {
@@ -357,4 +384,8 @@ void SwerveModule::SDS_UpdateState() {
         angle.RotateBy(rot_pi.operator*(2));
       }
   */
+}
+
+void SwerveModule::UpdateAnalogOffset() {
+  m_turnEncoder.UpdateOffset();
 }

@@ -27,7 +27,7 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
     centerOfRotation
   );
 
-  m_kinematics.NormalizeWheelSpeeds(&states, K_MAX_VELOCITY);
+  m_kinematics.NormalizeWheelSpeeds(&states, 1_mps);
 
   auto [fl, fr, bl, br] = states;
 
@@ -95,3 +95,9 @@ void SwerveDrive::ResetGyroscope() {
   // m_navX->SetAngleAdjustment(m_navX->GetUnadjustedAngle()); // that's not a real function, but it's how they do it in SDS
 }
 
+void SwerveDrive::UpdateModuleEncoderOFfsetAngles() {
+  m_backLeftModule.UpdateAnalogOffset();
+  m_backRightModule.UpdateAnalogOffset();
+  m_frontLeftModule.UpdateAnalogOffset();
+  m_frontRightModule.UpdateAnalogOffset();
+}

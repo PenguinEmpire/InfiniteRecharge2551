@@ -37,19 +37,21 @@ class SwerveModule {
   rev::CANSparkMax m_driveMotor;
   rev::CANSparkMax m_turnMotor;
 
-  /** This is called `setTargetVelocity` in the SDS code (which I use the algorithm from) and `SetDesiredState` in the WPILib code. Sets member variables SDS_targetSpeed and SDS_targetAngle.
-   * @param state: the desired frc::SwerveModuleState
+  /** @param state: the desired frc::SwerveModuleState
    */
   void SetDesiredState(frc::SwerveModuleState& state);
 
   void NormalizeState(frc::SwerveModuleState& state);
-  void NormalizeState2(frc::SwerveModuleState&);
-  void NormalizeState3(frc::SwerveModuleState&);
+  void SolveTurn180Problem2(frc::SwerveModuleState&);
+  void ToConstantState3(frc::SwerveModuleState&);
+  void SolveTurn180Problem4(frc::SwerveModuleState&);
 
   void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
 
   void PutDiagnostics();
   void UpdateSensors();
+
+  void UpdateAnalogOffset();
 
   SwerveModuleName m_moduleName;
 
@@ -64,7 +66,7 @@ class SwerveModule {
   void SDS_UpdateState();
   
   rev::CANPIDController m_onboardTurnMotorPIDController = m_turnMotor.GetPIDController();
-  frc2::PIDController m_turnPIDController{2, 0, 1};
+  // frc2::PIDController m_turnPIDController{2, 0, 1};
   /** Other (possible, I think wrong/not-necessary) PID constants:
    * `DEFAULT_ONBOARD_NEO_ANGLE_PID` is {0.5, 0.0, 0.0001}
    * `DEFAULT_CAN_SPARK_MAX_ANGLE_PID` is {1.5, 0.0, 0.5}`

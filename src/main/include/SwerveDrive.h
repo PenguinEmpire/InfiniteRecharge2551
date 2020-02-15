@@ -38,6 +38,8 @@ class SwerveDrive {
   void Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation);
   void Update();
 
+  void UpdateModuleEncoderOFfsetAngles();
+
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
   void ResetGyroscope();
   void PutDiagnostics();
@@ -54,10 +56,10 @@ class SwerveDrive {
   const units::meters_per_second_t K_MAX_VELOCITY = 3.5_mps;
   const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(2.5);
 
-  const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(135.05_deg);
-  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(106.1_deg);
-  const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(269.9_deg);
-  const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(244.1_deg);
+  const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(135.1_deg);
+  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(285.6_deg);
+  const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(270.1_deg);
+  const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(243.7_deg);
 
   const frc::Translation2d FRONT_LEFT_LOCATION {+TRACKWIDTH / 2.0, +WHEELBASE / 2.0};
   const frc::Translation2d FRONT_RIGHT_LOCATION{+TRACKWIDTH / 2.0, -WHEELBASE / 2.0}; 
