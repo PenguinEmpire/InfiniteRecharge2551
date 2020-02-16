@@ -223,22 +223,16 @@ void SwerveModule::Solve180Problem4(frc::SwerveModuleState& state) {
 
   // units::radian_t currentAngle = units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition());
   // units::radian_t currentAngle = m_currentAngle;
-  units::radian_t currentAngle = m_turnEncoder.GetAngle_SDS(true);
+  units::radian_t currentAngle = m_turnEncoder.GetAngle_SDS(false);
   units::radian_t targetAngle_r = targetAngle.Radians();
 
   units::radian_t delta = currentAngle - targetAngle_r;
-  delta = units::radian_t(fmod(delta.to<double>(), PenguinUtil::TWO_PI));
-  if ((units::math::abs(delta) > 90_deg) //&&
-      // !(
-      //   ( (units::math::abs(targetAngle_r - 0_rad) < 0.5_deg) && (units::math::abs(currentAngle - -PenguinUtil::PI_RAD) < 0.5_deg) ) ||
-      //   ( (units::math::abs(targetAngle_r - 0_rad) < 0.5_deg) && (units::math::abs(currentAngle - PenguinUtil::PI_RAD) < 0.5_deg) ) ||
-      //   ( (units::math::abs(targetAngle_r - -PenguinUtil::PI_RAD) < 0.5_deg) && (units::math::abs(currentAngle - -PenguinUtil::PI_RAD) < 0.5_deg) ) ||
-      //   ( (units::math::abs(targetAngle_r - PenguinUtil::PI_RAD) < 0.5_deg) && (units::math::abs(currentAngle - PenguinUtil::PI_RAD) < 0.5_deg) )
-      //  )
-  ) {
+  delta = units::math::abs(PenguinUtil::piNegPiClamp(units::math::abs(delta)));
+  if (delta > 90_deg) {
     targetSpeed *= -1;
     targetAngle += PenguinUtil::PI_ROT;
   }
+
   while (targetAngle.Radians() > PenguinUtil::PI_RAD) {
     targetAngle -= PenguinUtil::TWO_PI_ROT;
   }
@@ -252,10 +246,31 @@ void SwerveModule::Solve180Problem4(frc::SwerveModuleState& state) {
   PutSwerveModuleState("(2) post-norm", state);
 }
 
+void SwerveModule::Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState& state) {
+  PutSwerveModuleState("(1) pre-norm", state);
+
+  units::meters_per_second_t targetSpeed = state.speed;
+  frc::Rotation2d targetAngle = state.angle;
+
+  units::radian_t targetAngle_r = targetAngle.Radians();
+  if (targetAngle_r > PenguinUtil::PI_RAD / 2) {
+    targetAngle -= PenguinUtil::PI_ROT;
+    targetSpeed *= -1;
+  } else if (targetAngle_r < -PenguinUtil::PI_RAD / 2) {
+    targetAngle += PenguinUtil::PI_ROT;
+    targetSpeed *= -1;
+  }
+
+  state.speed = targetSpeed;
+  state.angle = targetAngle;
+
+  PutSwerveModuleState("(2) post-norm", state);
+}
+
 void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
   // PutSwerveModuleState("pre-norm", state_);
 
-  Solve180Problem4(state);
+  Solve180Problem5_RestrictToHalfPi(state);
 
   PutSwerveModuleState("to-motor", state);
 

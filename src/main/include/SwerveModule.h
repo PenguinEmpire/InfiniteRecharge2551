@@ -44,6 +44,7 @@ class SwerveModule {
   void Solve180Problem2(frc::SwerveModuleState&);
   void ToConstantState3(frc::SwerveModuleState&);
   void Solve180Problem4(frc::SwerveModuleState&);
+  void Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState&);
 
   void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
 

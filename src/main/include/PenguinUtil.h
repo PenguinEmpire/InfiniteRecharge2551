@@ -40,7 +40,9 @@ namespace PenguinUtil {
   inline bool approxEqual(double value1, double value2, double tolerance = 0.01) {
     return fabs(value1 - value2) < tolerance;
   }
-  
+
+  // units::meter_t a = units::math::
+ 
   inline constexpr double PI = wpi::math::pi;
   inline constexpr double TWO_PI = 2.0 * wpi::math::pi;
   inline constexpr units::radian_t PI_RAD = units::radian_t(PI);
@@ -48,4 +50,15 @@ namespace PenguinUtil {
   inline constexpr frc::Rotation2d ZERO_ROT = frc::Rotation2d();
   inline const frc::Rotation2d PI_ROT = frc::Rotation2d(PI_RAD);
   inline const frc::Rotation2d TWO_PI_ROT = frc::Rotation2d(TWO_PI_RAD);
+
+  inline units::radian_t piNegPiClamp(units::radian_t value) {
+    units::radian_t ret = value;
+    while (ret > PenguinUtil::PI_RAD) {
+      ret -= PenguinUtil::TWO_PI_RAD;
+    }
+    while (ret < -PenguinUtil::PI_RAD) {
+      ret += PenguinUtil::TWO_PI_RAD;
+    }
+    return ret;
+  }
 } // PenguinUtil namespace
