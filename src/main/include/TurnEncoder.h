@@ -29,24 +29,25 @@ struct TurnEncoder {
       builtInMotorEncoder.SetPositionConversionFactor(PenguinUtil::TWO_PI / (18. / 1.)); // 18:1 is the default angle reduction
   }
 
-  units::radian_t GetAngle_SDS() const {
+  units::radian_t GetAngle_SDS(bool continuous = false) const {
     units::radian_t angle = (1.0 - encoderAsAnalogInput.GetVoltage() / frc::RobotController::GetVoltage5V()) * PenguinUtil::TWO_PI_RAD;
     angle += offset;
 
-    double angle_d = fmod(angle.to<double>(), PenguinUtil::TWO_PI);
+    if (!continuous) {
+      double angle_d = fmod(angle.to<double>(), PenguinUtil::TWO_PI);
+      angle = units::radian_t(angle_d);
 
-    angle = units::radian_t(angle_d);
-
-    while (angle > PenguinUtil::PI_RAD) {
-      angle -= PenguinUtil::TWO_PI_RAD;
+      while (angle > PenguinUtil::PI_RAD) {
+        angle -= PenguinUtil::TWO_PI_RAD;
+      }
+      while (angle < -PenguinUtil::PI_RAD) {
+        angle += PenguinUtil::TWO_PI_RAD;
+      }
+      // if (angle < 0_rad) { // TODO: why is this commented out?
+      //   angle += 360_deg;
+      // }
     }
-    while (angle < -PenguinUtil::PI_RAD) {
-      angle += PenguinUtil::TWO_PI_RAD;
-    }
-    // if (angle < 0_rad) { // TODO: why is this commented out?
-    //   angle += 360_deg;
-    // }
-    
+        
     return angle;
   }
 

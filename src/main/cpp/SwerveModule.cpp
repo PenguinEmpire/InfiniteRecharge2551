@@ -59,7 +59,7 @@ void SwerveModule::PutDiagnostics() {
  * @param state The `frc::SwerveModuleState` to modify to make things more efficient.
  * @return Nothing: this function modifies `state` in-place (hopefully).
  */
-void SwerveModule::NormalizeState(frc::SwerveModuleState& state) {
+void SwerveModule::Solve180Problem1(frc::SwerveModuleState& state) {
   units::meters_per_second_t targetSpeed = state.speed;
   frc::Rotation2d angle = state.angle;
 
@@ -103,7 +103,7 @@ void SwerveModule::NormalizeState(frc::SwerveModuleState& state) {
   state.angle = angle;
 }
 
-void SwerveModule::SolveTurn180Problem2(frc::SwerveModuleState& state) {
+void SwerveModule::Solve180Problem2(frc::SwerveModuleState& state) {
   frc::SwerveModuleState tempState;
 
   units::meters_per_second_t targetSpeed = state.speed;
@@ -215,16 +215,20 @@ void SwerveModule::ToConstantState3(frc::SwerveModuleState& state) {
   state.angle = angle;
 }
   
-void SwerveModule::SolveTurn180Problem4(frc::SwerveModuleState& state) {
+void SwerveModule::Solve180Problem4(frc::SwerveModuleState& state) {
   PutSwerveModuleState("(1) pre-norm", state);
 
   units::meters_per_second_t targetSpeed = state.speed;
   frc::Rotation2d targetAngle = state.angle;
 
   // units::radian_t currentAngle = units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition());
-  units::radian_t currentAngle = m_currentAngle;
+  // units::radian_t currentAngle = m_currentAngle;
+  units::radian_t currentAngle = m_turnEncoder.GetAngle_SDS(true);
   units::radian_t targetAngle_r = targetAngle.Radians();
-  if ((units::math::abs(currentAngle - targetAngle_r) > 90_deg) //&&
+
+  units::radian_t delta = currentAngle - targetAngle_r;
+  delta = units::radian_t(fmod(delta.to<double>(), PenguinUtil::TWO_PI));
+  if ((units::math::abs(delta) > 90_deg) //&&
       // !(
       //   ( (units::math::abs(targetAngle_r - 0_rad) < 0.5_deg) && (units::math::abs(currentAngle - -PenguinUtil::PI_RAD) < 0.5_deg) ) ||
       //   ( (units::math::abs(targetAngle_r - 0_rad) < 0.5_deg) && (units::math::abs(currentAngle - PenguinUtil::PI_RAD) < 0.5_deg) ) ||
@@ -251,7 +255,7 @@ void SwerveModule::SolveTurn180Problem4(frc::SwerveModuleState& state) {
 void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
   // PutSwerveModuleState("pre-norm", state_);
 
-  SolveTurn180Problem4(state);
+  Solve180Problem4(state);
 
   PutSwerveModuleState("to-motor", state);
 
