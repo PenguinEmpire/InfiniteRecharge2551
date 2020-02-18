@@ -29,7 +29,7 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   // m_turnMotor.SetSecondaryCurrentLimit();
   // m_driveMotor.SetSecondaryCurrentLimit();
 
-  m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * PenguinUtil::PI / SDS_DRIVE_REDUCTION); // so this is meters, right?
+  m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * PenguinUtil::PI / SDS_DRIVE_REDUCTION); // so this is meters, right? // or, I guess inches? (wheel diameter is inches, conversion multiplier is circumference/reduction) huh.
   m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER * PenguinUtil::PI / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec"
 
   m_onboardTurnMotorPIDController.SetP(1.5);
@@ -45,7 +45,7 @@ void SwerveModule::PutDiagnostics() {
   using SD = frc::SmartDashboard;
 
   SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog)", units::radian_t(m_currentAngle).to<double>());
-  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angleMotorEncoder", m_turnEncoder.builtInMotorEncoder.GetPosition());
+  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angleMotorEncoder", m_turnEncoder.GetMotorEncoderPosition().to<double>());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderPosition", m_driveEncoder.GetPosition());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderVelocity", m_driveEncoder.GetVelocity());
 
@@ -223,11 +223,11 @@ void SwerveModule::Solve180Problem4(frc::SwerveModuleState& state) {
 
   // units::radian_t currentAngle = units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition());
   // units::radian_t currentAngle = m_currentAngle;
-  units::radian_t currentAngle = m_turnEncoder.GetAngle_SDS(false);
+  units::radian_t currentAngle = m_turnEncoder.GetAngle(false);
   units::radian_t targetAngle_r = targetAngle.Radians();
 
   units::radian_t delta = currentAngle - targetAngle_r;
-  delta = units::math::abs(PenguinUtil::piNegPiClamp(units::math::abs(delta)));
+  delta = units::math::abs(PenguinUtil::piNegPiNorm(units::math::abs(delta)));
   if (delta > 90_deg) {
     targetSpeed *= -1;
     targetAngle += PenguinUtil::PI_ROT;
@@ -281,6 +281,41 @@ void SwerveModule::ToConstantBackState6(frc::SwerveModuleState& state, bool left
   PutSwerveModuleState("(6.2) post-norm", state);
 }
 
+void SwerveModule::Solve180Problem7(frc::SwerveModuleState& state) {
+  PutSwerveModuleState("(7.1) pre-norm", state);
+
+  units::meters_per_second_t targetSpeed = state.speed;
+  frc::Rotation2d targetAngle = state.angle;
+
+  units::radian_t currentAngle = m_turnEncoder.GetMotorEncoderPosition();
+  // units::radian_t currentAngle = m_turnEncoder.GetAngle(false);
+
+  units::radian_t targetAngle_r = targetAngle.Radians();
+
+  // Here's the part that does the 180 problem
+  // units::radian_t delta = PenguinUtil::arbitraryTwoPiRangeNorm(currentAngle - targetAngle_r, 0_rad, PenguinUtil::TWO_PI_RAD);
+  // units::radian_t delta = currentAngle - targetAngle_r;
+  // delta = units::math::fmod(delta, 180_deg);
+  // if (delta < 0_deg) {
+  //   delta += 180_deg;
+  // }
+  units::radian_t delta = 180_deg - units::math::abs(units::math::fmod(units::math::abs(currentAngle - targetAngle_r), 360_deg) - 180_deg); // Credit to ruahk on StackOverflow: https://stackoverflow.com/a/9505991
+  // units::radian_t delta = PenguinUtil::piNegPiNorm(currentAngle - targetAngle_r); // not sure
+  if (delta > 90_deg) { 
+    targetAngle_r += 180_deg;
+    targetSpeed *= -1;
+  }
+
+  // Here's the part that puts that in the right range  
+  targetAngle_r = PenguinUtil::arbitraryTwoPiRangeNorm(targetAngle_r, currentAngle - PenguinUtil::PI_RAD, currentAngle + PenguinUtil::PI_RAD);
+
+  // Assign back
+  state.speed = targetSpeed;
+  state.angle = targetAngle;
+
+  PutSwerveModuleState("(7.2) post-norm", state);
+}
+
 void SwerveModule::SetDesiredState(frc::SwerveModuleState& state, bool left_or_right) {
   Solve180Problem4(state);
 
@@ -294,6 +329,9 @@ void SwerveModule::SetDesiredState(frc::SwerveModuleState& state, bool left_or_r
 }
 
 void SwerveModule::SetDirectly(double angle, double speed) {
+  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " true speed", speed);
+  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " true angle", angle);
+
   m_driveMotor.Set(speed);
   m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
 }
@@ -320,7 +358,7 @@ void SwerveModule::ReadSensors() {
       // I think also not used anywhere?
   */
 
-  m_currentAngle = m_turnEncoder.GetAngle_SDS(); // m_currentAngle is only set here, and always means this
+  m_currentAngle = m_turnEncoder.GetAngle(); // m_currentAngle is only set here, and always means this
   // SDS_currentDistance2 = SDS_ReadDistance(); // `SDS_ReadDistance` was `m_driveEncoder.GetPosition()`
 }
 

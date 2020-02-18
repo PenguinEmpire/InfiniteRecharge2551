@@ -40,8 +40,6 @@ namespace PenguinUtil {
   inline bool approxEqual(double value1, double value2, double tolerance = 0.01) {
     return fabs(value1 - value2) < tolerance;
   }
-
-  // units::meter_t a = units::math::
  
   inline constexpr double PI = wpi::math::pi;
   inline constexpr double TWO_PI = 2.0 * wpi::math::pi;
@@ -51,14 +49,23 @@ namespace PenguinUtil {
   inline const frc::Rotation2d PI_ROT = frc::Rotation2d(PI_RAD);
   inline const frc::Rotation2d TWO_PI_ROT = frc::Rotation2d(TWO_PI_RAD);
 
-  inline units::radian_t piNegPiClamp(units::radian_t value) {
+  inline units::radian_t arbitraryTwoPiRangeNorm(units::radian_t value, units::radian_t min, units::radian_t max) {
+    // TODO: add an assert that max and min are 2pi apart from each other. concerned about max-min not being exactly 2pi due to floating point; and approxEqual up there doesn't support units, and I can't believe `units` doesn't have a way to check for epsilon equality.
+    // Also: that max is bigger than min
     units::radian_t ret = value;
-    while (ret > PenguinUtil::PI_RAD) {
+
+    while (ret > max) {
       ret -= PenguinUtil::TWO_PI_RAD;
     }
-    while (ret < -PenguinUtil::PI_RAD) {
+    while (ret < min) {
       ret += PenguinUtil::TWO_PI_RAD;
     }
+
     return ret;
+  }
+
+
+  inline units::radian_t piNegPiNorm(units::radian_t value) {
+    return arbitraryTwoPiRangeNorm(value, -PenguinUtil::PI_RAD, PenguinUtil::PI_RAD);
   }
 } // PenguinUtil namespace
