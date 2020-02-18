@@ -38,15 +38,18 @@ class SwerveModule {
   rev::CANSparkMax m_turnMotor;
 
   /** @param state: the desired frc::SwerveModuleState, from the kinematics */
-  void SetDesiredState(frc::SwerveModuleState& state);
+  void SetDesiredState(frc::SwerveModuleState& state, bool);
+  void SetDirectly(double angle, double speed);
 
   void Solve180Problem1(frc::SwerveModuleState& state);
   void Solve180Problem2(frc::SwerveModuleState&);
   void ToConstantState3(frc::SwerveModuleState&);
   void Solve180Problem4(frc::SwerveModuleState&);
   void Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState&);
+  void ToConstantBackState6(frc::SwerveModuleState& state, bool left_or_right);
 
   void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
+  void PutSwerveModuleState(std::string, double, double);
 
   void PutDiagnostics();
   void ReadSensors();

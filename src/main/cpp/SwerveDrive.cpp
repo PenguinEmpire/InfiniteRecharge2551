@@ -17,7 +17,7 @@ SwerveDrive::SwerveDrive() {
   printf("front left angle offset: %f", BACK_RIGHT_ANGLE_OFFSET.to<double>());
 }
 
-void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation = frc::Translation2d()) {
+void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, bool b, frc::Translation2d centerOfRotation = frc::Translation2d()) {
   // rot *= 2. / HYPOT;
 
   auto states = m_kinematics.ToSwerveModuleStates(
@@ -31,13 +31,13 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
 
   auto [fl, fr, bl, br] = states;
 
-  m_backLeftModule.SetDesiredState(bl);
-  m_backRightModule.SetDesiredState(br);
-  m_frontLeftModule.SetDesiredState(fl);
-  m_frontRightModule.SetDesiredState(fr);
+  m_backLeftModule.SetDesiredState(bl, b);
+  m_backRightModule.SetDesiredState(br, b);
+  m_frontLeftModule.SetDesiredState(fl, b);
+  m_frontRightModule.SetDesiredState(fr, b);
 }
 
-void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation COR) {
+void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation COR, bool b) {
 
   frc::Translation2d centerOfRotation;
   switch (COR) {
@@ -61,9 +61,18 @@ void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, 
     fwd * K_MAX_VELOCITY,
     str * K_MAX_VELOCITY,
     rot * K_MAX_ANGULAR_VELOCITY,
-    fieldOriented,
+    fieldOriented, b,
     centerOfRotation
   );
+}
+
+void SwerveDrive::Driveish(double fwd, double str, double rot) {
+  const double angle = str * PenguinUtil::TWO_PI;
+  const double speed = 0.05;
+  m_backLeftModule.SetDirectly(angle, speed);
+  m_backRightModule.SetDirectly(angle, speed);
+  m_frontLeftModule.SetDirectly(angle, speed);
+  m_frontRightModule.SetDirectly(angle, speed);
 }
 
 void SwerveDrive::PutDiagnostics() {

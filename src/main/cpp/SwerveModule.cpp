@@ -38,7 +38,7 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
 
   ReadSensors();
 
-  m_turnEncoder.builtInMotorEncoder.SetPosition(m_currentAngle.to<double>());
+  // builtInMotorEncoder.SetPosition(m_currentAngle.to<double>()); // moved to the constuctor for TurnEncoder
 }
 
 void SwerveModule::PutDiagnostics() {
@@ -216,7 +216,7 @@ void SwerveModule::ToConstantState3(frc::SwerveModuleState& state) {
 }
   
 void SwerveModule::Solve180Problem4(frc::SwerveModuleState& state) {
-  PutSwerveModuleState("(1) pre-norm", state);
+  PutSwerveModuleState("(4.1) pre-norm", state);
 
   units::meters_per_second_t targetSpeed = state.speed;
   frc::Rotation2d targetAngle = state.angle;
@@ -243,11 +243,11 @@ void SwerveModule::Solve180Problem4(frc::SwerveModuleState& state) {
   state.speed = targetSpeed;
   state.angle = targetAngle;
 
-  PutSwerveModuleState("(2) post-norm", state);
+  PutSwerveModuleState("(4.2) post-norm", state);
 }
 
 void SwerveModule::Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState& state) {
-  PutSwerveModuleState("(1) pre-norm", state);
+  PutSwerveModuleState("(5.1) pre-norm", state);
 
   units::meters_per_second_t targetSpeed = state.speed;
   frc::Rotation2d targetAngle = state.angle;
@@ -264,19 +264,36 @@ void SwerveModule::Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState& sta
   state.speed = targetSpeed;
   state.angle = targetAngle;
 
-  PutSwerveModuleState("(2) post-norm", state);
+  PutSwerveModuleState("(5.2) post-norm", state);
 }
 
-void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
-  // PutSwerveModuleState("pre-norm", state_);
+void SwerveModule::ToConstantBackState6(frc::SwerveModuleState& state, bool left_or_right) {
+  PutSwerveModuleState("(6.1) pre-norm", state);
 
-  Solve180Problem5_RestrictToHalfPi(state);
+  if (left_or_right) {
+    state.angle = -PenguinUtil::PI_ROT + frc::Rotation2d(20_deg);
+  } else {
+    state.angle = -PenguinUtil::PI_ROT - frc::Rotation2d(20_deg);
+  }
 
-  PutSwerveModuleState("to-motor", state);
+  state.speed = 0.1_mps;
 
-  double speed = state.speed.to<double>();
-  double angle = state.angle.Radians().to<double>();
+  PutSwerveModuleState("(6.2) post-norm", state);
+}
 
+void SwerveModule::SetDesiredState(frc::SwerveModuleState& state, bool left_or_right) {
+  Solve180Problem4(state);
+
+  const double speed = state.speed.to<double>();
+  const double angle = state.angle.Radians().to<double>();
+
+  PutSwerveModuleState("to-motor", angle, speed);
+
+  m_driveMotor.Set(speed);
+  m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
+}
+
+void SwerveModule::SetDirectly(double angle, double speed) {
   m_driveMotor.Set(speed);
   m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
 }
@@ -314,6 +331,12 @@ void SwerveModule::PutSwerveModuleState(std::string info, frc::SwerveModuleState
   frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " " + info + " speed", speed_);
   frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " " + info + " angle", angle_);
 }
+
+void SwerveModule::PutSwerveModuleState(std::string info, double angle, double speed) {
+  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " true " + info + " speed", speed);
+  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " true " + info + " angle", angle);
+}
+
 
 void SwerveModule::UpdateAnalogOffset() {
   m_turnEncoder.UpdateOffset();
