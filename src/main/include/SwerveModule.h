@@ -47,7 +47,8 @@ class SwerveModule {
   void Solve180Problem4(frc::SwerveModuleState&);
   void Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState&);
   void ToConstantBackState6(frc::SwerveModuleState& state, bool left_or_right);
-  void Solve180Problem7(frc::SwerveModuleState&);
+  void Solve180Problem7_CenterOnCurrent(frc::SwerveModuleState&);
+  void ToConstantState8_BigRotation(frc::SwerveModuleState&);
 
   void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
   void PutSwerveModuleState(std::string, double, double);

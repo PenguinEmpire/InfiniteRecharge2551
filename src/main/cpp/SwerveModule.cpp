@@ -85,7 +85,7 @@ void SwerveModule::Solve180Problem1(frc::SwerveModuleState& state) {
 
 
   // frc::Rotation2d currentAngleRot = frc::Rotation2d(m_currentAngle);
-  frc::Rotation2d currentAngleRot = frc::Rotation2d(units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition()));
+  frc::Rotation2d currentAngleRot = frc::Rotation2d(m_turnEncoder.GetMotorEncoderPosition());
   // units::degree_t angleDif = (currentAngleRot - angle).Degrees();
   if (units::math::abs((currentAngleRot - angle).Degrees()) > 90_deg) {
     frc::SmartDashboard::PutBoolean("adjusting angle", true);
@@ -167,7 +167,7 @@ void SwerveModule::Solve180Problem2(frc::SwerveModuleState& state) {
 
   units::radian_t targetAngle3_r = targetAngle2.Radians();
 
-  units::radian_t currentMotorAngle_r = units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition());
+  units::radian_t currentMotorAngle_r = m_turnEncoder.GetMotorEncoderPosition();
   units::radian_t currentMotorAngleMod_r = (frc::Rotation2d(currentMotorAngle_r) + frc::Rotation2d()).Radians();
   if (currentMotorAngleMod_r < 0_rad) {
     currentMotorAngleMod_r += 360_deg;
@@ -281,7 +281,7 @@ void SwerveModule::ToConstantBackState6(frc::SwerveModuleState& state, bool left
   PutSwerveModuleState("(6.2) post-norm", state);
 }
 
-void SwerveModule::Solve180Problem7(frc::SwerveModuleState& state) {
+void SwerveModule::Solve180Problem7_CenterOnCurrent(frc::SwerveModuleState& state) {
   PutSwerveModuleState("(7.1) pre-norm", state);
 
   units::meters_per_second_t targetSpeed = state.speed;
@@ -309,16 +309,25 @@ void SwerveModule::Solve180Problem7(frc::SwerveModuleState& state) {
   // Here's the part that puts that in the right range  
   targetAngle_r = PenguinUtil::arbitraryTwoPiRangeNorm(targetAngle_r, currentAngle - PenguinUtil::PI_RAD, currentAngle + PenguinUtil::PI_RAD);
 
+  SetDirectly(targetAngle_r.to<double>(), targetSpeed.to<double>());
+
   // Assign back
   state.speed = targetSpeed;
   state.angle = targetAngle;
 
-  PutSwerveModuleState("(7.2) post-norm", state);
+  // PutSwerveModuleState("(7.2) post-norm", state);
+}
+
+void SwerveModule::ToConstantState8_BigRotation(frc::SwerveModuleState& state) {
+  SetDirectly(2551 * PenguinUtil::PI, 0);
 }
 
 void SwerveModule::SetDesiredState(frc::SwerveModuleState& state, bool left_or_right) {
-  Solve180Problem4(state);
+  Solve180Problem7_CenterOnCurrent(state); // seems to work!
+  // ToConstantState8_BigRotation(state);
 
+
+/* If using SetDirectly
   const double speed = state.speed.to<double>();
   const double angle = state.angle.Radians().to<double>();
 
@@ -326,6 +335,7 @@ void SwerveModule::SetDesiredState(frc::SwerveModuleState& state, bool left_or_r
 
   m_driveMotor.Set(speed);
   m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
+*/
 }
 
 void SwerveModule::SetDirectly(double angle, double speed) {
