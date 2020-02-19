@@ -269,12 +269,12 @@ void SwerveModule::Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState& sta
 
 void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
   // PutSwerveModuleState("pre-norm", state_);
+//Solve180Problem5_RestrictToHalfPi(state);
 
-  Solve180Problem5_RestrictToHalfPi(state);
+  Solve180Problem4(state);
+ PutSwerveModuleState("to-motor", state);
 
-  PutSwerveModuleState("to-motor", state);
-
-  double speed = state.speed.to<double>();
+   double speed = state.speed.to<double>();
   double angle = state.angle.Radians().to<double>();
 
   m_driveMotor.Set(speed);
