@@ -25,6 +25,8 @@
 #include "TurnEncoder.h"
 #include "SwerveModuleName.h"
 
+// using inches_per_sec = units::compound_unit<units::inch_t, units::inverse<units::second_t>>;      
+
 class SwerveModule {
  public:
   SwerveModule(frc::Translation2d pos,
@@ -41,16 +43,7 @@ class SwerveModule {
   void SetDesiredState(frc::SwerveModuleState& state);
   void SetDirectly(double angle, double speed);
 
-  void Solve180Problem1(frc::SwerveModuleState& state);
-  void Solve180Problem2_SDS(frc::SwerveModuleState&);
-  void ToConstantState3(frc::SwerveModuleState&);
-  void Solve180Problem4_Rewrite(frc::SwerveModuleState&);
-  void Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState&);
-  void ToConstantBackState6(frc::SwerveModuleState& state, bool left_or_right);
-  void Solve180Problem7_CenterOnCurrent(frc::SwerveModuleState&);
-  void ToConstantState8_BigRotation(frc::SwerveModuleState&);
-  void Solve180Problem10_CenterUsingRotation(frc::SwerveModuleState& state);
-
+  frc::SwerveModuleState GetState() const;
 
   void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
   void PutSwerveModuleState(std::string, units::degree_t, units::meters_per_second_t);
@@ -69,6 +62,8 @@ class SwerveModule {
   frc::Translation2d m_modulePosition;
 
   units::radian_t m_currentAngle = 0_rad;
+  units::meters_per_second_t m_currentVelocity = 0_mps;
+
 
   // deprecated. See implementation in SwerveModule.cpp for (I think) some algorithms for dealing with "turn 180 or run backwards?" 
   void SDS_UpdateState();
@@ -82,6 +77,6 @@ class SwerveModule {
 
   // copied from SDS
   static constexpr double SDS_DRIVE_REDUCTION = 8.31 / 1.0; // (gear ratio)
-  static constexpr double SDS_WHEEL_DIAMETER = 4.0; // (in)
+  static constexpr units::meter_t SDS_WHEEL_DIAMETER = 4.0_in; // (in)
   static constexpr double SDS_DEFAULT_DRIVE_ROTATIONS_PER_UNIT = (1.0 / (4.0 * wpi::math::pi)) * (60.0 / 15.0) * (18.0 / 26.0) * (42.0 / 14.0);
 };

@@ -17,12 +17,12 @@ SwerveDrive::SwerveDrive() {
   printf("front left angle offset: %f", BACK_RIGHT_ANGLE_OFFSET.to<double>());
 }
 
-void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, bool b, frc::Translation2d centerOfRotation = frc::Translation2d()) {
+void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation = frc::Translation2d()) {
   // rot *= 2. / HYPOT;
 
   auto states = m_kinematics.ToSwerveModuleStates(
     fieldOriented
-      ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, frc::Rotation2d(units::degree_t(fmod(-m_navX->GetAngle(), 360))))
+      ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, GetAngleAsRot())
       : frc::ChassisSpeeds{fwd, str, rot},
     centerOfRotation
   );
@@ -31,13 +31,13 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
 
   auto [fl, fr, bl, br] = states;
 
-  m_backLeftModule.SetDesiredState(bl, b);
-  m_backRightModule.SetDesiredState(br, b);
-  m_frontLeftModule.SetDesiredState(fl, b);
-  m_frontRightModule.SetDesiredState(fr, b);
+  m_backLeftModule.SetDesiredState(bl);
+  m_backRightModule.SetDesiredState(br);
+  m_frontLeftModule.SetDesiredState(fl);
+  m_frontRightModule.SetDesiredState(fr);
 }
 
-void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation COR, bool b) {
+void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation COR) {
 
   frc::Translation2d centerOfRotation;
   switch (COR) {
@@ -61,18 +61,9 @@ void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, 
     fwd * K_MAX_VELOCITY,
     str * K_MAX_VELOCITY,
     rot * K_MAX_ANGULAR_VELOCITY,
-    fieldOriented, b,
+    fieldOriented,
     centerOfRotation
   );
-}
-
-void SwerveDrive::Driveish(double fwd, double str, double rot) {
-  const double angle = str * PenguinUtil::TWO_PI;
-  const double speed = 0.05;
-  m_backLeftModule.SetDirectly(angle, speed);
-  m_backRightModule.SetDirectly(angle, speed);
-  m_frontLeftModule.SetDirectly(angle, speed);
-  m_frontRightModule.SetDirectly(angle, speed);
 }
 
 void SwerveDrive::PutDiagnostics() {
@@ -84,6 +75,10 @@ void SwerveDrive::PutDiagnostics() {
   m_frontRightModule.PutDiagnostics();
 
   SD::PutNumber("Gryoscope Angle", m_navX->GetAngle()); // TODO: probably this is the right function?
+
+
+  SD::PutNumber("x location", m_location.Translation().X().to<double>());
+  SD::PutNumber("y location", m_location.Translation().Y().to<double>());
 }
 
 void SwerveDrive::Update() {
@@ -96,6 +91,14 @@ void SwerveDrive::Update() {
   m_backRightModule.ReadSensors();
   m_frontLeftModule.ReadSensors();
   m_frontRightModule.ReadSensors();
+
+
+  m_odometry.Update(
+    GetAngleAsRot(),
+    m_frontLeftModule.GetState(), m_frontRightModule.GetState(), m_backLeftModule.GetState(), m_backRightModule.GetState()
+  );
+
+  m_location = m_odometry.GetPose();
 }
 
 void SwerveDrive::ResetGyroscope() {
@@ -103,6 +106,15 @@ void SwerveDrive::ResetGyroscope() {
   m_navX->Reset();
   // m_navX->SetAngleAdjustment(m_navX->GetUnadjustedAngle()); // that's not a real function, but it's how they do it in SDS
 }
+
+units::degree_t SwerveDrive::GetAngle() const {
+  return units::degree_t(fmod(-m_navX->GetAngle(), 360.0));
+}
+
+frc::Rotation2d SwerveDrive::GetAngleAsRot() const {
+  return frc::Rotation2d(GetAngle());
+}
+
 
 void SwerveDrive::UpdateModuleEncoderOFfsetAngles() {
   m_backLeftModule.UpdateAnalogOffset();

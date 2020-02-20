@@ -8,7 +8,7 @@
 #include <wpi/math>
 #include "frc/smartdashboard/SmartDashboard.h"
 
-#include <units/units.h>
+// #include <units/units.h>
 
 #include "SwerveModule.h"
 
@@ -29,8 +29,8 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   // m_turnMotor.SetSecondaryCurrentLimit();
   // m_driveMotor.SetSecondaryCurrentLimit();
 
-  m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER * PenguinUtil::PI / SDS_DRIVE_REDUCTION); // so this is meters, right? // or, I guess inches? (wheel diameter is inches, conversion multiplier is circumference/reduction) huh.
-  m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER * PenguinUtil::PI / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec"
+  m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER.to<double>() * PenguinUtil::PI / SDS_DRIVE_REDUCTION); // so this is meters, right? // or, I guess inches? (wheel diameter is inches, conversion multiplier is circumference/reduction) huh. // TODO: make sure this is returning meters
+  m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER.to<double>() * PenguinUtil::PI / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec" // TODO: make sure this is returning m/s
 
   m_onboardTurnMotorPIDController.SetP(1.5);
   m_onboardTurnMotorPIDController.SetI(0);
@@ -39,12 +39,16 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   ReadSensors();
 }
 
+frc::SwerveModuleState SwerveModule::GetState() const {
+  return {m_currentVelocity, frc::Rotation2d(m_currentAngle)};
+}
+
 void SwerveModule::PutDiagnostics() {
   using SD = frc::SmartDashboard;
 
-  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog)", units::radian_t(m_currentAngle).to<double>());
+  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (motor)", m_currentAngle.to<double>());
   SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog) (cont)", m_turnEncoder.GetAngle(true).to<double>());
-  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angleMotorEncoder", m_turnEncoder.GetMotorEncoderPosition().to<double>());
+  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog) (discont)", m_turnEncoder.GetAngle().to<double>());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderPosition", m_driveEncoder.GetPosition());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderVelocity", m_driveEncoder.GetVelocity());
 
@@ -108,8 +112,9 @@ void SwerveModule::ReadSensors() {
       // I think also not used anywhere?
   */
 
-  m_currentAngle = m_turnEncoder.GetAngle(); // m_currentAngle is only set here, and always means this
+  m_currentAngle = m_turnEncoder.GetMotorEncoderPosition(); // m_currentAngle is only set here, and always means this
   // SDS_currentDistance2 = SDS_ReadDistance(); // `SDS_ReadDistance` was `m_driveEncoder.GetPosition()`
+  m_currentVelocity = units::meters_per_second_t(m_driveEncoder.GetVelocity());
 }
 
 void SwerveModule::PutSwerveModuleState(std::string info, frc::SwerveModuleState& state) {

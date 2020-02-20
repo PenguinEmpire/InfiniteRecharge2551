@@ -69,8 +69,7 @@ void Robot::ProcessJoysticks() {
     centerOfRotation = SwerveDrive::ModuleLocation::NONE;
   }
 
-  m_drivetrain.Drive(forward, strafe, rotation, fieldOrient, centerOfRotation, m_rightJoystick.GetRawButton(2));
-  // m_drivetrain.Driveish(forward, strafe, rotation);
+  m_drivetrain.Drive(forward, strafe, rotation, fieldOrient, centerOfRotation);
 
   SD::PutNumber("fwd command", forward);
   SD::PutNumber("str command", strafe);
