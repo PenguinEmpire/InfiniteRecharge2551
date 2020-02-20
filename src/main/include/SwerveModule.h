@@ -42,7 +42,7 @@ class SwerveModule {
   void SetDirectly(double angle, double speed);
 
   void Solve180Problem1(frc::SwerveModuleState& state);
-  void Solve180Problem2(frc::SwerveModuleState&);
+  void Solve180Problem2_SDS(frc::SwerveModuleState&);
   void ToConstantState3(frc::SwerveModuleState&);
   void Solve180Problem4(frc::SwerveModuleState&);
   void Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState&);

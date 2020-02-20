@@ -104,7 +104,7 @@ void SwerveModule::Solve180Problem1(frc::SwerveModuleState& state) {
   state.angle = angle;
 }
 
-void SwerveModule::Solve180Problem2(frc::SwerveModuleState& state) {
+void SwerveModule::Solve180Problem2_SDS(frc::SwerveModuleState& state) {
   frc::SwerveModuleState tempState;
 
   units::meters_per_second_t targetSpeed = state.speed;
