@@ -63,6 +63,23 @@ namespace PenguinUtil {
 
     return ret;
   }
+  inline units::radian_t arbitraryTwoPiRangeNorm2(units::radian_t value, units::radian_t mid) {
+    units::radian_t ret = value;
+
+    while (ret > mid + 180_deg) {
+      ret -= 360_deg;
+    }
+    while (ret < mid - 180_deg) {
+      ret += 360_deg;
+    }
+
+    return ret;
+  }
+  
+  
+  
+  
+
 
 
   inline units::radian_t piNegPiNorm(units::radian_t value) {
