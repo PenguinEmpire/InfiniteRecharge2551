@@ -18,7 +18,7 @@ SwerveDrive::SwerveDrive() {
 }
 
 void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation = frc::Translation2d()) {
-  // rot *= 2. / HYPOT;
+  // rot *= 2. / HYPOT; // TODO: see if this improves things
 
   auto states = m_kinematics.ToSwerveModuleStates(
     fieldOriented

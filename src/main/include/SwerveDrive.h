@@ -35,22 +35,17 @@ class SwerveDrive {
   SwerveDrive();
 
   void Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation centerOfRotation);
-  void Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation);
   void Update();
-
   void UpdateModuleEncoderOFfsetAngles();
-
-  AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
   void ResetGyroscope();
   units::degree_t GetAngle() const;
-  frc::Rotation2d GetAngleAsRot() const;
-
   frc::Pose2d m_location;
-
   void PutDiagnostics();
 
 
  private:
+  AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
+
   const units::inch_t TRACKWIDTH = units::inch_t(21.25);
   const units::inch_t WHEELBASE = units::inch_t(24);
   const units::inch_t HYPOT_in = units::math::hypot(TRACKWIDTH, WHEELBASE);
@@ -84,30 +79,37 @@ class SwerveDrive {
     BACK_RIGHT_LOCATION
   };
 
-  frc::SwerveDriveOdometry<4> m_odometry{m_kinematics, PenguinUtil::ZERO_ROT}; // WPILib has `GetAngle()`, but I don't feel like defining it in the header file and we're resetting anyway.
+  frc::SwerveDriveOdometry<4> m_odometry{m_kinematics, PenguinUtil::ZERO_ROT}; // WPILib has `GetAngleAsRot()` for the starting angle, but I don't feel like defining it in the header file and we're resetting anyway.
 
   SwerveModule m_frontLeftModule {
     FRONT_LEFT_LOCATION,
     3, // analog input port. TODO: factor out into constants file/namespace/class.
     FRONT_LEFT_ANGLE_OFFSET,
     8, 7, // CAN ID of drive and angle motors. TODO: factor out into constants file/etc
-    SwerveModuleName("f", "l")}; 
+    SwerveModuleName("f", "l")
+  }; 
   SwerveModule m_frontRightModule{
     FRONT_RIGHT_LOCATION,
     2,
     FRONT_RIGHT_ANGLE_OFFSET,
     6, 5,
-    SwerveModuleName("f", "r")};
+    SwerveModuleName("f", "r")
+  };
   SwerveModule m_backLeftModule  {
     BACK_LEFT_LOCATION,
     0,
     BACK_LEFT_ANGLE_OFFSET,
     2, 1,
-    SwerveModuleName("b", "l")};
+    SwerveModuleName("b", "l")
+  };
   SwerveModule m_backRightModule {
     BACK_RIGHT_LOCATION,
     1,
     BACK_RIGHT_ANGLE_OFFSET,
     4, 3,
-    SwerveModuleName("b", "r")};
+    SwerveModuleName("b", "r")
+  };
+
+  void Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation);
+  frc::Rotation2d GetAngleAsRot() const;
 };

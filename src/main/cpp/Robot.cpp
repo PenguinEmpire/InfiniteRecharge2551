@@ -34,21 +34,17 @@ void Robot::TestPeriodic() {}
 void Robot::ProcessJoysticks() {
   using SD = frc::SmartDashboard;
 
-  // constexpr double DRIVE_DEADBAND = 0.09;
-
   bool fieldOrient = !m_rightJoystick.GetRawButton(3);
 
   double forward = -m_rightJoystick.GetRawAxis(1);
   SD::PutNumber("fwd raw", forward);
   forward = PenguinUtil::smartDeadband(forward, -0.18, 0.08); // 055, 0.079);
-  // forward = PenguinUtil::deadband(forward, DRIVE_DEADBAND);
   forward = copysign(pow(forward, 2), forward);
 
   double strafe = -m_rightJoystick.GetRawAxis(0);
   SD::PutNumber("str raw", strafe);
   // while strafe is negative deadband values are in form pos, neg
   strafe = PenguinUtil::smartDeadband(strafe, -0.125, 0.110);
-  //  strafe = PenguinUtil::deadband(strafe, DRIVE_DEADBAND);
   strafe = copysign(pow(strafe, 2), strafe);
 
   double rotation = -m_leftJoystick.GetRawAxis(2);
@@ -75,15 +71,10 @@ void Robot::ProcessJoysticks() {
   SD::PutNumber("str command", strafe);
   SD::PutNumber("rot command", rotation);
 
-
-
-
   if(m_leftJoystick.GetRawButtonPressed(11)) {
     m_drivetrain.ResetGyroscope();
   }
-  // if (m_leftJoystick.GetRawButtonPressed(12)) {
-  //   m_drivetrain.UpdateModuleEncoderOFfsetAngles();
-  // }
+  // if (m_leftJoystick.GetRawButtonPressed(12)) {m_drivetrain.UpdateModuleEncoderOFfsetAngles();} // TODO?
 
 }
 

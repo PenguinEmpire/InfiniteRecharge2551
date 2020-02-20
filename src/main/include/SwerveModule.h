@@ -45,11 +45,11 @@ class SwerveModule {
 
   frc::SwerveModuleState GetState() const;
 
-  void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
-  void PutSwerveModuleState(std::string, units::degree_t, units::meters_per_second_t);
-  void PutSwerveModuleState(std::string, double, double);
+  void PutSwerveModuleState(std::string, frc::SwerveModuleState&) const;
+  void PutSwerveModuleState(std::string, units::degree_t, units::meters_per_second_t) const;
+  void PutSwerveModuleState(std::string, double, double) const;
 
-  void PutDiagnostics();
+  void PutDiagnostics() const;
   void ReadSensors();
 
   void UpdateAnalogOffset();
@@ -64,16 +64,7 @@ class SwerveModule {
   units::radian_t m_currentAngle = 0_rad;
   units::meters_per_second_t m_currentVelocity = 0_mps;
 
-
-  // deprecated. See implementation in SwerveModule.cpp for (I think) some algorithms for dealing with "turn 180 or run backwards?" 
-  void SDS_UpdateState();
-  
   rev::CANPIDController m_onboardTurnMotorPIDController = m_turnMotor.GetPIDController();
-  // frc2::PIDController m_turnPIDController{2, 0, 1};
-  /** Other (possible, I think wrong/not-necessary) PID constants:
-   * `DEFAULT_ONBOARD_NEO_ANGLE_PID` is {0.5, 0.0, 0.0001}
-   * `DEFAULT_CAN_SPARK_MAX_ANGLE_PID` is {1.5, 0.0, 0.5}`
-  */
 
   // copied from SDS
   static constexpr double SDS_DRIVE_REDUCTION = 8.31 / 1.0; // (gear ratio)

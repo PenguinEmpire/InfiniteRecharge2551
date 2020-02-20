@@ -43,7 +43,7 @@ frc::SwerveModuleState SwerveModule::GetState() const {
   return {m_currentVelocity, frc::Rotation2d(m_currentAngle)};
 }
 
-void SwerveModule::PutDiagnostics() {
+void SwerveModule::PutDiagnostics() const {
   using SD = frc::SmartDashboard;
 
   SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (motor)", m_currentAngle.to<double>());
@@ -51,9 +51,9 @@ void SwerveModule::PutDiagnostics() {
   SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog) (discont)", m_turnEncoder.GetAngle().to<double>());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderPosition", m_driveEncoder.GetPosition());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderVelocity", m_driveEncoder.GetVelocity());
+  
 
   SD::PutString(m_moduleName.GetAbbrUpper() + " z-----sep", "");
-
 }
 
 void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
@@ -117,7 +117,7 @@ void SwerveModule::ReadSensors() {
   m_currentVelocity = units::meters_per_second_t(m_driveEncoder.GetVelocity());
 }
 
-void SwerveModule::PutSwerveModuleState(std::string info, frc::SwerveModuleState& state) {
+void SwerveModule::PutSwerveModuleState(std::string info, frc::SwerveModuleState& state) const {
   double speed_ = state.speed.to<double>();
   double angle_ = state.angle.Radians().to<double>();
 
@@ -125,12 +125,11 @@ void SwerveModule::PutSwerveModuleState(std::string info, frc::SwerveModuleState
   frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " " + info + " angle", angle_);
 }
 
-void SwerveModule::PutSwerveModuleState(std::string info, units::degree_t angle, units::meters_per_second_t speed) {
+void SwerveModule::PutSwerveModuleState(std::string info, units::degree_t angle, units::meters_per_second_t speed) const {
   PutSwerveModuleState(info, angle.to<double>(), speed.to<double>());
 }
 
-
-void SwerveModule::PutSwerveModuleState(std::string info, double angle, double speed) {
+void SwerveModule::PutSwerveModuleState(std::string info, double angle, double speed) const {
   frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " raw " + info + " speed", speed);
   frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " raw " + info + " angle", angle);
 }
