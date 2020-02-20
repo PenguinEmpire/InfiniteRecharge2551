@@ -52,74 +52,6 @@ void SwerveModule::PutDiagnostics() {
 
 }
 
-/** Deprecated. Worked tho! */
-void SwerveModule::Solve180Problem7_CenterOnCurrent(frc::SwerveModuleState& state) {
-  PutSwerveModuleState("(7.1) pre-norm", state);
-
-  units::meters_per_second_t targetSpeed = state.speed;
-  frc::Rotation2d targetAngle = state.angle;
-
-  units::radian_t currentAngle = m_turnEncoder.GetMotorEncoderPosition();
-  // units::radian_t currentAngle = m_turnEncoder.GetAngle(false);
-
-  units::radian_t targetAngle_r = targetAngle.Radians();
-
-  // Here's the part that does the 180 problem
-  // units::radian_t delta = PenguinUtil::arbitraryTwoPiRangeNorm(currentAngle - targetAngle_r, 0_rad, PenguinUtil::TWO_PI_RAD);
-  // units::radian_t delta = currentAngle - targetAngle_r;
-  // delta = units::math::fmod(delta, 180_deg);
-  // if (delta < 0_deg) {
-  //   delta += 180_deg;
-  // }
-  units::radian_t delta = 180_deg - units::math::abs(units::math::fmod(units::math::abs(currentAngle - targetAngle_r), 360_deg) - 180_deg); // Credit to ruahk on StackOverflow: https://stackoverflow.com/a/9505991
-  // units::radian_t delta = PenguinUtil::piNegPiNorm(currentAngle - targetAngle_r); // not sure
-  if (delta > 90_deg) { 
-    targetAngle_r += 180_deg;
-    targetSpeed *= -1;
-  }
-
-  // Here's the part that puts that in the right range  
-  targetAngle_r = PenguinUtil::arbitraryTwoPiRangeNorm(targetAngle_r, currentAngle - PenguinUtil::PI_RAD, currentAngle + PenguinUtil::PI_RAD);
-
-  SetDirectly(targetAngle_r.to<double>(), targetSpeed.to<double>());
-
-  // Assign back
-  state.speed = targetSpeed;
-  state.angle = targetAngle;
-
-  // PutSwerveModuleState("(7.2) post-norm", state);
-}
-
-/** Deprecated. Implemented in `SetDesiredState` now. */
-void SwerveModule::Solve180Problem10_CenterUsingRotation(frc::SwerveModuleState& state) {
-  PutSwerveModuleState("(10.1) pre-norm", state);
-
-  // start with what we're given
-  units::meters_per_second_t targetSpeed = state.speed;
-  units::radian_t targetAngle = state.angle.Radians();
-  units::radian_t currentAngle = m_turnEncoder.GetMotorEncoderPosition();
-  // units::radian_t currentAngle = m_turnEncoder.GetAngle(true); // use built-in or analog encoder?
-
-  // 180 Problem
-  units::radian_t delta = 180_deg - units::math::abs(units::math::fmod(units::math::abs(currentAngle - targetAngle), 360_deg) - 180_deg); // Credit to ruahk on StackOverflow: https://stackoverflow.com/a/9505991
-  if (delta > 90_deg) { 
-    targetAngle += 180_deg;
-    targetSpeed *= -1;
-  }
-
-  // Put it in the correct range. Probably this works?
-  // targetAngle = currentAngle + units::math::fmod(targetAngle, 180_deg);
-  targetAngle = PenguinUtil::arbitraryTwoPiRangeNorm2(targetAngle, currentAngle);
-
-  PutSwerveModuleState("values we really want", targetAngle.to<double>(), targetSpeed.to<double>());
-
-  // Assign back
-  state.speed = targetSpeed;
-  state.angle = frc::Rotation2d(targetAngle);
-
-  PutSwerveModuleState("(10.2) post-norm", state);
-}
-
 void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
   PutSwerveModuleState("requested", state);
 
@@ -138,7 +70,7 @@ void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
 
   // Put it in the correct range.
   // targetAngle = currentAngle + units::math::fmod(targetAngle, 180_deg); //  Probably this works? EDIT: no it doesn't
-  targetAngle = PenguinUtil::arbitraryTwoPiRangeNorm2(targetAngle, currentAngle);
+  targetAngle = PenguinUtil::arbitraryTwoPiRangeNorm(targetAngle, currentAngle);
 
   // Send it to the motor
   double toMotorAngle = targetAngle.to<double>();
