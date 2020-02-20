@@ -37,8 +37,6 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   m_onboardTurnMotorPIDController.SetD(0.5);
 
   ReadSensors();
-
-  // builtInMotorEncoder.SetPosition(m_currentAngle.to<double>()); // moved to the constuctor for TurnEncoder
 }
 
 void SwerveModule::PutDiagnostics() {
@@ -54,73 +52,7 @@ void SwerveModule::PutDiagnostics() {
 
 }
 
-  
-void SwerveModule::Solve180Problem4_Rewrite(frc::SwerveModuleState& state) {
-  PutSwerveModuleState("(4.1) pre-norm", state);
-
-  units::meters_per_second_t targetSpeed = state.speed;
-  frc::Rotation2d targetAngle = state.angle;
-
-  // units::radian_t currentAngle = units::radian_t(m_turnEncoder.builtInMotorEncoder.GetPosition());
-  // units::radian_t currentAngle = m_currentAngle;
-  units::radian_t currentAngle = m_turnEncoder.GetAngle(false);
-  units::radian_t targetAngle_r = targetAngle.Radians();
-
-  units::radian_t delta = currentAngle - targetAngle_r;
-  delta = units::math::abs(PenguinUtil::piNegPiNorm(units::math::abs(delta)));
-  if (delta > 90_deg) {
-    targetSpeed *= -1;
-    targetAngle += PenguinUtil::PI_ROT;
-  }
-
-  while (targetAngle.Radians() > PenguinUtil::PI_RAD) {
-    targetAngle -= PenguinUtil::TWO_PI_ROT;
-  }
-  while (targetAngle.Radians() < -PenguinUtil::PI_RAD) {
-    targetAngle += PenguinUtil::TWO_PI_ROT;
-  }
-  
-  state.speed = targetSpeed;
-  state.angle = targetAngle;
-
-  PutSwerveModuleState("(4.2) post-norm", state);
-}
-
-void SwerveModule::Solve180Problem5_RestrictToHalfPi(frc::SwerveModuleState& state) {
-  PutSwerveModuleState("(5.1) pre-norm", state);
-
-  units::meters_per_second_t targetSpeed = state.speed;
-  frc::Rotation2d targetAngle = state.angle;
-
-  units::radian_t targetAngle_r = targetAngle.Radians();
-  if (targetAngle_r > PenguinUtil::PI_RAD / 2) {
-    targetAngle -= PenguinUtil::PI_ROT;
-    targetSpeed *= -1;
-  } else if (targetAngle_r < -PenguinUtil::PI_RAD / 2) {
-    targetAngle += PenguinUtil::PI_ROT;
-    targetSpeed *= -1;
-  }
-
-  state.speed = targetSpeed;
-  state.angle = targetAngle;
-
-  PutSwerveModuleState("(5.2) post-norm", state);
-}
-
-void SwerveModule::ToConstantBackState6(frc::SwerveModuleState& state, bool left_or_right) {
-  PutSwerveModuleState("(6.1) pre-norm", state);
-
-  if (left_or_right) {
-    state.angle = -PenguinUtil::PI_ROT + frc::Rotation2d(20_deg);
-  } else {
-    state.angle = -PenguinUtil::PI_ROT - frc::Rotation2d(20_deg);
-  }
-
-  state.speed = 0.1_mps;
-
-  PutSwerveModuleState("(6.2) post-norm", state);
-}
-
+/** Deprecated. Worked tho! */
 void SwerveModule::Solve180Problem7_CenterOnCurrent(frc::SwerveModuleState& state) {
   PutSwerveModuleState("(7.1) pre-norm", state);
 
@@ -158,10 +90,7 @@ void SwerveModule::Solve180Problem7_CenterOnCurrent(frc::SwerveModuleState& stat
   // PutSwerveModuleState("(7.2) post-norm", state);
 }
 
-void SwerveModule::ToConstantState8_BigRotation(frc::SwerveModuleState& state) {
-  SetDirectly(2551 * PenguinUtil::PI, 0);
-}
-
+/** Deprecated. Implemented in `SetDesiredState` now. */
 void SwerveModule::Solve180Problem10_CenterUsingRotation(frc::SwerveModuleState& state) {
   PutSwerveModuleState("(10.1) pre-norm", state);
 
@@ -191,24 +120,36 @@ void SwerveModule::Solve180Problem10_CenterUsingRotation(frc::SwerveModuleState&
   PutSwerveModuleState("(10.2) post-norm", state);
 }
 
-void SwerveModule::SetDesiredState(frc::SwerveModuleState& state, bool left_or_right) {
-  Solve180Problem10_CenterUsingRotation(state); // seems to work!
+void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
+  PutSwerveModuleState("requested", state);
 
- // If using SetDirectly, add a comment start here
-  const double speed = state.speed.to<double>();
-  const double angle = state.angle.Radians().to<double>();
+  // Start with what we're given
+  units::meters_per_second_t targetSpeed = state.speed;
+  units::radian_t targetAngle = state.angle.Radians();
+  units::radian_t currentAngle = m_turnEncoder.GetMotorEncoderPosition();
+  // units::radian_t currentAngle = m_turnEncoder.GetAngle(true); // use built-in or analog encoder?
 
-  PutSwerveModuleState("to-motor", angle, speed);
+  // 'Turn 180 or drive backwards?'
+  units::radian_t delta = 180_deg - units::math::abs(units::math::fmod(units::math::abs(currentAngle - targetAngle), 360_deg) - 180_deg); // Credit to ruahk on StackOverflow: https://stackoverflow.com/a/9505991
+  if (delta > 90_deg) { 
+    targetAngle += 180_deg;
+    targetSpeed *= -1;
+  }
 
-  m_driveMotor.Set(speed);
-  m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
-// */
+  // Put it in the correct range.
+  // targetAngle = currentAngle + units::math::fmod(targetAngle, 180_deg); //  Probably this works? EDIT: no it doesn't
+  targetAngle = PenguinUtil::arbitraryTwoPiRangeNorm2(targetAngle, currentAngle);
+
+  // Send it to the motor
+  double toMotorAngle = targetAngle.to<double>();
+  double toMotorSpeed = targetSpeed.to<double>();
+
+  PutSwerveModuleState("true to-motor", toMotorAngle, toMotorSpeed);
+
+  SetDirectly(toMotorAngle, toMotorSpeed);
 }
 
 void SwerveModule::SetDirectly(double angle, double speed) {
-  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " true speed", speed);
-  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " true angle", angle);
-
   m_driveMotor.Set(speed);
   m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
 }
@@ -247,11 +188,15 @@ void SwerveModule::PutSwerveModuleState(std::string info, frc::SwerveModuleState
   frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " " + info + " angle", angle_);
 }
 
-void SwerveModule::PutSwerveModuleState(std::string info, double angle, double speed) {
-  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " true " + info + " speed", speed);
-  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " true " + info + " angle", angle);
+void SwerveModule::PutSwerveModuleState(std::string info, units::degree_t angle, units::meters_per_second_t speed) {
+  PutSwerveModuleState(info, angle.to<double>(), speed.to<double>());
 }
 
+
+void SwerveModule::PutSwerveModuleState(std::string info, double angle, double speed) {
+  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " raw " + info + " speed", speed);
+  frc::SmartDashboard::PutNumber(m_moduleName.GetAbbrUpper() + " raw " + info + " angle", angle);
+}
 
 void SwerveModule::UpdateAnalogOffset() {
   m_turnEncoder.UpdateOffset();

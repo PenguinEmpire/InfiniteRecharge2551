@@ -38,7 +38,7 @@ class SwerveModule {
   rev::CANSparkMax m_turnMotor;
 
   /** @param state: the desired frc::SwerveModuleState, from the kinematics */
-  void SetDesiredState(frc::SwerveModuleState& state, bool);
+  void SetDesiredState(frc::SwerveModuleState& state);
   void SetDirectly(double angle, double speed);
 
   void Solve180Problem1(frc::SwerveModuleState& state);
@@ -53,6 +53,7 @@ class SwerveModule {
 
 
   void PutSwerveModuleState(std::string, frc::SwerveModuleState&);
+  void PutSwerveModuleState(std::string, units::degree_t, units::meters_per_second_t);
   void PutSwerveModuleState(std::string, double, double);
 
   void PutDiagnostics();
