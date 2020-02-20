@@ -55,7 +55,7 @@ void SwerveModule::PutDiagnostics() {
 }
 
   
-void SwerveModule::Solve180Problem4(frc::SwerveModuleState& state) {
+void SwerveModule::Solve180Problem4_Rewrite(frc::SwerveModuleState& state) {
   PutSwerveModuleState("(4.1) pre-norm", state);
 
   units::meters_per_second_t targetSpeed = state.speed;
