@@ -36,20 +36,22 @@ void Robot::ProcessJoysticks() {
 
   bool fieldOrient = !m_rightJoystick.GetRawButton(3);
 
-  double forward = -m_rightJoystick.GetRawAxis(1);
+  double forward = m_rightJoystick.GetRawAxis(1);
   SD::PutNumber("fwd raw", forward);
-  forward = PenguinUtil::smartDeadband(forward, -0.18, 0.08); // 055, 0.079);
+  forward = PenguinUtil::smartDeadband(forward, -0.2, 0.16);
+  forward *= -1;
   forward = copysign(pow(forward, 2), forward);
 
-  double strafe = -m_rightJoystick.GetRawAxis(0);
+  double strafe = m_rightJoystick.GetRawAxis(0);
   SD::PutNumber("str raw", strafe);
-  // while strafe is negative deadband values are in form pos, neg
-  strafe = PenguinUtil::smartDeadband(strafe, -0.125, 0.110);
+  strafe = PenguinUtil::smartDeadband(strafe, -0.18, 0.15);
+  strafe *= -1;
   strafe = copysign(pow(strafe, 2), strafe);
 
-  double rotation = -m_leftJoystick.GetRawAxis(2);
-   SD::PutNumber("rot raw", rotation);
-  rotation = PenguinUtil::smartDeadband(rotation, -0.08, 0.17, 0.15);
+  double rotation = m_leftJoystick.GetRawAxis(2);
+  SD::PutNumber("rot raw", rotation);
+  rotation = PenguinUtil::smartDeadband(rotation, -0.31, 0.02, 0.15);
+  rotation *= -1;
   rotation = copysign(pow(rotation, 2), rotation);
 
   SwerveDrive::ModuleLocation centerOfRotation;

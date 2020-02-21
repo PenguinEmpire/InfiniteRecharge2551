@@ -38,24 +38,24 @@ struct SwerveModuleName {
     }
   }
 
-  std::string GetAbbrUpper() const {
-    return m_abbr_upper;
+  std::string GetAbbrUpper(bool with_module = false) const {
+    return m_abbr_upper + (with_module ? " Module" : "");
   }
 
-  std::string GetAbbrLower() const {
-    return m_abbr_lower;
+  std::string GetAbbrLower(bool with_module = false) const {
+    return m_abbr_lower + (with_module ? " module" : "");
   }
 
-  std::string GetCamelCase() const {
-    return m_camel + "Module";
+  std::string GetCamelCase(bool with_module = false) const {
+    return m_camel + (with_module ? "Module" : "");
   }
 
   std::string GetFullTitle() const {
-    return m_title + " Module";
+    return GetTitleCase(true);
   }
 
-  std::string GetTitleCase() const {
-    return m_title;
+  std::string GetTitleCase(bool with_module = false) const {
+    return m_title + (with_module ? " Module" : "");
   }
 
  private:
