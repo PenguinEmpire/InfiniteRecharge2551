@@ -65,6 +65,7 @@ class SwerveModule {
   units::meters_per_second_t m_currentVelocity = 0_mps;
 
   rev::CANPIDController m_onboardTurnMotorPIDController = m_turnMotor.GetPIDController();
+  rev::CANPIDController m_onboardDriveMotorPIDController = m_driveMotor.GetPIDController();
 
   // copied from SDS
   static constexpr double SDS_DRIVE_REDUCTION = 8.31 / 1.0; // (gear ratio)

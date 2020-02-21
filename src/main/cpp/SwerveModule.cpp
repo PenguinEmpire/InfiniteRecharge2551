@@ -32,6 +32,10 @@ SwerveModule::SwerveModule(frc::Translation2d pos, int analogEncoderPort, units:
   m_driveEncoder.SetPositionConversionFactor(SDS_WHEEL_DIAMETER.to<double>() * PenguinUtil::PI / SDS_DRIVE_REDUCTION); // so this is meters, right? // or, I guess inches? (wheel diameter is inches, conversion multiplier is circumference/reduction) huh. // TODO: make sure this is returning meters
   m_driveEncoder.SetVelocityConversionFactor(SDS_WHEEL_DIAMETER.to<double>() * PenguinUtil::PI / SDS_DRIVE_REDUCTION * (1.0 / 60.0)); // SDS: "RPM to units per sec" // TODO: make sure this is returning m/s
 
+  // m_onboardDriveMotorPIDController.SetP(1.5); // flag: CONTROL_VELOCITY_DIRECTLY
+  // m_onboardDriveMotorPIDController.SetI(0);
+  // m_onboardDriveMotorPIDController.SetD(0.5);
+
   m_onboardTurnMotorPIDController.SetP(1.5);
   m_onboardTurnMotorPIDController.SetI(0);
   m_onboardTurnMotorPIDController.SetD(0.5);
@@ -87,6 +91,7 @@ void SwerveModule::SetDesiredState(frc::SwerveModuleState& state) {
 
 void SwerveModule::SetDirectly(double angle, double speed) {
   m_driveMotor.Set(speed);
+  // m_onboardDriveMotorPIDController.SetReference(speed, rev::ControlType::kVelocity); // flag: CONTROL_VELOCITY_DIRECTLY
   m_onboardTurnMotorPIDController.SetReference(angle, rev::ControlType::kPosition);
 }
 

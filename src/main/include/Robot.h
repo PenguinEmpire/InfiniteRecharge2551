@@ -37,4 +37,5 @@ class Robot : public frc::TimedRobot {
   SwerveDrive m_drivetrain;
 
   void ProcessJoysticks();
+  void Drive();
 };

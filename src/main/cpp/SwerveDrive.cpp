@@ -28,6 +28,7 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
   );
 
   m_kinematics.NormalizeWheelSpeeds(&states, 1_mps);
+  // m_kinematics.NormalizeWheelSpeeds(&states, K_MAX_VELOCITY); // flag: CONTROL_VELOCITY_DIRECTLY
 
   auto [fl, fr, bl, br] = states;
 
