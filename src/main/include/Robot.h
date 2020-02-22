@@ -48,6 +48,7 @@ class Robot : public frc::TimedRobot {
   void Drive();
 
   WPI_TalonSRX elevator{0};
+  WPI_VictorSPX elevatorHelper{1};
 
  private:
 
