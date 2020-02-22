@@ -23,14 +23,6 @@
 class SwerveDrive {
  public:
 
-  enum ModuleLocation {
-    FRONT_LEFT,
-    FRONT_RIGHT,
-    BACK_LEFT,
-    BACK_RIGHT,
-    NONE // TODO: this seems bad and unclear
-  };
-
   SwerveDrive();
 
   void Drive(double fwd, double str, double rot, bool fieldOriented, frc::Translation2d centerOfRotation);
@@ -42,7 +34,7 @@ class SwerveDrive {
   frc::Pose2d m_location;
   void PutDiagnostics();
 
-  const units::meters_per_second_t K_MAX_VELOCITY = 3.5_mps;
+  const units::meters_per_second_t K_MAX_VELOCITY = 3.5_mps; // TODO: make accurate. flag: CONTROL_VELOCITY_DIRECTLY
   const units::meters_per_second_squared_t K_MAX_ACCELERATION = units::meters_per_second_squared_t(2); // TODO: make accurate
   const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(2.5);
 
