@@ -17,7 +17,7 @@ SwerveDrive::SwerveDrive() {
   printf("front left angle offset: %f", BACK_RIGHT_ANGLE_OFFSET.to<double>());
 }
 
-void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation = frc::Translation2d()) {
+void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation) {
   // rot *= 2. / HYPOT; // TODO: see if this improves things
 
   auto states = m_kinematics.ToSwerveModuleStates(
@@ -55,7 +55,7 @@ void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, 
       centerOfRotation = FRONT_RIGHT_CORNER_LOCATION;
       break;
     default:
-      centerOfRotation = Translation2d();
+      centerOfRotation = frc::Translation2d();
   }
 
   Drive(
@@ -88,11 +88,10 @@ void SwerveDrive::Update() {
   // m_frontLeftModule.SDS_UpdateState();
   // m_frontRightModule.SDS_UpdateState();
 
-  m_backLeftModule.ReadSensors();
-  m_backRightModule.ReadSensors();
   m_frontLeftModule.ReadSensors();
   m_frontRightModule.ReadSensors();
-
+  m_backLeftModule.ReadSensors();
+  m_backRightModule.ReadSensors();
 
   m_odometry.Update(
     GetAngleAsRot(),
@@ -105,7 +104,8 @@ void SwerveDrive::Update() {
 void SwerveDrive::ResetGyroscope() {
   // m_navX->SetAngleAdjustment(m_navX->GetAngle());
   m_navX->Reset();
-  // m_navX->SetAngleAdjustment(m_navX->GetUnadjustedAngle()); // that's not a real function, but it's how they do it in SDS
+  // m_navX->SetAngleAdjustment(m_navX->GetUnadjustedAngle()); // `GetUnadjustedAngle` isn't a real function, but it's how they do it in SDS
+  m_odometry.ResetPosition(frc::Pose2d(), PenguinUtil::ZERO_ROT);
 }
 
 units::degree_t SwerveDrive::GetAngle() const {

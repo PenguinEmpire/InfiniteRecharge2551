@@ -16,6 +16,12 @@
 
 #include "frc/Joystick.h"
 #include "frc/SPI.h"
+#include "frc/Timer.h"
+
+#include "frc/trajectory/TrajectoryGenerator.h"
+#include "frc/trajectory/Trajectory.h"
+#include "frc/trajectory/constraint/SwerveDriveKinematicsConstraint.h"
+#include "frc/trajectory/TrajectoryConfig.h"
 
 #include "PenguinUtil.h"
 #include "SwerveDrive.h"
@@ -30,6 +36,7 @@ class Robot : public frc::TimedRobot {
   void TeleopPeriodic() override;
   void TestPeriodic() override;
 
+  frc::Timer m_timer; 
   frc::Joystick m_leftJoystick{0};
   frc::Joystick m_rightJoystick{1};
   frc::Joystick m_gamerJoystick{2};
@@ -38,4 +45,9 @@ class Robot : public frc::TimedRobot {
 
   void ProcessJoysticks();
   void Drive();
+
+ private:
+
+  frc::TrajectoryConfig trajectoryConfig{m_drivetrain.K_MAX_VELOCITY, m_drivetrain.K_MAX_ACCELERATION};
+  frc::Trajectory exampleTrajectory{std::vector<frc::Trajectory::State>()};
 };
