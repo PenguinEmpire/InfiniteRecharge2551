@@ -25,6 +25,7 @@ void Robot::RobotInit() {
     // Pass the config
     trajectoryConfig      
   );
+  
 
   m_timer.Reset();
   m_timer.Start();
@@ -39,20 +40,23 @@ void Robot::RobotPeriodic() {
 void Robot::AutonomousInit() {}
 
 void Robot::AutonomousPeriodic() {
+  const units::second_t currentTime = units::second_t(m_timer.Get());
+  const units::second_t timeStep = units::second_t(0.02);
 
-  double currentTime = m_timer.Get();
-  frc::Trajectory::State state = exampleTrajectory.Sample(units::second_t(currentTime));
-  frc::Trajectory::State nextState = exampleTrajectory.Sample(units::second_t(currentTime + 0.02));
-  frc::Pose2d rel = nextState.pose.RelativeTo(state.pose);
-  units::meter_t x = rel.Translation().X();
-  units::meter_t y = rel.Translation().Y();
-  units::radian_t omega = rel.Rotation().Radians();
+  if (currentTime < exampleTrajectory.TotalTime()) {
+    frc::Trajectory::State state = exampleTrajectory.Sample(currentTime);
+    frc::Trajectory::State nextState = exampleTrajectory.Sample(currentTime + timeStep);
+    frc::Pose2d rel = nextState.pose.RelativeTo(state.pose);
+    units::meter_t x = rel.Translation().X();
+    units::meter_t y = rel.Translation().Y();
+    units::radian_t omega = rel.Rotation().Radians();
 
-  units::meters_per_second_t y_ = y / units::second_t(0.02); 
-  units::meters_per_second_t x_ = x / units::second_t(0.02);     
-  units::radians_per_second_t omega_ = omega / units::second_t(0.02); 
+    units::meters_per_second_t y_ = y / timeStep;
+    units::meters_per_second_t x_ = x / timeStep;
+    units::radians_per_second_t omega_ = omega / timeStep;
 
-  m_drivetrain.Drive(y_, x_, omega_, false);
+    m_drivetrain.Drive(y_, x_, omega_, false);
+  }
 }
 
 void Robot::TeleopInit() {}
