@@ -75,9 +75,8 @@ void SwerveDrive::PutDiagnostics() {
   m_frontLeftModule.PutDiagnostics();
   m_frontRightModule.PutDiagnostics();
 
-  SD::PutNumber("Gryoscope Angle", m_navX->GetAngle()); // TODO: probably this is the right function?
-
-
+  SD::PutNumber("Gryoscope Angle", GetAngle().to<double>());
+  
   SD::PutNumber("x location", m_location.Translation().X().to<double>());
   SD::PutNumber("y location", m_location.Translation().Y().to<double>());
 }
