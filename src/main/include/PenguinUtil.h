@@ -67,8 +67,27 @@ namespace PenguinUtil {
   }
 } // PenguinUtil namespace
 
-namespace Constants {
+namespace PenguinConstants {
   namespace Swerve {
-    
+    namespace FL {
+      constexpr int ANALOG_ENCODER_PORT = 3;
+      constexpr int DRIVE_MOTOR_CAN_ID = 8;
+      constexpr int TURN_MOTOR_CAN_ID = 7;
+    }
+    namespace FR {
+      constexpr int ANALOG_ENCODER_PORT = 2;
+      constexpr int DRIVE_MOTOR_CAN_ID = 6;
+      constexpr int TURN_MOTOR_CAN_ID = 5;
+    }
+    namespace BL {
+      constexpr int ANALOG_ENCODER_PORT = 0;
+      constexpr int DRIVE_MOTOR_CAN_ID = 2;
+      constexpr int TURN_MOTOR_CAN_ID = 1;
+    }
+    namespace BR {
+      constexpr int ANALOG_ENCODER_PORT = 1;
+      constexpr int DRIVE_MOTOR_CAN_ID = 4;
+      constexpr int TURN_MOTOR_CAN_ID = 3;
+    }
   } // Swerve namespace
 } // Constants namespace

@@ -80,30 +80,34 @@ class SwerveDrive {
 
   SwerveModule m_frontLeftModule {
     FRONT_LEFT_LOCATION,
-    3, // analog input port. TODO: factor out into constants file/namespace/class.
+    PenguinConstants::Swerve::FL::ANALOG_ENCODER_PORT,
     FRONT_LEFT_ANGLE_OFFSET,
-    8, 7, // CAN ID of drive and angle motors. TODO: factor out into constants file/etc
+    PenguinConstants::Swerve::FL::DRIVE_MOTOR_CAN_ID,
+    PenguinConstants::Swerve::FL::TURN_MOTOR_CAN_ID,
     SwerveModuleName("f", "l")
   }; 
   SwerveModule m_frontRightModule{
     FRONT_RIGHT_LOCATION,
-    2,
+    PenguinConstants::Swerve::FR::ANALOG_ENCODER_PORT,
     FRONT_RIGHT_ANGLE_OFFSET,
-    6, 5,
+    PenguinConstants::Swerve::FR::DRIVE_MOTOR_CAN_ID,
+    PenguinConstants::Swerve::FR::TURN_MOTOR_CAN_ID,
     SwerveModuleName("f", "r")
   };
   SwerveModule m_backLeftModule  {
     BACK_LEFT_LOCATION,
-    0,
+    PenguinConstants::Swerve::BL::ANALOG_ENCODER_PORT,
     BACK_LEFT_ANGLE_OFFSET,
-    2, 1,
+    PenguinConstants::Swerve::BL::DRIVE_MOTOR_CAN_ID,
+    PenguinConstants::Swerve::BL::TURN_MOTOR_CAN_ID,
     SwerveModuleName("b", "l")
   };
   SwerveModule m_backRightModule {
     BACK_RIGHT_LOCATION,
-    1,
+    PenguinConstants::Swerve::BR::ANALOG_ENCODER_PORT,
     BACK_RIGHT_ANGLE_OFFSET,
-    4, 3,
+    PenguinConstants::Swerve::BR::DRIVE_MOTOR_CAN_ID,
+    PenguinConstants::Swerve::BR::TURN_MOTOR_CAN_ID,
     SwerveModuleName("b", "r")
   };
 
