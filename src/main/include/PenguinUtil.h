@@ -66,3 +66,9 @@ namespace PenguinUtil {
     return arbitraryTwoPiRangeNorm(value, 0_deg);
   }
 } // PenguinUtil namespace
+
+namespace Constants {
+  namespace Swerve {
+    
+  } // Swerve namespace
+} // Constants namespace
