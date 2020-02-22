@@ -13,6 +13,7 @@
 #include <frc/TimedRobot.h>
 
 #include "AHRS.h"
+#include "ctre/Phoenix.h"
 
 #include "frc/Joystick.h"
 #include "frc/SPI.h"
@@ -45,6 +46,8 @@ class Robot : public frc::TimedRobot {
 
   void ProcessJoysticks();
   void Drive();
+
+  WPI_TalonSRX elevator{0};
 
  private:
 
