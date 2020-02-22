@@ -14,6 +14,17 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 
 void Robot::RobotInit() {
+  m_timer.Reset();
+  m_timer.Start();
+
+}
+
+void Robot::RobotPeriodic() {
+  m_drivetrain.PutDiagnostics();
+  m_drivetrain.Update();
+}
+
+void Robot::AutonomousInit() {
   trajectoryConfig.SetKinematics(m_drivetrain.m_kinematics);
   exampleTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
     // Start at the origin facing the +X direction
@@ -25,19 +36,7 @@ void Robot::RobotInit() {
     // Pass the config
     trajectoryConfig      
   );
-
-
-  m_timer.Reset();
-  m_timer.Start();
-
 }
-
-void Robot::RobotPeriodic() {
-  m_drivetrain.PutDiagnostics();
-  m_drivetrain.Update();
-}
-
-void Robot::AutonomousInit() {}
 
 void Robot::AutonomousPeriodic() {
   const units::second_t currentTime = units::second_t(m_timer.Get());

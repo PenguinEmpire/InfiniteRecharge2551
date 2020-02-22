@@ -38,14 +38,12 @@ class SwerveDrive {
   const units::meters_per_second_squared_t K_MAX_ACCELERATION = units::meters_per_second_squared_t(2); // TODO: make accurate
   const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(2.5);
 
+  const units::inch_t TRACKWIDTH = units::inch_t(21.25);
+  const units::inch_t WHEELBASE = units::inch_t(24);
 
  private:
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
 
- public:
-  const units::inch_t TRACKWIDTH = units::inch_t(21.25);
-  const units::inch_t WHEELBASE = units::inch_t(24);
- private:
   const units::inch_t HYPOT_in = units::math::hypot(TRACKWIDTH, WHEELBASE);
   const double HYPOT = hypot(WHEELBASE.to<double>(), TRACKWIDTH.to<double>());
 
