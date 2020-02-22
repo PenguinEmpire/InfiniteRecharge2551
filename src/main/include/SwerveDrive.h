@@ -33,7 +33,7 @@ class SwerveDrive {
 
   SwerveDrive();
 
-  void Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation centerOfRotation);
+  void Drive(double fwd, double str, double rot, bool fieldOriented, frc::Translation2d centerOfRotation);
   void Drive(units::meters_per_second_t fwd, units::meters_per_second_t str, units::radians_per_second_t rot, bool fieldOriented, frc::Translation2d centerOfRotation = frc::Translation2d());
   void Update();
   void UpdateModuleEncoderOFfsetAngles();

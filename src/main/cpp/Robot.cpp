@@ -25,7 +25,7 @@ void Robot::RobotInit() {
     // Pass the config
     trajectoryConfig      
   );
-  
+
 
   m_timer.Reset();
   m_timer.Start();
@@ -91,17 +91,17 @@ void Robot::Drive() {
   rotation *= -1;
   rotation = copysign(pow(rotation, 2), rotation);
 
-  SwerveDrive::ModuleLocation centerOfRotation;
+  frc::Translation2d centerOfRotation;
   if (m_leftJoystick.GetRawButton(5)) {
-    centerOfRotation = SwerveDrive::ModuleLocation::FRONT_LEFT;
+    centerOfRotation = m_drivetrain.FRONT_LEFT_CORNER_LOCATION;
   } else if (m_leftJoystick.GetRawButton(6)) {
-    centerOfRotation = SwerveDrive::ModuleLocation::FRONT_RIGHT;
+    centerOfRotation = m_drivetrain.FRONT_RIGHT_CORNER_LOCATION;
   } else if (m_leftJoystick.GetRawButton(3)) {
-    centerOfRotation = SwerveDrive::ModuleLocation::BACK_LEFT;
+    centerOfRotation = m_drivetrain.BACK_LEFT_CORNER_LOCATION;
   } else if (m_leftJoystick.GetRawButton(4)) {
-    centerOfRotation = SwerveDrive::ModuleLocation::BACK_RIGHT;
+    centerOfRotation = m_drivetrain.BACK_RIGHT_CORNER_LOCATION;
   } else {
-    centerOfRotation = SwerveDrive::ModuleLocation::NONE;
+    centerOfRotation = frc::Translation2d();
   }
 
   m_drivetrain.Drive(forward, strafe, rotation, fieldOrient, centerOfRotation);

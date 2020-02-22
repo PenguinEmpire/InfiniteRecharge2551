@@ -38,25 +38,25 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
   m_frontRightModule.SetDesiredState(fr);
 }
 
-void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, SwerveDrive::ModuleLocation COR) {
+void SwerveDrive::Drive(double fwd, double str, double rot, bool fieldOriented, frc::Translation2d centerOfRotation) {
 
-  frc::Translation2d centerOfRotation;
-  switch (COR) {
-    case BACK_LEFT:
-      centerOfRotation = BACK_LEFT_CORNER_LOCATION;
-      break;
-    case BACK_RIGHT:
-      centerOfRotation = BACK_RIGHT_CORNER_LOCATION;
-      break;
-    case FRONT_LEFT:
-      centerOfRotation = FRONT_LEFT_CORNER_LOCATION;
-      break;
-    case FRONT_RIGHT:
-      centerOfRotation = FRONT_RIGHT_CORNER_LOCATION;
-      break;
-    default:
-      centerOfRotation = frc::Translation2d();
-  }
+  // frc::Translation2d centerOfRotation;
+  // switch (COR) {
+  //   case BACK_LEFT:
+  //     centerOfRotation = BACK_LEFT_CORNER_LOCATION;
+  //     break;
+  //   case BACK_RIGHT:
+  //     centerOfRotation = BACK_RIGHT_CORNER_LOCATION;
+  //     break;
+  //   case FRONT_LEFT:
+  //     centerOfRotation = FRONT_LEFT_CORNER_LOCATION;
+  //     break;
+  //   case FRONT_RIGHT:
+  //     centerOfRotation = FRONT_RIGHT_CORNER_LOCATION;
+  //     break;
+  //   default:
+  //     centerOfRotation = frc::Translation2d();
+  // }
 
   Drive(
     fwd * K_MAX_VELOCITY,
