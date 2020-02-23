@@ -15,6 +15,7 @@ LimelightAutonomous::LimelightAutonomous(Limelight* limelight)
 
 LimelightAutonomous::~LimelightAutonomous() {
   m_pidController.~PIDController();
+  // free(m_limelight); // TODO: is this necessary?
 }
 
 units::radians_per_second_t LimelightAutonomous::Run(units::radian_t currentAngle) {
