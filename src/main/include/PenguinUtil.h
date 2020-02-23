@@ -41,7 +41,7 @@ namespace PenguinUtil {
     return fabs(value1 - value2) < tolerance;
   }
  
-  inline constexpr double PI = wpi::math::pi;
+  inline constexpr double PI = wpi::math::pi; // TODO: inline only on functions?
   inline constexpr double TWO_PI = 2.0 * wpi::math::pi;
   inline constexpr units::radian_t PI_RAD = units::radian_t(PI);
   inline constexpr units::radian_t TWO_PI_RAD = units::radian_t(TWO_PI);
