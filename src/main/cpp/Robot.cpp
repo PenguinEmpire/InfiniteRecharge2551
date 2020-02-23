@@ -8,12 +8,12 @@
 
 void Robot::RobotInit() {
   m_chooser.SetDefaultOption(kAutoNameDefault, kAutoNameDefault);
-  m_chooser.AddOption(kAutoNameCustom, kAutoNameCustom);
+  m_chooser.AddOption(trajectoryAutoName, trajectoryAutoName);
+  m_chooser.AddOption(limelightAutoName, limelightAutoName);
   frc::SmartDashboard::PutData("Auto Modes", &m_chooser);
 
   m_timer.Reset();
   m_timer.Start();
-
 }
 
  /* Runs every packet. Runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard integrated updating. */
@@ -29,50 +29,51 @@ void Robot::AutonomousInit() {
   m_autoSelected = m_chooser.GetSelected();
   std::cout << "Auto selected: " << m_autoSelected << std::endl;
 
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
+  if (m_autoSelected == trajectoryAutoName) {
+    trajectoryConfig.SetKinematics(m_drivetrain.m_kinematics);
+    exampleTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
+      // Start at the origin facing the +X direction
+      frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
+      // Pass through these two interior waypoints, making an 's' curve path
+      {frc::Translation2d(1_m, 1_m), frc::Translation2d(2_m, -1_m)},
+      // End 3 meters straight ahead of where we started, facing forward
+      frc::Pose2d(3_m, 0_m, frc::Rotation2d(0_deg)),
+      // Pass the config
+      trajectoryConfig      
+    );
+  } else if (m_autoSelected == limelightAutoName) {
+
   } else {
     // Default Auto goes here
   }
-
-  trajectoryConfig.SetKinematics(m_drivetrain.m_kinematics);
-  exampleTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
-    // Start at the origin facing the +X direction
-    frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
-    // Pass through these two interior waypoints, making an 's' curve path
-    {frc::Translation2d(1_m, 1_m), frc::Translation2d(2_m, -1_m)},
-    // End 3 meters straight ahead of where we started, facing forward
-    frc::Pose2d(3_m, 0_m, frc::Rotation2d(0_deg)),
-    // Pass the config
-    trajectoryConfig      
-  );
 }
 
 void Robot::AutonomousPeriodic() {
-  if (m_autoSelected == kAutoNameCustom) {
-    // Custom Auto goes here
-  } else {
+  if (m_autoSelected == trajectoryAutoName) {
+    const units::second_t currentTime = units::second_t(m_timer.Get());
+    const units::second_t timeStep = units::second_t(0.02);
+
+    if (currentTime < exampleTrajectory.TotalTime()) {
+      frc::Trajectory::State state = exampleTrajectory.Sample(currentTime);
+      frc::Trajectory::State nextState = exampleTrajectory.Sample(currentTime + timeStep);
+      frc::Pose2d rel = nextState.pose.RelativeTo(state.pose);
+      units::meter_t x = rel.Translation().X();
+      units::meter_t y = rel.Translation().Y();
+      units::radian_t omega = rel.Rotation().Radians();
+
+      units::meters_per_second_t y_ = y / timeStep;
+      units::meters_per_second_t x_ = x / timeStep;
+      units::radians_per_second_t omega_ = omega / timeStep;
+
+      m_drivetrain.Drive(y_, x_, omega_, false);
+    }
+  } else if (m_autoSelected == limelightAutoName) {
+    
+  } else{
     // Default Auto goes here
   }
 
 
-  const units::second_t currentTime = units::second_t(m_timer.Get());
-  const units::second_t timeStep = units::second_t(0.02);
-
-  if (currentTime < exampleTrajectory.TotalTime()) {
-    frc::Trajectory::State state = exampleTrajectory.Sample(currentTime);
-    frc::Trajectory::State nextState = exampleTrajectory.Sample(currentTime + timeStep);
-    frc::Pose2d rel = nextState.pose.RelativeTo(state.pose);
-    units::meter_t x = rel.Translation().X();
-    units::meter_t y = rel.Translation().Y();
-    units::radian_t omega = rel.Rotation().Radians();
-
-    units::meters_per_second_t y_ = y / timeStep;
-    units::meters_per_second_t x_ = x / timeStep;
-    units::radians_per_second_t omega_ = omega / timeStep;
-
-    m_drivetrain.Drive(y_, x_, omega_, false);
-  }
 }
 
 void Robot::TeleopInit() {}
