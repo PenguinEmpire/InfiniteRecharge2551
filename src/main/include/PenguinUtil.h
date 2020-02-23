@@ -73,22 +73,22 @@ namespace PenguinConstants {
       constexpr int ANALOG_ENCODER_PORT = 3;
       constexpr int DRIVE_MOTOR_CAN_ID = 8;
       constexpr int TURN_MOTOR_CAN_ID = 7;
-    }
+    } // FL namespace
     namespace FR {
       constexpr int ANALOG_ENCODER_PORT = 2;
       constexpr int DRIVE_MOTOR_CAN_ID = 6;
       constexpr int TURN_MOTOR_CAN_ID = 5;
-    }
+    } // FR namespace
     namespace BL {
       constexpr int ANALOG_ENCODER_PORT = 0;
       constexpr int DRIVE_MOTOR_CAN_ID = 2;
       constexpr int TURN_MOTOR_CAN_ID = 1;
-    }
+    } // BL namespace
     namespace BR {
       constexpr int ANALOG_ENCODER_PORT = 1;
       constexpr int DRIVE_MOTOR_CAN_ID = 4;
       constexpr int TURN_MOTOR_CAN_ID = 3;
-    }
+    } // BR namespace
   } // Swerve namespace
 
   constexpr double LIMELIGHT_DEFAULT_VALUE = 0.0;
