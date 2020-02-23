@@ -21,6 +21,7 @@
 #include "frc/trajectory/constraint/SwerveDriveKinematicsConstraint.h"
 #include "frc/trajectory/TrajectoryConfig.h"
 
+#include "LimelightAutonomous.h"
 #include "PenguinUtil.h"
 #include "SwerveDrive.h"
 
@@ -56,6 +57,9 @@ class Robot : public frc::TimedRobot {
 
   WPI_TalonSRX elevator{0};
   WPI_VictorSPX elevatorHelper{1};
+
+
+  LimelightAutonomous limelightAuto{&limelight};
 
  private:
 

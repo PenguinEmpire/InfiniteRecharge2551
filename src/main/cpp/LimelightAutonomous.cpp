@@ -7,4 +7,15 @@
 
 #include "LimelightAutonomous.h"
 
-LimelightAutonomous::LimelightAutonomous() {}
+LimelightAutonomous::LimelightAutonomous(Limelight* limelight)
+  : m_limelight{limelight} {
+    m_pidController.SetSetpoint(0);
+  }
+
+units::radians_per_second_t LimelightAutonomous::Run(units::radian_t currentAngle) {
+  const LimelightValues vals = m_limelight->GetInfo();
+
+  return units::radians_per_second_t(
+    m_pidController.Calculate(vals.tx)
+  );
+}

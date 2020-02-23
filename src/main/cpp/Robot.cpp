@@ -68,7 +68,11 @@ void Robot::AutonomousPeriodic() {
       m_drivetrain.Drive(y_, x_, omega_, false);
     }
   } else if (m_autoSelected == limelightAutoName) {
-    
+    units::radians_per_second_t desiredRot = limelightAuto.Run(
+      m_drivetrain.GetAngle()
+    );
+
+    m_drivetrain.Drive(0_mps, 0_mps, desiredRot, false);    
   } else {
     // Default Auto goes here
   }

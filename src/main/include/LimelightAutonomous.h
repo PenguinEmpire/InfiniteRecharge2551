@@ -7,14 +7,19 @@
 
 #pragma once
 
+#include "units/units.h"
+
 #include "frc/controller/PIDController.h"
 
 #include "Limelight.h"
   
 class LimelightAutonomous {
  public:
-  LimelightAutonomous();
+  LimelightAutonomous(Limelight* limelight);
 
-  frc2::PIDController pidController{1, 0, 0};
+  Limelight* m_limelight;
 
+  frc2::PIDController m_pidController{1, 0, 0};
+
+  units::radians_per_second_t Run(units::radian_t currentAngle);
 };
