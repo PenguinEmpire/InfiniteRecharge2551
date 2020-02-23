@@ -14,7 +14,7 @@
 
 #include "frc/Joystick.h"
 #include "frc/SPI.h"
-#include "frc/Timer.h"
+#include "frc2/Timer.h"
 
 #include "frc/trajectory/TrajectoryGenerator.h"
 #include "frc/trajectory/Trajectory.h"
@@ -43,7 +43,7 @@ class Robot : public frc::TimedRobot {
 
   Limelight limelight;
 
-  frc::Timer m_timer; 
+  frc2::Timer m_timer; 
 
   frc::Joystick m_leftJoystick{0};
   frc::Joystick m_rightJoystick{1};

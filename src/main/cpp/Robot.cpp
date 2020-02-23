@@ -50,7 +50,7 @@ void Robot::AutonomousInit() {
 
 void Robot::AutonomousPeriodic() {
   if (m_autoSelected == trajectoryAutoName) {
-    const units::second_t currentTime = units::second_t(m_timer.Get());
+    const units::second_t currentTime = m_timer.Get();
     const units::second_t timeStep = units::second_t(0.02);
 
     if (currentTime < exampleTrajectory.TotalTime()) {
@@ -69,7 +69,7 @@ void Robot::AutonomousPeriodic() {
     }
   } else if (m_autoSelected == limelightAutoName) {
     
-  } else{
+  } else {
     // Default Auto goes here
   }
 
