@@ -18,11 +18,10 @@ void Robot::RobotInit() {
 
  /* Runs every packet. Runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard integrated updating. */
 void Robot::RobotPeriodic() {
+  m_currentTime = m_timer.Get();
+
   m_drivetrain.PutDiagnostics();
   m_drivetrain.Update();
-
-
-  limelight.GetInfo();
 }
 
 void Robot::AutonomousInit() {
@@ -50,12 +49,11 @@ void Robot::AutonomousInit() {
 
 void Robot::AutonomousPeriodic() {
   if (m_autoSelected == trajectoryAutoName) {
-    const units::second_t currentTime = m_timer.Get();
     const units::second_t timeStep = units::second_t(0.02);
 
-    if (currentTime < exampleTrajectory.TotalTime()) {
-      frc::Trajectory::State state = exampleTrajectory.Sample(currentTime);
-      frc::Trajectory::State nextState = exampleTrajectory.Sample(currentTime + timeStep);
+    if (m_currentTime < exampleTrajectory.TotalTime()) {
+      frc::Trajectory::State state = exampleTrajectory.Sample(m_currentTime);
+      frc::Trajectory::State nextState = exampleTrajectory.Sample(m_currentTime + timeStep);
       frc::Pose2d rel = nextState.pose.RelativeTo(state.pose);
       units::meter_t x = rel.Translation().X();
       units::meter_t y = rel.Translation().Y();
@@ -74,7 +72,9 @@ void Robot::AutonomousPeriodic() {
 
     m_drivetrain.Drive(0_mps, 0_mps, desiredRot, false);    
   } else {
-    // Default Auto goes here
+    if (m_currentTime < units::second_t(10)) {
+      m_drivetrain.Drive(0.5_mps, 0_mps, units::radians_per_second_t(0), false);
+    }
   }
 
 

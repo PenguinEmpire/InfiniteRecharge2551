@@ -44,7 +44,8 @@ class Robot : public frc::TimedRobot {
 
   Limelight limelight;
 
-  frc2::Timer m_timer; 
+  frc2::Timer m_timer;
+  units::second_t m_currentTime = units::second_t(0);
 
   frc::Joystick m_leftJoystick{0};
   frc::Joystick m_rightJoystick{1};
