@@ -56,7 +56,7 @@ void Robot::AutonomousPeriodic() {
   }
 
 
-  const units::second_t currentTime = units::second_t(m_timer.Get());
+  const units::second_t currentTime = m_timer.Get();
   const units::second_t timeStep = units::second_t(0.02);
 
   if (currentTime < exampleTrajectory.TotalTime()) {
