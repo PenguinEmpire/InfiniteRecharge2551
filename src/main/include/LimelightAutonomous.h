@@ -16,6 +16,7 @@
 class LimelightAutonomous {
  public:
   LimelightAutonomous(Limelight* limelight);
+  ~LimelightAutonomous();
 
   Limelight* m_limelight;
 

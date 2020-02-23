@@ -10,7 +10,12 @@
 LimelightAutonomous::LimelightAutonomous(Limelight* limelight)
   : m_limelight{limelight} {
     m_pidController.SetSetpoint(0);
-  }
+    m_pidController.SetTolerance(2); // degrees
+}
+
+LimelightAutonomous::~LimelightAutonomous() {
+  m_pidController.~PIDController();
+}
 
 units::radians_per_second_t LimelightAutonomous::Run(units::radian_t currentAngle) {
   const LimelightValues vals = m_limelight->GetInfo();
