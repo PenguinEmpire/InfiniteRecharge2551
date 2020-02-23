@@ -90,4 +90,7 @@ namespace PenguinConstants {
       constexpr int TURN_MOTOR_CAN_ID = 3;
     }
   } // Swerve namespace
+
+  constexpr double LIMELIGHT_DEFAULT_VALUE = 0.0;
+
 } // Constants namespace

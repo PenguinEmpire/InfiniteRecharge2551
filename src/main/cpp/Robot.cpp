@@ -20,6 +20,9 @@ void Robot::RobotInit() {
 void Robot::RobotPeriodic() {
   m_drivetrain.PutDiagnostics();
   m_drivetrain.Update();
+
+
+  limelight.GetInfo();
 }
 
 void Robot::AutonomousInit() {
