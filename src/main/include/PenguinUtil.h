@@ -68,29 +68,37 @@ namespace PenguinUtil {
 } // PenguinUtil namespace
 
 namespace PenguinConstants {
-  namespace Swerve {
-    namespace FL {
-      constexpr int ANALOG_ENCODER_PORT = 3;
-      constexpr int DRIVE_MOTOR_CAN_ID = 8;
-      constexpr int TURN_MOTOR_CAN_ID = 7;
-    } // FL namespace
-    namespace FR {
-      constexpr int ANALOG_ENCODER_PORT = 2;
-      constexpr int DRIVE_MOTOR_CAN_ID = 6;
-      constexpr int TURN_MOTOR_CAN_ID = 5;
-    } // FR namespace
-    namespace BL {
-      constexpr int ANALOG_ENCODER_PORT = 0;
-      constexpr int DRIVE_MOTOR_CAN_ID = 2;
-      constexpr int TURN_MOTOR_CAN_ID = 1;
-    } // BL namespace
-    namespace BR {
-      constexpr int ANALOG_ENCODER_PORT = 1;
-      constexpr int DRIVE_MOTOR_CAN_ID = 4;
-      constexpr int TURN_MOTOR_CAN_ID = 3;
-    } // BR namespace
-  } // Swerve namespace
-
   constexpr double LIMELIGHT_DEFAULT_VALUE = 0.0;
+
+  namespace CAN {
+    constexpr int ELEVATOR_MASTER = 9;
+    constexpr int ELEVATOR_SLAVE = 10;
+    constexpr int SHOOTER = 11;
+
+    namespace Swerve {
+      constexpr int FL_DRIVE = 8;
+      constexpr int FL_TURN = 7;
+
+      constexpr int FR_DRIVE = 6;
+      constexpr int FR_TURN = 5;
+
+      constexpr int BL_DRIVE = 2;
+      constexpr int BL_TURN = 1;
+
+      constexpr int BR_DRIVE = 4;
+      constexpr int BR_TURN = 3;
+    } // Swerve namespace
+  } // CAN namespace
+
+  namespace PWM {
+    constexpr int BELT = 0;
+  }
+
+  namespace AnalogIn {
+    constexpr int SWERVE_FL_ENCODER = 3;
+    constexpr int SWERVE_FR_ENCODER = 2;
+    constexpr int SWERVE_BL_ENCODER = 0;
+    constexpr int SWERVE_BR_ENCODER = 1;
+  }
 
 } // Constants namespace

@@ -15,6 +15,7 @@
 #include "frc/Joystick.h"
 #include "frc/SPI.h"
 #include "frc2/Timer.h"
+#include "frc/Spark.h"
 
 #include "frc/trajectory/TrajectoryGenerator.h"
 #include "frc/trajectory/Trajectory.h"
@@ -56,8 +57,12 @@ class Robot : public frc::TimedRobot {
   void ProcessJoysticks();
   void Drive();
 
-  WPI_TalonSRX elevator{0};
-  WPI_VictorSPX elevatorHelper{1};
+  WPI_TalonSRX elevator{PenguinConstants::CAN::ELEVATOR_MASTER};
+  WPI_VictorSPX elevatorHelper{PenguinConstants::CAN::ELEVATOR_SLAVE};
+
+  WPI_TalonSRX shooter{PenguinConstants::CAN::SHOOTER};
+
+  frc::Spark belt{PenguinConstants::PWM::BELT};
 
 
   LimelightAutonomous limelightAuto{&limelight};
@@ -67,3 +72,4 @@ class Robot : public frc::TimedRobot {
   frc::TrajectoryConfig trajectoryConfig{m_drivetrain.K_MAX_VELOCITY, m_drivetrain.K_MAX_ACCELERATION};
   frc::Trajectory exampleTrajectory{std::vector<frc::Trajectory::State>()};
 };
+

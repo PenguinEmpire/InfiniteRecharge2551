@@ -18,10 +18,14 @@ LimelightAutonomous::~LimelightAutonomous() {
   // free(m_limelight); // TODO: is this necessary?
 }
 
-units::radians_per_second_t LimelightAutonomous::Run(units::radian_t currentAngle) {
+units::radians_per_second_t LimelightAutonomous::CalculateRot(units::radian_t currentAngle) {
   const LimelightValues vals = m_limelight->GetInfo();
 
   return units::radians_per_second_t(
     m_pidController.Calculate(vals.tx)
   );
+}
+
+LimelightAutonomous::AutoState LimelightAutonomous::GetState() {
+  return m_state;
 }

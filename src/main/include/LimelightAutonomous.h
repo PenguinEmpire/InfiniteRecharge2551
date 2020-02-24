@@ -22,5 +22,13 @@ class LimelightAutonomous {
 
   frc2::PIDController m_pidController{1, 0, 0};
 
-  units::radians_per_second_t Run(units::radian_t currentAngle);
+  units::radians_per_second_t CalculateRot(units::radian_t currentAngle);
+
+  enum AutoState {
+    ALIGNING, 
+    SHOOTING,
+    DONE
+  } m_state = ALIGNING;
+
+  AutoState GetState();
 };

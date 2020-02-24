@@ -18,6 +18,7 @@
     "math": "cpp",
     "cmath": "cpp",
     "type_traits": "cpp",
-    "*.inc": "cpp"
+    "*.inc": "cpp",
+    "future": "cpp"
   }
 }

@@ -78,34 +78,34 @@ class SwerveDrive {
 
   SwerveModule m_frontLeftModule {
     FRONT_LEFT_LOCATION,
-    PenguinConstants::Swerve::FL::ANALOG_ENCODER_PORT,
+    PenguinConstants::AnalogIn::SWERVE_FL_ENCODER,
     FRONT_LEFT_ANGLE_OFFSET,
-    PenguinConstants::Swerve::FL::DRIVE_MOTOR_CAN_ID,
-    PenguinConstants::Swerve::FL::TURN_MOTOR_CAN_ID,
+    PenguinConstants::CAN::Swerve::FL_DRIVE,
+    PenguinConstants::CAN::Swerve::FL_TURN,
     SwerveModuleName("f", "l")
   }; 
   SwerveModule m_frontRightModule{
     FRONT_RIGHT_LOCATION,
-    PenguinConstants::Swerve::FR::ANALOG_ENCODER_PORT,
+    PenguinConstants::AnalogIn::SWERVE_FR_ENCODER,
     FRONT_RIGHT_ANGLE_OFFSET,
-    PenguinConstants::Swerve::FR::DRIVE_MOTOR_CAN_ID,
-    PenguinConstants::Swerve::FR::TURN_MOTOR_CAN_ID,
+    PenguinConstants::CAN::Swerve::FR_DRIVE,
+    PenguinConstants::CAN::Swerve::FR_TURN,
     SwerveModuleName("f", "r")
   };
   SwerveModule m_backLeftModule  {
     BACK_LEFT_LOCATION,
-    PenguinConstants::Swerve::BL::ANALOG_ENCODER_PORT,
+    PenguinConstants::AnalogIn::SWERVE_BL_ENCODER,
     BACK_LEFT_ANGLE_OFFSET,
-    PenguinConstants::Swerve::BL::DRIVE_MOTOR_CAN_ID,
-    PenguinConstants::Swerve::BL::TURN_MOTOR_CAN_ID,
+    PenguinConstants::CAN::Swerve::BL_DRIVE,
+    PenguinConstants::CAN::Swerve::BL_TURN,
     SwerveModuleName("b", "l")
   };
   SwerveModule m_backRightModule {
     BACK_RIGHT_LOCATION,
-    PenguinConstants::Swerve::BR::ANALOG_ENCODER_PORT,
+    PenguinConstants::AnalogIn::SWERVE_BR_ENCODER,
     BACK_RIGHT_ANGLE_OFFSET,
-    PenguinConstants::Swerve::BR::DRIVE_MOTOR_CAN_ID,
-    PenguinConstants::Swerve::BR::TURN_MOTOR_CAN_ID,
+    PenguinConstants::CAN::Swerve::BR_DRIVE,
+    PenguinConstants::CAN::Swerve::BR_TURN,
     SwerveModuleName("b", "r")
   };
 
