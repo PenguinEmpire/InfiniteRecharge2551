@@ -8,6 +8,7 @@
 #include <frc/smartdashboard/SendableChooser.h>
 
 #include "Limelight.h"
+#include "WheelOfFortune.h"
 
 #include "AHRS.h"
 #include "ctre/Phoenix.h"
@@ -55,6 +56,9 @@ class Robot : public frc::TimedRobot {
 
   WPI_TalonSRX elevator{0};
   WPI_VictorSPX elevatorHelper{1};
+
+
+  WheelOfFortune m_wheelOfFortuneSystem;
 
  private:
 

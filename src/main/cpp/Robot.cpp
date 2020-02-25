@@ -23,6 +23,7 @@ void Robot::RobotPeriodic() {
 
 
   limelight.GetInfo();
+  frc::Color color = m_wheelOfFortuneSystem.Periodic();
 }
 
 void Robot::AutonomousInit() {
