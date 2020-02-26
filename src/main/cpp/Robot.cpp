@@ -22,7 +22,7 @@ void Robot::RobotPeriodic() {
   m_drivetrain.Update();
 
 
-  limelight.GetInfo();
+  // limelight.GetInfo();
 }
 
 void Robot::AutonomousInit() {
