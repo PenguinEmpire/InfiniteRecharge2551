@@ -35,17 +35,17 @@ void Robot::AutonomousInit() {
     // Default Auto goes here
   }
 
-  trajectoryConfig.SetKinematics(m_drivetrain.m_kinematics);
-  exampleTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
-    // Start at the origin facing the +X direction
-    frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
-    // Pass through these two interior waypoints, making an 's' curve path
-    {frc::Translation2d(1_m, 1_m), frc::Translation2d(2_m, -1_m)},
-    // End 3 meters straight ahead of where we started, facing forward
-    frc::Pose2d(3_m, 0_m, frc::Rotation2d(0_deg)),
-    // Pass the config
-    trajectoryConfig      
-  );
+  // trajectoryConfig.SetKinematics(m_drivetrain.m_kinematics);
+  // exampleTrajectory = frc::TrajectoryGenerator::GenerateTrajectory(
+  //   // Start at the origin facing the +X direction
+  //   frc::Pose2d(0_m, 0_m, frc::Rotation2d(0_deg)),
+  //   // Pass through these two interior waypoints, making an 's' curve path
+  //   {frc::Translation2d(1_m, 1_m), frc::Translation2d(2_m, -1_m)},
+  //   // End 3 meters straight ahead of where we started, facing forward
+  //   frc::Pose2d(3_m, 0_m, frc::Rotation2d(0_deg)),
+  //   // Pass the config
+  //   trajectoryConfig      
+  // );
 }
 
 void Robot::AutonomousPeriodic() {
@@ -59,20 +59,20 @@ void Robot::AutonomousPeriodic() {
   const units::second_t currentTime = m_timer.Get();
   const units::second_t timeStep = units::second_t(0.02);
 
-  if (currentTime < exampleTrajectory.TotalTime()) {
-    frc::Trajectory::State state = exampleTrajectory.Sample(currentTime);
-    frc::Trajectory::State nextState = exampleTrajectory.Sample(currentTime + timeStep);
-    frc::Pose2d rel = nextState.pose.RelativeTo(state.pose);
-    units::meter_t x = rel.Translation().X();
-    units::meter_t y = rel.Translation().Y();
-    units::radian_t omega = rel.Rotation().Radians();
+  // if (currentTime < exampleTrajectory.TotalTime()) {
+  //   frc::Trajectory::State state = exampleTrajectory.Sample(currentTime);
+  //   frc::Trajectory::State nextState = exampleTrajectory.Sample(currentTime + timeStep);
+  //   frc::Pose2d rel = nextState.pose.RelativeTo(state.pose);
+  //   units::meter_t x = rel.Translation().X();
+  //   units::meter_t y = rel.Translation().Y();
+  //   units::radian_t omega = rel.Rotation().Radians();
 
-    units::meters_per_second_t y_ = y / timeStep;
-    units::meters_per_second_t x_ = x / timeStep;
-    units::radians_per_second_t omega_ = omega / timeStep;
+  //   units::meters_per_second_t y_ = y / timeStep;
+  //   units::meters_per_second_t x_ = x / timeStep;
+  //   units::radians_per_second_t omega_ = omega / timeStep;
 
-    m_drivetrain.Drive(y_, x_, omega_, false);
-  }
+  //   m_drivetrain.Drive(y_, x_, omega_, false);
+  // }
 }
 
 void Robot::TeleopInit() {}
