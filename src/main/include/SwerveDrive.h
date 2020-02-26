@@ -10,7 +10,7 @@
 #include <array>
 
 #include <units/units.h>
-#include "AHRS.h"
+// #include "AHRS.h"
 
 #include "frc/geometry/Translation2d.h"
 #include <frc/kinematics/SwerveDriveKinematics.h>
@@ -30,7 +30,7 @@ class SwerveDrive {
   void Update();
   void UpdateModuleEncoderOFfsetAngles();
   void ResetGyroscope();
-  units::degree_t GetAngle() const;
+  // units::degree_t GetAngle() const;
   frc::Pose2d m_location;
   void PutDiagnostics();
 
@@ -42,7 +42,7 @@ class SwerveDrive {
   const units::inch_t WHEELBASE = units::inch_t(24);
 
  private:
-  AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
+  // AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
 
   const units::inch_t HYPOT_in = units::math::hypot(TRACKWIDTH, WHEELBASE);
   const double HYPOT = hypot(WHEELBASE.to<double>(), TRACKWIDTH.to<double>());
@@ -109,5 +109,5 @@ class SwerveDrive {
     SwerveModuleName("b", "r")
   };
 
-  frc::Rotation2d GetAngleAsRot() const;
+  // frc::Rotation2d GetAngleAsRot() const;
 };
