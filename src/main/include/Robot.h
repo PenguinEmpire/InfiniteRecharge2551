@@ -9,7 +9,7 @@
 
 #include "Limelight.h"
 
-// #include "AHRS.h"
+#include "AHRS.h"
 #include "ctre/Phoenix.h"
 
 #include "frc/Joystick.h"

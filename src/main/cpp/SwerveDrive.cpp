@@ -21,10 +21,9 @@ void SwerveDrive::Drive(units::meters_per_second_t fwd, units::meters_per_second
   // rot *= 2. / HYPOT; // TODO: see if this improves things
 
   auto states = m_kinematics.ToSwerveModuleStates(
-    // fieldOriented
-    //   ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, GetAngleAsRot())
-    //   : 
-      frc::ChassisSpeeds{fwd, str, rot},
+    fieldOriented
+      ? frc::ChassisSpeeds::FromFieldRelativeSpeeds(fwd, str, rot, GetAngleAsRot())
+      : frc::ChassisSpeeds{fwd, str, rot},
     centerOfRotation
   );
 
@@ -76,7 +75,7 @@ void SwerveDrive::PutDiagnostics() {
   m_frontLeftModule.PutDiagnostics();
   m_frontRightModule.PutDiagnostics();
 
-  // SD::PutNumber("Gryoscope Angle", GetAngle().to<double>());
+  SD::PutNumber("Gryoscope Angle", GetAngle().to<double>());
   
   SD::PutNumber("x location", m_location.Translation().X().to<double>());
   SD::PutNumber("y location", m_location.Translation().Y().to<double>());
@@ -94,7 +93,7 @@ void SwerveDrive::Update() {
   m_backRightModule.ReadSensors();
 
   m_odometry.Update(
-    frc::Rotation2d(), // GetAngleAsRot(),
+    GetAngleAsRot(),
     m_frontLeftModule.GetState(), m_frontRightModule.GetState(), m_backLeftModule.GetState(), m_backRightModule.GetState()
   );
 
@@ -103,18 +102,18 @@ void SwerveDrive::Update() {
 
 void SwerveDrive::ResetGyroscope() {
   // m_navX->SetAngleAdjustment(m_navX->GetAngle());
-  // m_navX->Reset();
+  m_navX->Reset();
   // m_navX->SetAngleAdjustment(m_navX->GetUnadjustedAngle()); // `GetUnadjustedAngle` isn't a real function, but it's how they do it in SDS
   m_odometry.ResetPosition(frc::Pose2d(), PenguinUtil::ZERO_ROT);
 }
 
-// units::degree_t SwerveDrive::GetAngle() const {
-//   return units::degree_t(fmod(-m_navX->GetAngle(), 360.0));
-// }
+units::degree_t SwerveDrive::GetAngle() const {
+  return units::degree_t(fmod(-m_navX->GetAngle(), 360.0));
+}
 
-// frc::Rotation2d SwerveDrive::GetAngleAsRot() const {
-//   return frc::Rotation2d(GetAngle());
-// }
+frc::Rotation2d SwerveDrive::GetAngleAsRot() const {
+  return frc::Rotation2d(GetAngle());
+}
 
 
 void SwerveDrive::UpdateModuleEncoderOFfsetAngles() {
