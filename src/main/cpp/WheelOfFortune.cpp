@@ -7,7 +7,7 @@
 
 #include "WheelOfFortune.h"
 
-WheelOfFortune::WheelOfFortune(frc::DriverStation& ds) 
+WheelOfFortune::WheelOfFortune(frc::DriverStation* ds) 
   : m_driverStation{ds} {
   m_colorMatcher.AddColorMatch(kBlueTarget);
   m_colorMatcher.AddColorMatch(kGreenTarget);
@@ -17,7 +17,31 @@ WheelOfFortune::WheelOfFortune(frc::DriverStation& ds)
 }
 
 frc::Color WheelOfFortune::Periodic() {
-  std::string gameData = m_driverStation.GetGameSpecificMessage();
+  std::string gameData = m_driverStation->GetGameSpecificMessage();
+
+  frc::Color targetColor;
+
+  if (gameData.length() > 0) {
+    switch (gameData[0]) {
+      case 'B':
+        targetColor = kBlueTarget;
+        break;
+      case 'G' :
+        //Green case code
+        break;
+      case 'R' :
+        //Red case code
+        break;
+      case 'Y' :
+        //Yellow case code
+        break;
+      default :
+        //This is corrupt data
+        break;
+    }
+  } else {
+    //Code for no data received yet
+  }
 
   
 

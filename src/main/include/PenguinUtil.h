@@ -93,4 +93,6 @@ namespace PenguinConstants {
 
   constexpr double LIMELIGHT_DEFAULT_VALUE = 0.0;
 
+  constexpr int WHEEL_OF_FORTUNE_MANIP = 1; // TODO: move into 'pwm' namespace
+
 } // Constants namespace

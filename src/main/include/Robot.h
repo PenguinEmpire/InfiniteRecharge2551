@@ -60,7 +60,7 @@ class Robot : public frc::TimedRobot {
 
   frc::DriverStation& m_DS = frc::DriverStation::GetInstance();
 
-  WheelOfFortune m_wheelOfFortuneSystem{m_DS};
+  WheelOfFortune m_wheelOfFortuneSystem{&m_DS};
 
 
  private:

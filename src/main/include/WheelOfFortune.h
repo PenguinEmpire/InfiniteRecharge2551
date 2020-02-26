@@ -7,18 +7,23 @@
 
 #pragma once
 
+#include "PenguinUtil.h"
+
 #include <frc/util/color.h>
 #include "frc/smartdashboard/SmartDashboard.h"
 #include "frc/DriverStation.h"
+#include "frc/Spark.h"
 
 #include "rev/ColorSensorV3.h"
 #include "rev/ColorMatch.h"
 
 class WheelOfFortune {
  public:
-  WheelOfFortune(frc::DriverStation& ds);
+  WheelOfFortune(frc::DriverStation* ds);
 
   frc::Color Periodic();
+
+  frc::Spark wheelManip{PenguinConstants::WHEEL_OF_FORTUNE_MANIP};
 
  private:
   static constexpr auto I2C_PORT = frc::I2C::Port::kOnboard;
@@ -37,6 +42,6 @@ class WheelOfFortune {
   static constexpr frc::Color kRedTarget = frc::Color(0.561, 0.232, 0.114);
   static constexpr frc::Color kYellowTarget = frc::Color(0.361, 0.524, 0.113);
 
-  frc::DriverStation& m_driverStation;
+  frc::DriverStation* m_driverStation;
 
 };
