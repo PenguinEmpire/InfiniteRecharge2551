@@ -7,7 +7,8 @@
 
 #include "WheelOfFortune.h"
 
-WheelOfFortune::WheelOfFortune() {
+WheelOfFortune::WheelOfFortune(frc::DriverStation& ds) 
+  : m_driverStation{ds} {
   m_colorMatcher.AddColorMatch(kBlueTarget);
   m_colorMatcher.AddColorMatch(kGreenTarget);
   m_colorMatcher.AddColorMatch(kRedTarget);
@@ -16,6 +17,20 @@ WheelOfFortune::WheelOfFortune() {
 }
 
 frc::Color WheelOfFortune::Periodic() {
+  std::string gameData = m_driverStation.GetGameSpecificMessage();
+
+  
+
+
+
+
+
+
+
+
+
+
+
   /**
    * The method GetColor() returns a normalized color value from the sensor and can be
    * useful if outputting the color to an RGB LED or similar. To

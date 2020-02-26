@@ -16,7 +16,7 @@
 
 class WheelOfFortune {
  public:
-  WheelOfFortune();
+  WheelOfFortune(frc::DriverStation& ds);
 
   frc::Color Periodic();
 
@@ -37,6 +37,6 @@ class WheelOfFortune {
   static constexpr frc::Color kRedTarget = frc::Color(0.561, 0.232, 0.114);
   static constexpr frc::Color kYellowTarget = frc::Color(0.361, 0.524, 0.113);
 
-  // auto m_DS = frc::DriverStation::GetInstance();
+  frc::DriverStation& m_driverStation;
 
 };
