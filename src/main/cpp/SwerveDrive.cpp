@@ -108,7 +108,8 @@ void SwerveDrive::ResetGyroscope() {
 }
 
 units::degree_t SwerveDrive::GetAngle() const {
-  return units::degree_t(fmod(-m_navX->GetAngle(), 360.0));
+  units::degree_t ret =  units::degree_t(fmod(-m_navX->GetAngle(), 360.0));
+  return ret < 0_deg ? ret + 360_deg : ret; // TODO: possibly this breaks swerve, check
 }
 
 frc::Rotation2d SwerveDrive::GetAngleAsRot() const {
