@@ -7,7 +7,7 @@
 
 #include <frc/smartdashboard/SendableChooser.h>
 
-// #include "Limelight.h"
+#include "Limelight.h"
 
 // #include "AHRS.h"
 #include "ctre/Phoenix.h"
@@ -40,7 +40,7 @@ class Robot : public frc::TimedRobot {
   std::string m_autoSelected;
 
 
-  // Limelight limelight;
+  Limelight limelight;
 
   frc2::Timer m_timer; 
 
