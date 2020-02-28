@@ -17,10 +17,10 @@
 #include "frc2/Timer.h"
 #include "frc/Spark.h"
 
-#include "frc/trajectory/TrajectoryGenerator.h"
-#include "frc/trajectory/Trajectory.h"
-#include "frc/trajectory/constraint/SwerveDriveKinematicsConstraint.h"
-#include "frc/trajectory/TrajectoryConfig.h"
+// #include "frc/trajectory/TrajectoryGenerator.h"
+// #include "frc/trajectory/Trajectory.h"
+// #include "frc/trajectory/constraint/SwerveDriveKinematicsConstraint.h"
+// #include "frc/trajectory/TrajectoryConfig.h"
 
 #include "LimelightAutonomous.h"
 #include "PenguinUtil.h"
@@ -69,7 +69,6 @@ class Robot : public frc::TimedRobot {
 
  private:
 
-  frc::TrajectoryConfig trajectoryConfig{m_drivetrain.K_MAX_VELOCITY, m_drivetrain.K_MAX_ACCELERATION};
-  frc::Trajectory exampleTrajectory{std::vector<frc::Trajectory::State>()};
+  // frc::TrajectoryConfig trajectoryConfig{m_drivetrain.K_MAX_VELOCITY, m_drivetrain.K_MAX_ACCELERATION};
+  // frc::Trajectory exampleTrajectory{std::vector<frc::Trajectory::State>()};
 };
-
