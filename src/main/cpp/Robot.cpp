@@ -67,10 +67,9 @@ void Robot::AutonomousPeriodic() {
     }
   } else if (m_autoSelected == limelightAutoName) {
     if (limelightAuto.GetState() == LimelightAutonomous::AutoState::ALIGNING) {
-      units::radians_per_second_t desiredRot = limelightAuto.CalculateRot(
-        m_drivetrain.GetAngle()
-      );
-
+      const units::degree_t currentAngle = m_drivetrain.GetAngle();
+      units::radians_per_second_t desiredRot = limelightAuto.CalculateRot(currentAngle);
+      
       m_drivetrain.Drive(0_mps, 0_mps, desiredRot, false);
     } else if (limelightAuto.GetState() == LimelightAutonomous::AutoState::SHOOTING) {
       // TODO: shoot the balls. can't just run belt and shooter at the same time

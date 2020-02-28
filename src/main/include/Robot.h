@@ -59,10 +59,10 @@ class Robot : public frc::TimedRobot {
 
   WPI_TalonSRX elevator{PenguinConstants::CAN::ELEVATOR_MASTER};
   WPI_VictorSPX elevatorHelper{PenguinConstants::CAN::ELEVATOR_SLAVE};
-
+  WPI_TalonSRX intake{PenguinConstants::CAN::INTAKE};
+  WPI_TalonSRX belt{PenguinConstants::CAN::BELT};
+  WPI_TalonSRX aimer{PenguinConstants::CAN::AIMER};
   WPI_TalonSRX shooter{PenguinConstants::CAN::SHOOTER};
-
-  frc::Spark belt{PenguinConstants::PWM::BELT};
 
 
   LimelightAutonomous limelightAuto{&limelight};

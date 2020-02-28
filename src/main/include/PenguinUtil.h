@@ -88,11 +88,13 @@ namespace PenguinConstants {
       constexpr int BR_DRIVE = 4;
       constexpr int BR_TURN = 3;
     } // Swerve namespace
+
+    constexpr int AIMER = 12;
+    constexpr int INTAKE = 13;
+    constexpr int BELT = 14;
   } // CAN namespace
 
-  namespace PWM {
-    constexpr int BELT = 0;
-  }
+  namespace PWM {}
 
   namespace AnalogIn {
     constexpr int SWERVE_FL_ENCODER = 3;
