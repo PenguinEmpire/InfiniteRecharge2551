@@ -70,12 +70,8 @@ namespace PenguinUtil {
 namespace PenguinConstants {
   constexpr double LIMELIGHT_DEFAULT_VALUE = 0.0;
 
-  namespace CAN {
-    constexpr int ELEVATOR_MASTER = 9;
-    constexpr int ELEVATOR_SLAVE = 10;
-    constexpr int SHOOTER = 11;
-    constexpr int CENTERER = 12;
 
+  namespace CAN {
     namespace Swerve {
       constexpr int FL_DRIVE = 8;
       constexpr int FL_TURN = 7;
@@ -90,9 +86,13 @@ namespace PenguinConstants {
       constexpr int BR_TURN = 3;
     } // Swerve namespace
 
+    constexpr int ELEVATOR_MASTER = 9;
+    constexpr int ELEVATOR_SLAVE = 10;
+    constexpr int SHOOTER = 11;
     constexpr int AIMER = 12;
     constexpr int INTAKE = 13;
     constexpr int BELT = 14;
+    constexpr int CENTERER = 15;
   } // CAN namespace
 
   namespace PWM {}
@@ -103,5 +103,9 @@ namespace PenguinConstants {
     constexpr int SWERVE_BL_ENCODER = 0;
     constexpr int SWERVE_BR_ENCODER = 1;
   }
+
+  namespace DIO {
+
+  } // DIO namespace
 
 } // Constants namespace
