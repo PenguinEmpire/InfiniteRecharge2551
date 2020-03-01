@@ -63,6 +63,7 @@ class Robot : public frc::TimedRobot {
   WPI_TalonSRX belt{PenguinConstants::CAN::BELT};
   WPI_TalonSRX aimer{PenguinConstants::CAN::AIMER};
   WPI_TalonSRX shooter{PenguinConstants::CAN::SHOOTER};
+  WPI_TalonSRX centerer{PenguinConstants::CAN::CENTERER};
 
 
   LimelightAutonomous limelightAuto{&limelight};

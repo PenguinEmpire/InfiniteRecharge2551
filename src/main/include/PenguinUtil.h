@@ -74,6 +74,7 @@ namespace PenguinConstants {
     constexpr int ELEVATOR_MASTER = 9;
     constexpr int ELEVATOR_SLAVE = 10;
     constexpr int SHOOTER = 11;
+    constexpr int CENTERER = 12;
 
     namespace Swerve {
       constexpr int FL_DRIVE = 8;
