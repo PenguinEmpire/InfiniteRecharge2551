@@ -56,6 +56,7 @@ class Robot : public frc::TimedRobot {
 
   void ProcessJoysticks();
   void Drive();
+  void ConfigESCs();
 
   WPI_TalonSRX elevator{PenguinConstants::CAN::ELEVATOR_MASTER};
   WPI_VictorSPX elevatorHelper{PenguinConstants::CAN::ELEVATOR_SLAVE};
@@ -64,7 +65,22 @@ class Robot : public frc::TimedRobot {
   WPI_TalonSRX aimer{PenguinConstants::CAN::AIMER};
   WPI_TalonSRX shooter{PenguinConstants::CAN::SHOOTER};
   WPI_TalonSRX centerer{PenguinConstants::CAN::CENTERER};
-
+  
+  std::unique_ptr<WPI_TalonSRX> elevator_ = std::make_unique<WPI_TalonSRX>(PenguinConstants::CAN::ELEVATOR_MASTER);
+  std::unique_ptr<WPI_VictorSPX> elevatorHelper_ = std::make_unique<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
+  std::unique_ptr<WPI_TalonSRX> intake_ = std::make_unique<WPI_TalonSRX>(PenguinConstants::CAN::INTAKE);
+  std::unique_ptr<WPI_TalonSRX> belt_ = std::make_unique<WPI_TalonSRX>(PenguinConstants::CAN::BELT);
+  std::unique_ptr<WPI_TalonSRX> aimer_ = std::make_unique<WPI_TalonSRX>(PenguinConstants::CAN::AIMER);
+  std::unique_ptr<WPI_TalonSRX> shooter_ = std::make_unique<WPI_TalonSRX>(PenguinConstants::CAN::SHOOTER);
+  std::unique_ptr<WPI_TalonSRX> centerer_ = std::make_unique<WPI_TalonSRX>(PenguinConstants::CAN::CENTERER);
+  
+  std::shared_ptr<WPI_TalonSRX> elevator_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::ELEVATOR_MASTER);
+  std::shared_ptr<WPI_VictorSPX> elevatorHelper_s = std::make_shared<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
+  std::shared_ptr<WPI_TalonSRX> intake_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::INTAKE);
+  std::shared_ptr<WPI_TalonSRX> belt_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::BELT);
+  std::shared_ptr<WPI_TalonSRX> aimer_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::AIMER);
+  std::shared_ptr<WPI_TalonSRX> shooter_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::SHOOTER);
+  std::shared_ptr<WPI_TalonSRX> centerer_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::CENTERER);
 
   LimelightAutonomous limelightAuto{&limelight};
 

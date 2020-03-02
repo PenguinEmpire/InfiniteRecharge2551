@@ -14,6 +14,9 @@ void Robot::RobotInit() {
 
   m_timer.Reset();
   m_timer.Start();
+
+
+  ConfigESCs();
 }
 
  /* Runs every packet. Runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard integrated updating. */
@@ -49,9 +52,9 @@ void Robot::AutonomousInit() {
 
 void Robot::AutonomousPeriodic() {
   if (m_autoSelected == trajectoryAutoName) {
-    const units::second_t timeStep = units::second_t(0.02);
+    // const units::second_t timeStep = units::second_t(0.02);
 
-    if (m_currentTime < exampleTrajectory.TotalTime()) {
+    // if (m_currentTime < exampleTrajectory.TotalTime()) {
       // frc::Trajectory::State state = exampleTrajectory.Sample(m_currentTime);
       // frc::Trajectory::State nextState = exampleTrajectory.Sample(m_currentTime + timeStep);
       // frc::Pose2d rel = nextState.pose.RelativeTo(state.pose);
@@ -64,7 +67,7 @@ void Robot::AutonomousPeriodic() {
       // units::radians_per_second_t omega_ = omega / timeStep;
 
       // m_drivetrain.Drive(y_, x_, omega_, false);
-    }
+    // }
   } else if (m_autoSelected == limelightAutoName) {
     if (limelightAuto.GetState() == LimelightAutonomous::AutoState::ALIGNING) {
       const units::degree_t currentAngle = m_drivetrain.GetAngle();
@@ -137,12 +140,30 @@ void Robot::Drive() {
   SD::PutNumber("rot command", rotation);
 }
 
+/** Joystick gets that aren't to do with driving.
+ */
 void Robot::ProcessJoysticks() {
   if(m_leftJoystick.GetRawButtonPressed(11)) {
     m_drivetrain.ResetGyroscope();
   }
   // if (m_leftJoystick.GetRawButtonPressed(12)) {m_drivetrain.UpdateModuleEncoderOFfsetAngles();} // TODO?
 }
+
+void Robot::ConfigESCs() {
+  // elevator.
+  // elevatorHelper
+  // intake
+  // belt
+  // aimer
+  // shooter
+  // centerer
+
+  elevator_->ConfigFactoryDefault();
+
+  
+  
+}
+
 
 #ifndef RUNNING_FRC_TESTS
 int main() {return frc::StartRobot<Robot>();}
