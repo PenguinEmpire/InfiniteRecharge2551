@@ -105,7 +105,11 @@ namespace PenguinConstants {
   }
 
   namespace DIO {
+    constexpr int SHOOTER_ENCODER_A = 0;
+    constexpr int SHOOTER_ENCODER_B = 1;
 
+    constexpr int ELEVATOR_ENCODER_A = 2;
+    constexpr int ELEVATOR_ENCODER_B = 3;
   } // DIO namespace
 
 } // Constants namespace

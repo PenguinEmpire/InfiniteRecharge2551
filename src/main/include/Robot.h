@@ -16,6 +16,7 @@
 #include "frc/SPI.h"
 #include "frc2/Timer.h"
 #include "frc/Spark.h"
+#include "frc/Encoder.h"
 
 // #include "frc/trajectory/TrajectoryGenerator.h"
 // #include "frc/trajectory/Trajectory.h"
@@ -68,8 +69,7 @@ class Robot : public frc::TimedRobot {
 
   LimelightAutonomous limelightAuto{&limelight};
 
- private:
 
-  // frc::TrajectoryConfig trajectoryConfig{m_drivetrain.K_MAX_VELOCITY, m_drivetrain.K_MAX_ACCELERATION};
-  // frc::Trajectory exampleTrajectory{std::vector<frc::Trajectory::State>()};
+  std::shared_ptr<frc::Encoder> shooterEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::SHOOTER_ENCODER_A, PenguinConstants::DIO::SHOOTER_ENCODER_B);
+  std::shared_ptr<frc::Encoder> elevatorEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::ELEVATOR_ENCODER_A, PenguinConstants::DIO::ELEVATOR_ENCODER_B);
 };
