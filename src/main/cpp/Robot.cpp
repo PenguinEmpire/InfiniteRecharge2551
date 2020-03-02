@@ -15,7 +15,12 @@ void Robot::RobotInit() {
   m_timer.Reset();
   m_timer.Start();
 
+  m_shooterEncoder->Reset();
+  m_elevatorEncoder->Reset();
 
+  m_shooterEncoder->SetDistancePerPulse(PenguinUtil::PI / 8192);
+  m_elevatorEncoder->SetDistancePerPulse(1); // TODO: how far up does the elevator go w one revolution of this motor?
+  
   ConfigESCs();
 }
 
@@ -77,8 +82,8 @@ void Robot::AutonomousPeriodic() {
     } else if (limelightAuto.GetState() == LimelightAutonomous::AutoState::SHOOTING) {
       // TODO: shoot the balls. can't just run belt and shooter at the same time
       // or: we could here, but we need the capability to not.
-      shooter.Set(ControlMode::Velocity, 1);
-      belt.Set(1);
+      m_shooter->Set(ControlMode::Velocity, 1);
+      m_belt->Set(1);
     } else {}
 
   } else {
