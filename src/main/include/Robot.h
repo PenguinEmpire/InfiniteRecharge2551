@@ -58,13 +58,13 @@ class Robot : public frc::TimedRobot {
   void Drive();
   void ConfigESCs();
 
-  std::shared_ptr<WPI_TalonSRX> elevator_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::ELEVATOR_MASTER);
-  std::shared_ptr<WPI_VictorSPX> elevatorHelper_s = std::make_shared<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
-  std::shared_ptr<WPI_TalonSRX> intake_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::INTAKE);
-  std::shared_ptr<WPI_TalonSRX> belt_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::BELT);
-  std::shared_ptr<WPI_TalonSRX> aimer_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::AIMER);
-  std::shared_ptr<WPI_TalonSRX> shooter_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::SHOOTER);
-  std::shared_ptr<WPI_TalonSRX> centerer_s = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::CENTERER);
+  std::shared_ptr<WPI_TalonSRX> elevator = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::ELEVATOR_MASTER);
+  std::shared_ptr<WPI_VictorSPX> elevatorHelper = std::make_shared<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
+  std::shared_ptr<WPI_TalonSRX> intake = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::INTAKE);
+  std::shared_ptr<WPI_TalonSRX> belt = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::BELT);
+  std::shared_ptr<WPI_TalonSRX> aimer = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::AIMER);
+  std::shared_ptr<WPI_TalonSRX> shooter = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::SHOOTER);
+  std::shared_ptr<WPI_TalonSRX> centerer = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::CENTERER);
 
   LimelightAutonomous limelightAuto{&limelight};
 

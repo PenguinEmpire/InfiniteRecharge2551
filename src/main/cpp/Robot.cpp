@@ -147,20 +147,19 @@ void Robot::ProcessJoysticks() {
     m_drivetrain.ResetGyroscope();
   }
   // if (m_leftJoystick.GetRawButtonPressed(12)) {m_drivetrain.UpdateModuleEncoderOFfsetAngles();} // TODO?
+
+  
 }
 
 void Robot::ConfigESCs() {
-  // elevator.
-  // elevatorHelper
-  // intake
-  // belt
-  // aimer
-  // shooter
-  // centerer
+  elevator->ConfigFactoryDefault();
+  elevatorHelper->ConfigFactoryDefault();
+  intake->ConfigFactoryDefault();
+  belt->ConfigFactoryDefault();
+  aimer->ConfigFactoryDefault();
+  shooter->ConfigFactoryDefault();
+  centerer->ConfigFactoryDefault();
 
-  elevator_->ConfigFactoryDefault();
-
-  
   
 }
 
