@@ -152,13 +152,13 @@ void Robot::ProcessJoysticks() {
 }
 
 void Robot::ConfigESCs() {
-  elevator->ConfigFactoryDefault();
-  elevatorHelper->ConfigFactoryDefault();
-  intake->ConfigFactoryDefault();
-  belt->ConfigFactoryDefault();
-  aimer->ConfigFactoryDefault();
-  shooter->ConfigFactoryDefault();
-  centerer->ConfigFactoryDefault();
+  m_elevator->ConfigFactoryDefault();
+  m_elevatorHelper->ConfigFactoryDefault();
+  m_intake->ConfigFactoryDefault();
+  m_belt->ConfigFactoryDefault();
+  m_aimer->ConfigFactoryDefault();
+  m_shooter->ConfigFactoryDefault();
+  m_centerer->ConfigFactoryDefault();
 
   
 }
