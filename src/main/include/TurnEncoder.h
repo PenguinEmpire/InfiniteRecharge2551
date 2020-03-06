@@ -47,9 +47,8 @@ struct TurnEncoder {
     // angle *= -1;
 
     if (!continuous) {
-      // double angle_d = fmod(angle.to<double>(), PenguinUtil::TWO_PI);
-      // angle = units::radian_t(angle_d);
       angle = units::math::fmod(angle, PenguinUtil::TWO_PI_RAD);
+
 
       while (angle > PenguinUtil::PI_RAD) {
         angle -= PenguinUtil::TWO_PI_RAD;

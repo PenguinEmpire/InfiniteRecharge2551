@@ -73,26 +73,26 @@ namespace PenguinConstants {
 
   namespace CAN {
     namespace Swerve {
-      constexpr int FL_DRIVE = 8;
-      constexpr int FL_TURN = 7;
-
-      constexpr int FR_DRIVE = 6;
-      constexpr int FR_TURN = 5;
+      constexpr int FL_DRIVE = 6;
+      constexpr int FL_TURN = 5;
+  
+      constexpr int FR_DRIVE = 8;
+      constexpr int FR_TURN = 7;
 
       constexpr int BL_DRIVE = 2;
       constexpr int BL_TURN = 1;
 
-      constexpr int BR_DRIVE = 4;
-      constexpr int BR_TURN = 3;
+      constexpr int BR_DRIVE = 3;
+      constexpr int BR_TURN = 4;
     } // Swerve namespace
 
-    constexpr int ELEVATOR_MASTER = 9;
-    constexpr int ELEVATOR_SLAVE = 10;
-    constexpr int SHOOTER = 11;
-    constexpr int AIMER = 12;
-    constexpr int INTAKE = 13;
-    constexpr int BELT = 14;
-    constexpr int CENTERER = 15;
+    constexpr int ELEVATOR_MASTER = 16;
+    constexpr int ELEVATOR_SLAVE = 11;
+    constexpr int SHOOTER = 10;
+    constexpr int AIMER = 15;
+    constexpr int INTAKE = 12;
+    constexpr int BELT = 9;
+    constexpr int CENTERER = 14;
   } // CAN namespace
 
   namespace PWM {}
@@ -105,11 +105,11 @@ namespace PenguinConstants {
   }
 
   namespace DIO {
-    constexpr int SHOOTER_ENCODER_A = 0;
-    constexpr int SHOOTER_ENCODER_B = 1;
+    constexpr int SHOOTER_ENCODER_A = 1;
+    constexpr int SHOOTER_ENCODER_B = 2;
 
-    constexpr int ELEVATOR_ENCODER_A = 2;
-    constexpr int ELEVATOR_ENCODER_B = 3;
+    constexpr int ELEVATOR_ENCODER_A = 6;
+    constexpr int ELEVATOR_ENCODER_B = 7;
   } // DIO namespace
 
 } // Constants namespace

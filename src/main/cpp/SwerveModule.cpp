@@ -51,8 +51,8 @@ void SwerveModule::PutDiagnostics() const {
   using SD = frc::SmartDashboard;
 
   SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (motor)", m_currentAngle.to<double>());
-  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog) (cont)", m_turnEncoder.GetAngle(true).to<double>());
-  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog) (discont)", m_turnEncoder.GetAngle().to<double>());
+  // SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog) (cont)", units::degree_t(m_turnEncoder.GetAngle(true)).to<double>());
+  SD::PutNumber(m_moduleName.GetAbbrUpper() + " angle (analog) (discont)", units::degree_t(m_turnEncoder.GetAngle()).to<double>());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderPosition", m_driveEncoder.GetPosition());
   // SD::PutNumber(m_moduleName.GetAbbrUpper() + " driveMotorEncoderVelocity", m_driveEncoder.GetVelocity());
   

@@ -153,21 +153,43 @@ void Robot::ProcessJoysticks() {
   }
   // if (m_leftJoystick.GetRawButtonPressed(12)) {m_drivetrain.UpdateModuleEncoderOFfsetAngles();} // TODO?
 
-  
+  m_elevator->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(5));
+  m_intake->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(1));
+  m_belt->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(0));
+  m_aimer->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(4));
+  m_shooter->Set(ControlMode::PercentOutput, m_utilityJoystick.GetRawAxis(1));  
 }
 
 void Robot::ConfigESCs() {
   m_elevator->ConfigFactoryDefault();
-  m_elevatorHelper->ConfigFactoryDefault();
+  m_elevatorSlave->ConfigFactoryDefault();
   m_intake->ConfigFactoryDefault();
   m_belt->ConfigFactoryDefault();
   m_aimer->ConfigFactoryDefault();
   m_shooter->ConfigFactoryDefault();
   m_centerer->ConfigFactoryDefault();
 
-  
-}
+  m_elevatorSlave->Set(ControlMode::Follower, PenguinConstants::CAN::ELEVATOR_MASTER);
 
+  m_centerer->NeutralOutput();  
+
+  m_elevator->SetInverted(true);
+  m_intake->SetInverted(false);
+  m_belt->SetInverted(false); // TODO
+  m_aimer->SetInverted(false); // TODO
+  m_shooter->SetInverted(false);
+  m_centerer->SetInverted(false); // TODO
+
+  // m_elevator->ConfigForwardSoftLimitThreshold(___); // TODO
+  // m_elevator->ConfigReverseSoftLimitThreshold(___); // TODO
+  // m_elevator->ConfigForwardSoftLimitEnable(true); // TODO: when we get the above two done
+  // m_elevator->ConfigReverseSoftLimitEnable(true); // TODO: when we get the above two done
+
+  m_aimer->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
+  m_aimer->ConfigFeedbackNotContinuous(false); // TODO: is this true?
+  m_aimer->SetSensorPhase(true);
+
+}
 
 #ifndef RUNNING_FRC_TESTS
 int main() {return frc::StartRobot<Robot>();}

@@ -38,8 +38,8 @@ class SwerveDrive {
   const units::meters_per_second_squared_t K_MAX_ACCELERATION = units::meters_per_second_squared_t(2); // TODO: make accurate
   const units::radians_per_second_t K_MAX_ANGULAR_VELOCITY = units::radians_per_second_t(2.5);
 
-  const units::inch_t TRACKWIDTH = units::inch_t(21.25);
-  const units::inch_t WHEELBASE = units::inch_t(24);
+  const units::inch_t TRACKWIDTH = units::inch_t(20.75);
+  const units::inch_t WHEELBASE = units::inch_t(25.5);
 
  private:
   AHRS* m_navX = new AHRS(frc::SPI::Port::kMXP);
@@ -47,13 +47,13 @@ class SwerveDrive {
   const units::inch_t HYPOT_in = units::math::hypot(TRACKWIDTH, WHEELBASE);
   const double HYPOT = hypot(WHEELBASE.to<double>(), TRACKWIDTH.to<double>());
 
-  const units::inch_t CHASSIS_WIDTH = units::inch_t(27.625);
-  const units::inch_t CHASSIS_LENGTH = units::inch_t(32.25);
+  const units::inch_t CHASSIS_WIDTH = units::inch_t(33.5);
+  const units::inch_t CHASSIS_LENGTH = units::inch_t(38.25);
 
-  const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(315.1_deg);
-  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(105.6_deg);
-  const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(90.1_deg);
-  const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(63.7_deg);
+  const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(336.0_deg); //   //315.1_deg);
+  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(16.8_deg); //   //105.6_deg);
+  const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(271.25_deg - 180_deg); // //90.1_deg);
+  const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(136.9_deg); //   //63.7_deg);
 
   const frc::Translation2d FRONT_LEFT_LOCATION {+TRACKWIDTH / 2.0, +WHEELBASE / 2.0};
   const frc::Translation2d FRONT_RIGHT_LOCATION{+TRACKWIDTH / 2.0, -WHEELBASE / 2.0}; 

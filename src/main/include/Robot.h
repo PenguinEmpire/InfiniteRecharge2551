@@ -67,10 +67,11 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_leftJoystick{0};
   frc::Joystick m_rightJoystick{1};
   frc::Joystick m_gamerJoystick{2};
+  frc::Joystick m_utilityJoystick{3};
   
     // Other motors
   std::shared_ptr<WPI_TalonSRX> m_elevator = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::ELEVATOR_MASTER);
-  std::shared_ptr<WPI_VictorSPX> m_elevatorHelper = std::make_shared<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
+  std::shared_ptr<WPI_VictorSPX> m_elevatorSlave = std::make_shared<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
   std::shared_ptr<WPI_TalonSRX> m_intake = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::INTAKE);
   std::shared_ptr<WPI_TalonSRX> m_belt = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::BELT);
   std::shared_ptr<WPI_TalonSRX> m_aimer = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::AIMER);
