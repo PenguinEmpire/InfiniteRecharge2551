@@ -17,6 +17,8 @@
 #include "frc2/Timer.h"
 #include "frc/Spark.h"
 #include "frc/Encoder.h"
+#include <frc/controller/ProfiledPIDController.h>
+#include <frc/trajectory/TrapezoidProfile.h>
 
 // #include "frc/trajectory/TrajectoryGenerator.h"
 // #include "frc/trajectory/Trajectory.h"
@@ -49,10 +51,16 @@ class Robot : public frc::TimedRobot {
   // Global state
   frc2::Timer m_timer;
   units::second_t m_currentTime = units::second_t(0);
+  units::meter_t elevatorPosition;
+  bool elevatorAtZero;
+  bool elevatorNearZero;
+  bool elevatorAboveZero;
+
 
   // Subsystems
   Limelight limelight;
   SwerveDrive m_drivetrain;
+
 
   // Autonomous classes
   LimelightAutonomous limelightAuto{&limelight};
@@ -69,7 +77,8 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_gamerJoystick{2};
   frc::Joystick m_utilityJoystick{3};
   
-    // Other motors
+
+  // Other motors
   std::shared_ptr<WPI_TalonSRX> m_elevator = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::ELEVATOR_MASTER);
   std::shared_ptr<WPI_VictorSPX> m_elevatorSlave = std::make_shared<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
   std::shared_ptr<WPI_TalonSRX> m_intake = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::INTAKE);
@@ -81,4 +90,12 @@ class Robot : public frc::TimedRobot {
     // Encoders
   std::shared_ptr<frc::Encoder> m_shooterEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::SHOOTER_ENCODER_A, PenguinConstants::DIO::SHOOTER_ENCODER_B);
   std::shared_ptr<frc::Encoder> m_elevatorEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::ELEVATOR_ENCODER_A, PenguinConstants::DIO::ELEVATOR_ENCODER_B);
+
+  private:
+
+  //elevator PID controller
+  frc::TrapezoidProfile<units::meters>::Constraints m_constraints{1.75_mps,
+                                                                  0.75_mps_sq};
+  frc::ProfiledPIDController<units::meters> m_controller{1.3, 0.0, 0.7,
+                                                         m_constraints, PenguinConstants::kDt};
 };
