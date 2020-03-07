@@ -5,6 +5,7 @@
 
 #include <units/units.h>
 #include "frc/geometry/Rotation2d.h"
+#include "frc/I2C.h"
 
 namespace PenguinUtil {
   inline double linearMap(double n, double start1, double stop1, double start2, double stop2) {
@@ -111,5 +112,9 @@ namespace PenguinConstants {
     constexpr int ELEVATOR_ENCODER_A = 6;
     constexpr int ELEVATOR_ENCODER_B = 7;
   } // DIO namespace
+
+  namespace I2C {
+    constexpr frc::I2C::Port BALL_LIDAR = frc::I2C::Port::kOnboard;
+  }
 
 } // Constants namespace

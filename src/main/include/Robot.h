@@ -8,6 +8,7 @@
 #include <frc/smartdashboard/SendableChooser.h>
 
 #include "Limelight.h"
+#include "Lidar.h"
 
 #include "AHRS.h"
 #include "ctre/Phoenix.h"
@@ -51,11 +52,12 @@ class Robot : public frc::TimedRobot {
   units::second_t m_currentTime = units::second_t(0);
 
   // Subsystems
-  Limelight limelight;
+  Limelight m_limelight;
   SwerveDrive m_drivetrain;
+  std::shared_ptr<Lidar> m_ballLidar = std::make_shared<Lidar>(PenguinConstants::I2C::BALL_LIDAR);
 
   // Autonomous classes
-  LimelightAutonomous limelightAuto{&limelight};
+  LimelightAutonomous limelightAuto{&m_limelight};
 
   // Other functions
   void ProcessJoysticks();
