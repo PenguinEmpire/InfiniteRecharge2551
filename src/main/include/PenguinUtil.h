@@ -41,6 +41,11 @@ namespace PenguinUtil {
   inline bool approxEqual(double value1, double value2, double tolerance = 0.01) {
     return fabs(value1 - value2) < tolerance;
   }
+
+  /** Returns true when @param value is within @param percentTolerance percent of @param reference. */
+  inline bool withinPercentTolerance(double value, double reference, double percentTolerance) {
+    return approxEqual(value, reference, reference * percentTolerance);
+  }
  
   inline constexpr double PI = wpi::math::pi; // TODO: inline only on functions?
   inline constexpr double TWO_PI = 2.0 * wpi::math::pi;
