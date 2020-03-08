@@ -30,9 +30,11 @@ void Robot::RobotInit() {
  /* Runs every packet. Runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard integrated updating. */
 void Robot::RobotPeriodic() {
   m_currentTime = m_timer.Get();
+  PutDiagnostics();
 
-  m_drivetrain.PutDiagnostics();
   m_drivetrain.Update();
+
+  m_shooterSystem.Update();
 
   elevatorPosition = units::meter_t(m_elevatorEncoder->GetDistance());
   
@@ -214,6 +216,11 @@ void Robot::ConfigESCs() {
   m_aimer->ConfigFeedbackNotContinuous(false); // TODO: is this true?
   m_aimer->SetSensorPhase(true);
 
+}
+
+void Robot::PutDiagnostics() {
+  m_drivetrain.PutDiagnostics();
+  m_shooterSystem.PutDiagnostics();
 }
 
 #ifndef RUNNING_FRC_TESTS

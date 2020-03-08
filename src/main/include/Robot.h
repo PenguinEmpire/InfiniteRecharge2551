@@ -29,6 +29,7 @@
 #include "LimelightAutonomous.h"
 #include "PenguinUtil.h"
 #include "SwerveDrive.h"
+#include "ShooterSystem.h"
 
 class Robot : public frc::TimedRobot {
  public:
@@ -60,7 +61,9 @@ class Robot : public frc::TimedRobot {
   // Subsystems
   Limelight m_limelight;
   SwerveDrive m_drivetrain;
-  std::shared_ptr<Lidar> m_ballLidar = std::make_shared<Lidar>(PenguinConstants::I2C::BALL_LIDAR);
+  ShooterSystem m_shooterSystem{
+    m_shooter, m_belt, m_aimer, m_intake, m_ballLidar, m_shooterEncoder
+  };
 
   // Subsystem-specific values
     //elevator PID controller
@@ -69,7 +72,7 @@ class Robot : public frc::TimedRobot {
     PenguinConstants::ElevatorControl::P,
     PenguinConstants::ElevatorControl::I,
     PenguinConstants::ElevatorControl::D,
-    m_constraints, PenguinConstants::DT
+    m_elevatorConstraints, PenguinConstants::DT
   };
 
   // Autonomous classes
@@ -79,7 +82,8 @@ class Robot : public frc::TimedRobot {
   void ProcessJoysticks();
   void Drive();
   void ConfigESCs();
-
+  void PutDiagnostics();
+  
   // Global devices
     // Joysticks
   frc::Joystick m_leftJoystick{0};
@@ -99,4 +103,7 @@ class Robot : public frc::TimedRobot {
     // Encoders
   std::shared_ptr<frc::Encoder> m_shooterEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::SHOOTER_ENCODER_A, PenguinConstants::DIO::SHOOTER_ENCODER_B);
   std::shared_ptr<frc::Encoder> m_elevatorEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::ELEVATOR_ENCODER_A, PenguinConstants::DIO::ELEVATOR_ENCODER_B);
+
+    // Other sensors
+  std::shared_ptr<Lidar> m_ballLidar = std::make_shared<Lidar>(PenguinConstants::I2C::BALL_LIDAR);
 };

@@ -40,13 +40,16 @@ class ShooterSystem {
    */
   static constexpr units::inch_t NORMAL_DISTANCE = 15_in * 0.8;
 
-  bool ballCurrentlyPassingInFrontOfLidar;
+  bool m_ballCurrentlyPassingInFrontOfLidar;
+  units::inch_t currentLidarDistance; // temp, probably. Would want to move into update and make `const` eventually, but need global to reference in `PutDiagnostics()`.
 
   /** How many balls are currently being carried by the robot. Hard-coded as 3 to start. */
-  int ballCount = 3;
+  int m_ballCount = 3;
 
 
-
+  /** RPM of CIMs operating at maximum efficiency/max power output.
+   * From here: https://motors.vex.com/vexpro-motors/cim-motor
+   */
   static constexpr units::revolutions_per_minute_t SHOOTING_SPEED = units::revolutions_per_minute_t(2670);
   bool ShooterReadyToShoot();
 

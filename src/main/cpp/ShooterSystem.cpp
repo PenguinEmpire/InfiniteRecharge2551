@@ -12,7 +12,7 @@ ShooterSystem::ShooterSystem(std::shared_ptr<WPI_TalonSRX> shooter, std::shared_
     m_ballDetector{ballDetector}, m_shooterEncoder{shooterEncoder} {}
 
 void ShooterSystem::Update() {
-  const units::inch_t currentLidarDistance = m_lidar->GetDistance();
+  currentLidarDistance = m_ballDetector->GetDistance();
 
   if (!m_ballCurrentlyPassingInFrontOfLidar) {
     if (currentLidarDistance < NORMAL_DISTANCE) {
@@ -31,6 +31,7 @@ void ShooterSystem::PutDiagnostics() {
 
   SD::PutBoolean("ball in front of lidar", m_ballCurrentlyPassingInFrontOfLidar);
   SD::PutNumber("balls in system", m_ballCount);
+  SD::PutNumber("lidar currently reporting (in)", units::inch_t(currentLidarDistance).to<double>());
 }
 
 bool ShooterSystem::ShooterReadyToShoot() {
