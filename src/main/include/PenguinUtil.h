@@ -74,6 +74,7 @@ namespace PenguinUtil {
 } // PenguinUtil namespace
 
 namespace PenguinConstants {
+  constexpr units::second_t kDt = 20_ms;
   constexpr double LIMELIGHT_DEFAULT_VALUE = 0.0;
 
 
@@ -117,9 +118,18 @@ namespace PenguinConstants {
     constexpr int ELEVATOR_ENCODER_A = 6;
     constexpr int ELEVATOR_ENCODER_B = 7;
   } // DIO namespace
+  
+  namespace ElevatorConstants {
+    // these are placeholders
+    constexpr units::meters_per_second_t MAX_VEL = 1.75_mps; //TODO placeholders
+    constexpr units::meters_per_second_squared_t MAX_ACCEL = 0.75_mps_sq;
+    //profiled pid constants, also placeholders
+    constexpr double P{1.3}; //TODO get real ones
+    constexpr double I{0};
+    constexpr double D{0.3};
+  }
 
   namespace I2C {
     constexpr frc::I2C::Port BALL_LIDAR = frc::I2C::Port::kOnboard;
   }
-
 } // Constants namespace

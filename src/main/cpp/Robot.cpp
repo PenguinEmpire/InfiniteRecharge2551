@@ -22,6 +22,9 @@ void Robot::RobotInit() {
   m_elevatorEncoder->SetDistancePerPulse(1); // TODO: how far up does the elevator go w one revolution of this motor?
   
   ConfigESCs();
+  
+
+  
 }
 
  /* Runs every packet. Runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard integrated updating. */
@@ -30,6 +33,9 @@ void Robot::RobotPeriodic() {
 
   m_drivetrain.PutDiagnostics();
   m_drivetrain.Update();
+
+  elevatorPosition = units::meter_t(m_elevatorEncoder->GetDistance());
+  
 }
 
 void Robot::AutonomousInit() {
@@ -92,12 +98,15 @@ void Robot::AutonomousPeriodic() {
     }
   }
 }
-
 void Robot::TeleopInit() {}
 
 void Robot::TeleopPeriodic() {
   Drive();
   ProcessJoysticks();
+  
+  m_elevator->Set(m_controller.Calculate(units::meter_t(m_elevatorEncoder->GetDistance()))); //TODO get rid of get distance call.
+ 
+  
 }
 
 void Robot::TestPeriodic() {}
@@ -158,7 +167,15 @@ void Robot::ProcessJoysticks() {
   m_intake->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(1));
   m_belt->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(0));
   m_aimer->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(4));
-  m_shooter->Set(ControlMode::PercentOutput, m_utilityJoystick.GetRawAxis(1));  
+  m_shooter->Set(ControlMode::PercentOutput, m_utilityJoystick.GetRawAxis(1)); 
+  //set elevator positions
+  if(m_leftJoystick.GetRawButtonPressed(2)) {
+    m_controller.SetGoal(2_m);
+  }
+  else if(m_leftJoystick.GetRawButtonPressed(3)) {
+    m_controller.SetGoal(0_m);
+  }
+
 }
 
 void Robot::ConfigESCs() {
@@ -180,6 +197,13 @@ void Robot::ConfigESCs() {
   m_aimer->SetInverted(false); // TODO
   m_shooter->SetInverted(false);
   m_centerer->SetInverted(false); // TODO
+
+
+  //m_elevator->ConfigOpenloopRamp(0.05); //TODO
+  m_elevator->ConfigContinuousCurrentLimit(39, 10);
+  m_elevator->ConfigPeakCurrentLimit(0, 10);    
+  m_elevator->SetNeutralMode(NeutralMode::Brake);
+  
 
   // m_elevator->ConfigForwardSoftLimitThreshold(___); // TODO
   // m_elevator->ConfigReverseSoftLimitThreshold(___); // TODO
