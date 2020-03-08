@@ -57,12 +57,20 @@ class Robot : public frc::TimedRobot {
   bool elevatorNearZero;
   bool elevatorAboveZero;
 
-
   // Subsystems
   Limelight m_limelight;
   SwerveDrive m_drivetrain;
   std::shared_ptr<Lidar> m_ballLidar = std::make_shared<Lidar>(PenguinConstants::I2C::BALL_LIDAR);
 
+  // Subsystem-specific values
+    //elevator PID controller
+  frc::TrapezoidProfile<units::meters>::Constraints m_elevatorConstraints{PenguinConstants::ElevatorControl::MAX_VEL, PenguinConstants::ElevatorControl::MAX_ACCEL};
+  frc::ProfiledPIDController<units::meters> m_controller{
+    PenguinConstants::ElevatorControl::P,
+    PenguinConstants::ElevatorControl::I,
+    PenguinConstants::ElevatorControl::D,
+    m_constraints, PenguinConstants::DT
+  };
 
   // Autonomous classes
   LimelightAutonomous limelightAuto{&m_limelight};
@@ -79,8 +87,7 @@ class Robot : public frc::TimedRobot {
   frc::Joystick m_gamerJoystick{2};
   frc::Joystick m_utilityJoystick{3};
   
-
-  // Other motors
+    // Other motors
   std::shared_ptr<WPI_TalonSRX> m_elevator = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::ELEVATOR_MASTER);
   std::shared_ptr<WPI_VictorSPX> m_elevatorSlave = std::make_shared<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
   std::shared_ptr<WPI_TalonSRX> m_intake = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::INTAKE);
@@ -92,12 +99,4 @@ class Robot : public frc::TimedRobot {
     // Encoders
   std::shared_ptr<frc::Encoder> m_shooterEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::SHOOTER_ENCODER_A, PenguinConstants::DIO::SHOOTER_ENCODER_B);
   std::shared_ptr<frc::Encoder> m_elevatorEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::ELEVATOR_ENCODER_A, PenguinConstants::DIO::ELEVATOR_ENCODER_B);
-
-  private:
-
-  //elevator PID controller
-  frc::TrapezoidProfile<units::meters>::Constraints m_constraints{1.75_mps,
-                                                                  0.75_mps_sq};
-  frc::ProfiledPIDController<units::meters> m_controller{1.3, 0.0, 0.7,
-                                                         m_constraints, PenguinConstants::kDt};
 };
