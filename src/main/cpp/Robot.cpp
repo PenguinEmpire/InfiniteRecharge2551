@@ -19,12 +19,9 @@ void Robot::RobotInit() {
   m_elevatorEncoder->Reset();
 
   m_shooterEncoder->SetDistancePerPulse(PenguinUtil::PI / 8192);
-  m_elevatorEncoder->SetDistancePerPulse(1); // TODO: how far up does the elevator go w one revolution of this motor?
+  m_elevatorEncoder->SetDistancePerPulse(2 * PenguinUtil::PI * 3 * 4 / 8192); // TODO: how far up does the elevator go w one revolution of this motor? I think replace 3 with the gear ratio and 4 with the circumference of the first gear? Or maybe of the last. we want `Get`s to end up in meters, hopefully
   
   ConfigESCs();
-  
-
-  
 }
 
  /* Runs every packet. Runs after the mode specific periodic functions, but before LiveWindow and SmartDashboard integrated updating. */
@@ -191,7 +188,7 @@ void Robot::ConfigESCs() {
 
   m_elevatorSlave->Set(ControlMode::Follower, PenguinConstants::CAN::ELEVATOR_MASTER);
 
-  m_centerer->NeutralOutput();  
+  m_centerer->NeutralOutput(); // TODO/temp
 
   m_elevator->SetInverted(true);
   m_intake->SetInverted(false);
@@ -200,17 +197,31 @@ void Robot::ConfigESCs() {
   m_shooter->SetInverted(false);
   m_centerer->SetInverted(false); // TODO
 
+  /** # Things that need to be set on all of the talons (TODO):
+   * open loop ramp
+   * closed loop ramp
+   * continuous and peak current limits
+   * neutral modes
+   * 
+   * everything, but also with the SparkMaxs
+   * 
+   * also the P, I, and D and I guess F for the aimer
+   * 
+   * Some of this is being done already, below, for the elevator and the aimer
+  */
+
 
   //m_elevator->ConfigOpenloopRamp(0.05); //TODO
-  m_elevator->ConfigContinuousCurrentLimit(39, 10);
-  m_elevator->ConfigPeakCurrentLimit(0, 10);    
+  m_elevator->ConfigContinuousCurrentLimit(39);
+  m_elevator->ConfigPeakCurrentLimit(0);    
   m_elevator->SetNeutralMode(NeutralMode::Brake);
   
 
-  // m_elevator->ConfigForwardSoftLimitThreshold(___); // TODO
-  // m_elevator->ConfigReverseSoftLimitThreshold(___); // TODO
-  // m_elevator->ConfigForwardSoftLimitEnable(true); // TODO: when we get the above two done
-  // m_elevator->ConfigReverseSoftLimitEnable(true); // TODO: when we get the above two done
+
+  // m_aimer->ConfigForwardSoftLimitThreshold(___); // TODO
+  // m_aimer->ConfigReverseSoftLimitThreshold(___); // TODO
+  // m_aimer->ConfigForwardSoftLimitEnable(true); // TODO: when we get the above two done
+  // m_aimer->ConfigReverseSoftLimitEnable(true); // TODO: when we get the above two done
 
   m_aimer->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
   m_aimer->ConfigFeedbackNotContinuous(false); // TODO: is this true?
