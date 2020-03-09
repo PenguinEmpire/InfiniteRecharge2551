@@ -21,10 +21,20 @@ class ShooterSystem {
  public:
   ShooterSystem(std::shared_ptr<WPI_TalonSRX> shooter, std::shared_ptr<WPI_TalonSRX> belt, std::shared_ptr<WPI_TalonSRX> aimer, std::shared_ptr<WPI_TalonSRX> intake, std::shared_ptr<Lidar> ballDetector, std::shared_ptr<frc::Encoder> shooterEncoder);
 
+  bool BallDetectedByLidar();
+
   void Update();
   void PutDiagnostics();
 
  private:
+
+  enum Mode {
+    COLLECTING, SHOOTING
+  } m_mode;
+  const std::unordered_map<Mode, std::string> MODE_STRINGS = {
+    {Mode::COLLECTING, "Collecting"}, {Mode::SHOOTING, "Shooting"}
+  };
+
   std::shared_ptr<WPI_TalonSRX> m_shooter;
   std::shared_ptr<WPI_TalonSRX> m_belt;
   std::shared_ptr<WPI_TalonSRX> m_aimer;
@@ -41,7 +51,8 @@ class ShooterSystem {
   static constexpr units::inch_t NORMAL_DISTANCE = 15_in * 0.8;
 
   bool m_ballCurrentlyPassingInFrontOfLidar;
-  units::inch_t currentLidarDistance; // temp, probably. Would want to move into update and make `const` eventually, but need global to reference in `PutDiagnostics()`.
+  bool m_ballDetectedByLidar;
+  units::inch_t m_currentLidarDistance; // temp, probably. Would want to move into update and make `const` eventually, but need global to reference in `PutDiagnostics()`.
 
   /** How many balls are currently being carried by the robot. Hard-coded as 3 to start. */
   int m_ballCount = 3;
