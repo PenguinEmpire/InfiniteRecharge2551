@@ -15,10 +15,10 @@ void Robot::RobotInit() {
   m_timer.Reset();
   m_timer.Start();
 
-  m_shooterEncoder->Reset();
+  m_beltEncoder->Reset();
   m_elevatorEncoder->Reset();
 
-  m_shooterEncoder->SetDistancePerPulse(PenguinUtil::PI / 8192);
+  m_beltEncoder->SetDistancePerPulse(PenguinUtil::PI / 8192);
   m_elevatorEncoder->SetDistancePerPulse(2 * PenguinUtil::PI * 3 * 4 / 8192); // TODO: how far up does the elevator go w one revolution of this motor? I think replace 3 with the gear ratio and 4 with the circumference of the first gear? Or maybe of the last. we want `Get`s to end up in meters, hopefully
   
   ConfigESCs();
@@ -30,11 +30,9 @@ void Robot::RobotPeriodic() {
   PutDiagnostics();
 
   m_drivetrain.Update();
-
   m_shooterSystem.Update();
 
-  elevatorPosition = units::meter_t(m_elevatorEncoder->GetDistance());
-  
+  elevatorPosition = units::meter_t(m_elevatorEncoder->GetDistance());  
 }
 
 void Robot::AutonomousInit() {
@@ -87,8 +85,8 @@ void Robot::AutonomousPeriodic() {
     } else if (limelightAuto.GetState() == LimelightAutonomous::AutoState::SHOOTING) {
       // TODO: shoot the balls. can't just run belt and shooter at the same time
       // or: we could here, but we need the capability to not.
-      m_shooter->Set(ControlMode::Velocity, 1);
-      m_belt->Set(1);
+      // m_shooter->velocity, 1); // TODO (look up syntax): velocity closed-loop control
+      // m_belt->Set(1);
     } else {}
 
   } else {
@@ -163,10 +161,15 @@ void Robot::ProcessJoysticks() {
   // if (m_leftJoystick.GetRawButtonPressed(12)) {m_drivetrain.UpdateModuleEncoderOFfsetAngles();} // TODO?
 
   m_elevator->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(5));
-  m_intake->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(1));
-  m_belt->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(0));
-  m_aimer->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(4));
-  m_shooter->Set(ControlMode::PercentOutput, m_utilityJoystick.GetRawAxis(1)); 
+  // m_intake->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(1));
+  // m_belt->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(0));
+  // m_aimer->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(4));
+  // m_shooter->Set(m_utilityJoystick.GetRawAxis(1)); 
+
+  m_shooterSystem.RunMotorIf(m_gamerJoystick.GetRawButton(3));
+  m_shooterSystem.RunIntakeIf(m_gamerJoystick.GetRawButton(1));
+  m_shooterSystem.RunBeltIf(m_gamerJoystick.GetRawButton(2));
+
   //set elevator positions
   if(m_leftJoystick.GetRawButtonPressed(2)) {
     m_controller.SetGoal(2_m);
@@ -180,22 +183,14 @@ void Robot::ProcessJoysticks() {
 void Robot::ConfigESCs() {
   m_elevator->ConfigFactoryDefault();
   m_elevatorSlave->ConfigFactoryDefault();
-  m_intake->ConfigFactoryDefault();
-  m_belt->ConfigFactoryDefault();
-  m_aimer->ConfigFactoryDefault();
-  m_shooter->ConfigFactoryDefault();
-  m_centerer->ConfigFactoryDefault();
+  // m_centerer->ConfigFactoryDefault();
 
   m_elevatorSlave->Set(ControlMode::Follower, PenguinConstants::CAN::ELEVATOR_MASTER);
 
-  m_centerer->NeutralOutput(); // TODO/temp
+  // m_centerer->NeutralOutput(); // TODO/temp
 
   m_elevator->SetInverted(true);
-  m_intake->SetInverted(false);
-  m_belt->SetInverted(false); // TODO
-  m_aimer->SetInverted(false); // TODO
-  m_shooter->SetInverted(false);
-  m_centerer->SetInverted(false); // TODO
+  // m_centerer->SetInverted(false); // TODO
 
   /** # Things that need to be set on all of the talons (TODO):
    * open loop ramp
@@ -217,20 +212,12 @@ void Robot::ConfigESCs() {
   m_elevator->SetNeutralMode(NeutralMode::Brake);
   
 
-
-  // m_aimer->ConfigForwardSoftLimitThreshold(___); // TODO
-  // m_aimer->ConfigReverseSoftLimitThreshold(___); // TODO
-  // m_aimer->ConfigForwardSoftLimitEnable(true); // TODO: when we get the above two done
-  // m_aimer->ConfigReverseSoftLimitEnable(true); // TODO: when we get the above two done
-
-  m_aimer->ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
-  m_aimer->ConfigFeedbackNotContinuous(false); // TODO: is this true?
-  m_aimer->SetSensorPhase(true);
+  m_shooterSystem.ConfigESCs();
 
 }
 
 void Robot::PutDiagnostics() {
-  m_drivetrain.PutDiagnostics();
+  // m_drivetrain.PutDiagnostics();
   m_shooterSystem.PutDiagnostics();
 }
 

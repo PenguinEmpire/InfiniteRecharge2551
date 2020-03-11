@@ -12,6 +12,8 @@
 
 #include "AHRS.h"
 #include "ctre/Phoenix.h"
+#include "rev/CANSparkMax.h"
+#include "rev/CANEncoder.h"
 
 #include "frc/Joystick.h"
 #include "frc/SPI.h"
@@ -62,7 +64,7 @@ class Robot : public frc::TimedRobot {
   Limelight m_limelight;
   SwerveDrive m_drivetrain;
   ShooterSystem m_shooterSystem{
-    m_shooter, m_belt, m_aimer, m_intake, m_ballLidar, m_shooterEncoder
+    PenguinConstants::CAN::SHOOTER, PenguinConstants::CAN::BELT, PenguinConstants::CAN::AIMER, PenguinConstants::CAN::INTAKE, PenguinConstants::I2C::BALL_LIDAR
   };
 
   // Subsystem-specific values
@@ -94,16 +96,11 @@ class Robot : public frc::TimedRobot {
     // Other motors
   std::shared_ptr<WPI_TalonSRX> m_elevator = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::ELEVATOR_MASTER);
   std::shared_ptr<WPI_VictorSPX> m_elevatorSlave = std::make_shared<WPI_VictorSPX>(PenguinConstants::CAN::ELEVATOR_SLAVE);
-  std::shared_ptr<WPI_TalonSRX> m_intake = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::INTAKE);
-  std::shared_ptr<WPI_TalonSRX> m_belt = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::BELT);
-  std::shared_ptr<WPI_TalonSRX> m_aimer = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::AIMER);
-  std::shared_ptr<WPI_TalonSRX> m_shooter = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::SHOOTER);
-  std::shared_ptr<WPI_TalonSRX> m_centerer = std::make_shared<WPI_TalonSRX>(PenguinConstants::CAN::CENTERER);
 
     // Encoders
-  std::shared_ptr<frc::Encoder> m_shooterEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::SHOOTER_ENCODER_A, PenguinConstants::DIO::SHOOTER_ENCODER_B);
+  std::shared_ptr<frc::Encoder> m_beltEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::BELT_ENCODER_A, PenguinConstants::DIO::BELT_ENCODER_B);
   std::shared_ptr<frc::Encoder> m_elevatorEncoder = std::make_shared<frc::Encoder>(PenguinConstants::DIO::ELEVATOR_ENCODER_A, PenguinConstants::DIO::ELEVATOR_ENCODER_B);
 
     // Other sensors
-  std::shared_ptr<Lidar> m_ballLidar = std::make_shared<Lidar>(PenguinConstants::I2C::BALL_LIDAR);
+  // std::shared_ptr<Lidar> m_ballLidar = std::make_shared<Lidar>(PenguinConstants::I2C::BALL_LIDAR);
 };

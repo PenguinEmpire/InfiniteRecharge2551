@@ -50,10 +50,10 @@ class SwerveDrive {
   const units::inch_t CHASSIS_WIDTH = units::inch_t(33.5);
   const units::inch_t CHASSIS_LENGTH = units::inch_t(38.25);
 
-  const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(336.0_deg); //   //315.1_deg);
-  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(16.8_deg); //   //105.6_deg);
-  const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(271.25_deg - 180_deg); // //90.1_deg);
-  const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(136.9_deg); //   //63.7_deg);
+  const units::radian_t FRONT_LEFT_ANGLE_OFFSET  = -units::radian_t(-26.7_deg); // 336.0_deg); //   //315.1_deg);
+  const units::radian_t FRONT_RIGHT_ANGLE_OFFSET = -units::radian_t(15.7_deg); // 16.8_deg); //   //105.6_deg);
+  const units::radian_t BACK_LEFT_ANGLE_OFFSET   = -units::radian_t(90.5_deg); // 271.25_deg - 180_deg); // //90.1_deg);
+  const units::radian_t BACK_RIGHT_ANGLE_OFFSET  = -units::radian_t(135.9_deg); // 0_deg); // 136.9_deg); //   //63.7_deg);
 
   const frc::Translation2d FRONT_LEFT_LOCATION {+TRACKWIDTH / 2.0, +WHEELBASE / 2.0};
   const frc::Translation2d FRONT_RIGHT_LOCATION{+TRACKWIDTH / 2.0, -WHEELBASE / 2.0}; 

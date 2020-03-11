@@ -95,11 +95,11 @@ namespace PenguinConstants {
 
     constexpr int ELEVATOR_MASTER = 16;
     constexpr int ELEVATOR_SLAVE = 11;
-    constexpr int SHOOTER = 10;
+    constexpr int SHOOTER = 20;
     constexpr int AIMER = 15;
     constexpr int INTAKE = 12;
     constexpr int BELT = 9;
-    constexpr int CENTERER = 14;
+    // constexpr int CENTERER = 14;
   } // CAN namespace
 
   namespace PWM {}
@@ -112,8 +112,8 @@ namespace PenguinConstants {
   }
 
   namespace DIO {
-    constexpr int SHOOTER_ENCODER_A = 1;
-    constexpr int SHOOTER_ENCODER_B = 2;
+    constexpr int BELT_ENCODER_A = 1;
+    constexpr int BELT_ENCODER_B = 2;
 
     constexpr int ELEVATOR_ENCODER_A = 6;
     constexpr int ELEVATOR_ENCODER_B = 7;
