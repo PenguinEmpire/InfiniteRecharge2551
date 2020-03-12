@@ -23,8 +23,7 @@ void Limelight::SetDriveCamMode() {
 LimelightValues Limelight::GetInfo() {
 
   return {
-    table->GetNumber("tx", PenguinConstants::LIMELIGHT_DEFAULT_VALUE),
-    table->GetNumber("ty", PenguinConstants::LIMELIGHT_DEFAULT_VALUE)            
+    table->GetNumber("tx", PenguinConstants::Limelight::DEFAULT_VALUE),
+    table->GetNumber("ty", PenguinConstants::Limelight::DEFAULT_VALUE)            
   };
 }
-    

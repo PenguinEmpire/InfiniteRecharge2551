@@ -76,13 +76,16 @@ namespace PenguinUtil {
 namespace PenguinConstants {
   constexpr units::second_t DT = 20_ms; // loop period
 
-  constexpr double LIMELIGHT_DEFAULT_VALUE = 0.0;
+  namespace Limelight {
+    constexpr double DEFAULT_VALUE = 0.0;
+    constexpr units::inch_t HEIGHT = 38.5_in;
+  } // Limelight namespace
 
   namespace CAN {
     namespace Swerve {
       constexpr int FL_DRIVE = 6;
       constexpr int FL_TURN = 5;
-  
+
       constexpr int FR_DRIVE = 8;
       constexpr int FR_TURN = 7;
 
@@ -132,4 +135,46 @@ namespace PenguinConstants {
     constexpr double I{0};
     constexpr double D{0.3};
   } // ElevatorControl namespace
+
+  namespace ShooterSystem {
+    namespace ShooterPID { // TODO: not final values
+      constexpr double P = 0.000782;
+      constexpr double I = 1e-6;
+      constexpr double IZone = 1e-5; // maybe?
+      constexpr double D = 0;
+    } // ShooterPID namespace
+
+    namespace Characterization {
+      // Unit definitions copied [from WPILib](https://github.com/wpilibsuite/allwpilib/blob/0ec8ed6c052b18402924daac591ff9e192695825/wpilibc/src/main/native/include/frc/controller/SimpleMotorFeedforward.h#L21):
+      using Velocity = units::compound_unit<units::turns, units::inverse<units::seconds>>;
+      using Acceleration = units::compound_unit<Velocity, units::inverse<units::seconds>>;
+      using kv_unit = units::compound_unit<units::volts, units::inverse<Velocity>>;
+      using ka_unit = units::compound_unit<units::volts, units::inverse<Acceleration>>;
+
+      constexpr units::volt_t kS = 0.00116 * (1_V);
+      constexpr units::unit_t<kv_unit> kV = 0.187 * units::unit_t<kv_unit>(1);
+      constexpr units::unit_t<ka_unit> kA = 0.0867 * units::unit_t<ka_unit>(1);
+    }
+
+    constexpr double GEAR_RATIO = 30 / 24;
+  } // ShooterSystem namespace
+
+  namespace Joysticks {
+    namespace Gamer {
+      constexpr int A = 1;
+      constexpr int B = 2;
+      constexpr int Y = 4;
+      constexpr int X = 3;
+      constexpr int LEFT_STICK = 9;
+      constexpr int RIGHT_STICK = 10;
+      constexpr int START = 8;
+      constexpr int BACK = 7;
+      constexpr int LEFT_BUMPER = 5;
+      constexpr int RIGHT_BUMPER = 6;
+    } // Gamer namespace
+
+    namespace Flight { // TODO
+
+    }
+  }
 } // Constants namespace

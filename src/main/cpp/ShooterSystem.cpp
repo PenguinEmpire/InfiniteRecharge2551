@@ -26,22 +26,31 @@ ShooterSystem::ShooterSystem(int shooterID, int beltID, int aimerID, int intakeI
 {
   m_ballCurrentlyPassingInFrontOfLidar = BallDetectedByLidar();
 
-  m_shooterPID.SetP(1);
-  m_shooterPID.SetI(0);
-  m_shooterPID.SetD(0);
+  m_shooterPID.SetP(PenguinConstants::ShooterSystem::ShooterPID::P);
+  m_shooterPID.SetI(PenguinConstants::ShooterSystem::ShooterPID::I);
+  m_shooterPID.SetIZone(PenguinConstants::ShooterSystem::ShooterPID::IZone);
+  m_shooterPID.SetD(PenguinConstants::ShooterSystem::ShooterPID::D);
+
+  m_shooter.SetClosedLoopRampRate(0);
+  m_shooterEncoder.SetVelocityConversionFactor(1);
 }
 
 void ShooterSystem::Update() {
   m_currentLidarDistance = m_ballDetector.GetDistance();
-  m_ballDetectedByLidar = BallDetectedByLidar();
 
+  UpdateBallCount();
+}
+
+
+void ShooterSystem::UpdateBallCount() { 
+  const bool ballDetected = BallDetectedByLidar();
   if (!m_ballCurrentlyPassingInFrontOfLidar) {
-    if (m_ballDetectedByLidar) {
+    if (ballDetected) {
       m_ballCurrentlyPassingInFrontOfLidar = true;
       m_ballCount += 1;
     }
   } else {
-    if (!m_ballDetectedByLidar) {
+    if (!ballDetected) {
       m_ballCurrentlyPassingInFrontOfLidar = false;
     }
   }
@@ -53,31 +62,60 @@ void ShooterSystem::PutDiagnostics() {
   SD::PutBoolean("ball in front of lidar", m_ballCurrentlyPassingInFrontOfLidar);
   SD::PutNumber("balls in system", m_ballCount);
   SD::PutNumber("lidar currently reporting (in)", units::inch_t(m_currentLidarDistance).to<double>());
+  // SD::PutString("shooter mode:", MODE_STRINGS[m_mode]); // TODO: maybe `MODE_STRINGS.find(m_mode);` instead? // errors as currently stands
+  SD::PutNumber("shooter speed", m_shooterEncoder.GetVelocity());
 }
 
-bool ShooterSystem::ShooterReadyToShoot() {
+bool ShooterSystem::ShooterReadyToShoot(units::revolutions_per_minute_t atSpeed = SHOOTING_SPEED) {
   const bool flywheelAdjusted = true; // TODO: adjust based off of limelight, probably. maybe also use odometry?
   return 
     flywheelAdjusted && \
-    PenguinUtil::withinPercentTolerance(m_shooterEncoder.GetVelocity(), SHOOTING_SPEED.to<double>(), 10);
+    PenguinUtil::withinPercentTolerance(m_shooterEncoder.GetVelocity(), atSpeed.to<double>(), 10);
 }
 
 bool ShooterSystem::BallDetectedByLidar() {
   return m_currentLidarDistance < NORMAL_DISTANCE;
 }
 
-void ShooterSystem::Intake() {
-  m_intake.Set(-0.8);
-  if (m_ballCount <= 2 && m_ballDetectedByLidar) {
-    m_belt.Set(-0.15);
+void ShooterSystem::Intake(bool run) {
+  if (run && m_ballCount < 5) {
+    m_intake.Set(1);
+    if (m_ballCount <= 2 && m_ballCurrentlyPassingInFrontOfLidar) {
+      m_belt.Set(ControlMode::PercentOutput, 0.6);
+    } else {
+    }
+  } else {
+    m_intake.Set(0);
+    m_belt.Set(0);
   }
 }
 
-void ShooterSystem::RunMotorIf(bool run) {
+void ShooterSystem::Shoot(bool run) {
+  if (run) {
+    RunShooterIf(true);
+    if (ShooterReadyToShoot()) {
+      m_belt.Set(ControlMode::PercentOutput, 1);
+    } else {
+      m_belt.Set(ControlMode::PercentOutput, 0);
+    }
+  }
+}
+
+void ShooterSystem::RunShooterIf(bool run) {
   if (run) {
     m_shooterPID.SetReference(SHOOTING_SPEED.to<double>(), rev::ControlType::kVelocity);
+    // m_shooterPID.SetReference(4500, rev::ControlType::kVelocity);
   } else {
-    m_shooterPID.SetReference(0, rev::ControlType::kVelocity);
+    // m_shooterPID.SetReference(0, rev::ControlType::kDutyCycle);
+    m_shooter.Set(0);
+  }
+}
+
+void ShooterSystem::RunShooterWithWPIFF(bool run) {
+  if (run) {
+    m_shooter.SetVoltage(m_shooterFF.Calculate(SHOOTING_SPEED));
+  } else {
+    m_shooter.Set(0);
   }
 }
 
@@ -91,7 +129,7 @@ void ShooterSystem::RunIntakeIf(bool run) {
 
 void ShooterSystem::RunBeltIf(bool run) {
   if (run) {
-    m_belt.Set(-1);
+    m_belt.Set(1);
   } else {
     m_belt.Set(0);
   }
@@ -101,13 +139,14 @@ void ShooterSystem::ConfigESCs() {
   m_intake.ConfigFactoryDefault();
   m_belt.ConfigFactoryDefault();
   m_aimer.ConfigFactoryDefault();
-  // m_shooter.ConfigFactoryDefault();
+  // Not calling a factory default on the shooter b/c it's on a SparkMax, and [`RestoreFactoryDefaults`](http://www.revrobotics.com/content/sw/max/sw-docs/cpp/classrev_1_1_c_a_n_spark_max_low_level.html#a557335092c72f5a39b19604b365360c2) (I think, based on observed behavior and the wording of the documentation) resets _all_ parameters -- including the CAN ID.
 
   m_intake.SetInverted(false);
-  m_belt.SetInverted(false);
+  m_belt.SetInverted(true);
   m_aimer.SetInverted(true);
-  // m_shooter.SetInverted(false);
+  m_shooter.SetInverted(true);
 
+  m_shooter.SetIdleMode(rev::CANSparkMax::IdleMode::kCoast);
 
   // m_aimer.ConfigForwardSoftLimitThreshold(___); // TODO
   // m_aimer.ConfigReverseSoftLimitThreshold(___); // TODO
@@ -115,6 +154,6 @@ void ShooterSystem::ConfigESCs() {
   // m_aimer.ConfigReverseSoftLimitEnable(true); // TODO: when we get the above two done
 
   m_aimer.ConfigSelectedFeedbackSensor(FeedbackDevice::CTRE_MagEncoder_Relative);
-  m_aimer.ConfigFeedbackNotContinuous(false); // TODO: is this true?
+  m_aimer.SetSelectedSensorPosition(0); // !Imp: Assumes the aimer is always in the same place when the robot turns on
   m_aimer.SetSensorPhase(false); // TODO
 }

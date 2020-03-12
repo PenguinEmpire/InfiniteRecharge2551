@@ -158,24 +158,29 @@ void Robot::ProcessJoysticks() {
     m_drivetrain.ResetGyroscope();
   }
 
-  // if (m_leftJoystick.GetRawButtonPressed(12)) {m_drivetrain.UpdateModuleEncoderOFfsetAngles();} // TODO?
-
   m_elevator->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(5));
   // m_intake->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(1));
   // m_belt->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(0));
   // m_aimer->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(4));
   // m_shooter->Set(m_utilityJoystick.GetRawAxis(1)); 
 
-  m_shooterSystem.RunMotorIf(m_gamerJoystick.GetRawButton(3));
-  m_shooterSystem.RunIntakeIf(m_gamerJoystick.GetRawButton(1));
-  m_shooterSystem.RunBeltIf(m_gamerJoystick.GetRawButton(2));
+  m_shooterSystem.RunShooterIf(m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::A));
+  // m_shooterSystem.RunIntakeIf(m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::B));
+  m_shooterSystem.Intake(m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::B));
+  // m_shooterSystem.RunBeltIf(m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::Y));
 
-  //set elevator positions
-  if(m_leftJoystick.GetRawButtonPressed(2)) {
-    m_controller.SetGoal(2_m);
+  if (m_gamerJoystick.GetRawButtonPressed(PenguinConstants::Joysticks::Gamer::LEFT_BUMPER)) {
+    m_shooterSystem.m_ballCount--;
   }
-  else if(m_leftJoystick.GetRawButtonPressed(3)) {
-    m_controller.SetGoal(0_m);
+
+  { // Heston elevator stuff
+    //set elevator positions
+    if(m_leftJoystick.GetRawButtonPressed(2)) {
+      m_controller.SetGoal(2_m);
+    }
+    else if(m_leftJoystick.GetRawButtonPressed(3)) {
+      m_controller.SetGoal(0_m);
+    }
   }
 
 }
