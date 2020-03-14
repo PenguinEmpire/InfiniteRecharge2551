@@ -66,18 +66,19 @@ void ShooterSystem::PutDiagnostics() {
   SD::PutNumber("shooter speed", m_shooterEncoder.GetVelocity());
 }
 
-bool ShooterSystem::ShooterReadyToShoot(units::revolutions_per_minute_t atSpeed = SHOOTING_SPEED) {
+bool ShooterSystem::ShooterReadyToShoot(units::revolutions_per_minute_t atSpeed = SHOOTING_SPEED, double withinPercent = 10) {
   const bool flywheelAdjusted = true; // TODO: adjust based off of limelight, probably. maybe also use odometry?
-  return 
-    flywheelAdjusted && \
-    PenguinUtil::withinPercentTolerance(m_shooterEncoder.GetVelocity(), atSpeed.to<double>(), 10);
+  const bool shootingFastEnough = PenguinUtil::withinPercentTolerance(m_shooterEncoder.GetVelocity(), atSpeed.to<double>(), withinPercent);
+  return flywheelAdjusted && shootingFastEnough;    
 }
 
 bool ShooterSystem::BallDetectedByLidar() {
-  return m_currentLidarDistance < NORMAL_DISTANCE;
+  return m_currentLidarDistance < PenguinConstants::ShooterSystem::LIDAR_NORMAL_DISTANCE * 0.8;
 }
 
 void ShooterSystem::Intake(bool run) {
+  m_mode = Mode::INTAKING;
+
   if (run && m_ballCount < 5) {
     m_intake.Set(1);
     if (m_ballCount <= 2 && m_ballCurrentlyPassingInFrontOfLidar) {
@@ -91,8 +92,10 @@ void ShooterSystem::Intake(bool run) {
 }
 
 void ShooterSystem::Shoot(bool run) {
+  m_mode = Mode::SHOOTING;
+  
   if (run) {
-    RunShooterIf(true);
+    RunShooterWithWPIFF(true);
     if (ShooterReadyToShoot()) {
       m_belt.Set(ControlMode::PercentOutput, 1);
     } else {
@@ -101,7 +104,16 @@ void ShooterSystem::Shoot(bool run) {
   }
 }
 
+void ShooterSystem::DontRun() {
+  m_shooter.Set(0);
+  m_aimer.Set(0);
+  m_intake.Set(0);
+  m_belt.Set(0);
+}
+
 void ShooterSystem::RunShooterIf(bool run) {
+  m_mode = Mode::SHOOTING;
+
   if (run) {
     m_shooterPID.SetReference(SHOOTING_SPEED.to<double>(), rev::ControlType::kVelocity);
     // m_shooterPID.SetReference(4500, rev::ControlType::kVelocity);
@@ -112,6 +124,8 @@ void ShooterSystem::RunShooterIf(bool run) {
 }
 
 void ShooterSystem::RunShooterWithWPIFF(bool run) {
+  m_mode = Mode::SHOOTING;
+
   if (run) {
     m_shooter.SetVoltage(m_shooterFF.Calculate(SHOOTING_SPEED));
   } else {
@@ -133,6 +147,16 @@ void ShooterSystem::RunBeltIf(bool run) {
   } else {
     m_belt.Set(0);
   }
+}
+
+void ShooterSystem::EnterManualMode() {
+  if (m_mode != Mode::MANUAL) {
+    m_mode = Mode::MANUAL;
+  }
+}
+
+bool ShooterSystem::InManualMode() {
+  return m_mode == Mode::MANUAL;
 }
 
 void ShooterSystem::ConfigESCs() {

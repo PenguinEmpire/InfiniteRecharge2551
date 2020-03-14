@@ -44,7 +44,7 @@ namespace PenguinUtil {
 
   /** Returns true when @param value is within @param percentTolerance percent of @param reference. */
   inline bool withinPercentTolerance(double value, double reference, double percentTolerance) {
-    return approxEqual(value, reference, reference * percentTolerance);
+    return approxEqual(value, reference, reference * percentTolerance / 100);
   }
  
   inline constexpr double PI = wpi::math::pi; // TODO: inline only on functions?
@@ -75,6 +75,7 @@ namespace PenguinUtil {
 
 namespace PenguinConstants {
   constexpr units::second_t DT = 20_ms; // loop period
+  constexpr bool DEV_TESTING = true;
 
   namespace Limelight {
     constexpr double DEFAULT_VALUE = 0.0;
@@ -157,24 +158,61 @@ namespace PenguinConstants {
     }
 
     constexpr double GEAR_RATIO = 30 / 24;
+    
+    /**  The distance the lidar should (approximately) read if there are balls in front of it.
+     * This should be the smallest value it will ever reasonably read with no ball, not the average value.
+     * TODO: 30 inches seems about right - needs more testing
+     */
+    constexpr units::inch_t LIDAR_NORMAL_DISTANCE = 30_in;
   } // ShooterSystem namespace
 
   namespace Joysticks {
     namespace Gamer {
-      constexpr int A = 1;
-      constexpr int B = 2;
-      constexpr int Y = 4;
-      constexpr int X = 3;
-      constexpr int LEFT_STICK = 9;
-      constexpr int RIGHT_STICK = 10;
-      constexpr int START = 8;
-      constexpr int BACK = 7;
-      constexpr int LEFT_BUMPER = 5;
-      constexpr int RIGHT_BUMPER = 6;
+      namespace Buttons {
+        constexpr int A = 1;
+        constexpr int B = 2;
+        constexpr int Y = 4;
+        constexpr int X = 3;
+        constexpr int LEFT_STICK = 9;
+        constexpr int RIGHT_STICK = 10;
+        constexpr int START = 8;
+        constexpr int BACK = 7;
+        constexpr int LEFT_BUMPER = 5;
+        constexpr int RIGHT_BUMPER = 6;
+      } // Buttons namespace
+
+      namespace Axes {
+        constexpr int LEFT_Y = 1;
+        constexpr int LEFT_X = 0;
+        constexpr int RIGHT_Y = 5;
+        constexpr int RIGHT_X = 4;
+        constexpr int LEFT_TRIGGER = 2;
+        constexpr int RIGHT_TRIGGER = 3;
+      } // Axes namespace
     } // Gamer namespace
 
     namespace Flight { // TODO
+      namespace Buttons {
+        constexpr int UPPER_TOP_LEFT = 5;
+        constexpr int UPPER_BOTTOM_LEFT = 3;
+        constexpr int UPPER_TOP_RIGHT = 6;
+        constexpr int UPPER_BOTTOM_RIGHT = 4;
+        constexpr int TRIGGER = 1;
+        constexpr int SIDE = 2;
+        constexpr int LOWER_BOTTOM_LEFT = 11;
+        constexpr int LOWER_BOTTOM_RIGHT = 12;
+        constexpr int LOWER_MID_LEFT = 9;
+        constexpr int LOWER_MID_RIGHT = 10;
+        constexpr int LOWER_TOP_LEFT = 7;
+        constexpr int LOWER_TOP_RIGHT = 8;
+      } // Buttons namespace
 
+      namespace Axes {
+        constexpr int Y = 1;
+        constexpr int X = 0; // TODO
+        constexpr int ROT = 2; // TODO
+        constexpr int TRIM = 3; // TODO
+      } // Axes namespace
     }
   }
 } // Constants namespace

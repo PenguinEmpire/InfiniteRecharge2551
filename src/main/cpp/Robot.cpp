@@ -154,31 +154,47 @@ void Robot::Drive() {
 /** Joystick gets that aren't to do with driving.
  */
 void Robot::ProcessJoysticks() {
-  if(m_leftJoystick.GetRawButtonPressed(11)) {
+  if(m_leftJoystick.GetRawButtonPressed(PenguinConstants::Joysticks::Flight::Buttons::LOWER_BOTTOM_LEFT)) {
     m_drivetrain.ResetGyroscope();
   }
 
-  m_elevator->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(5));
-  // m_intake->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(1));
-  // m_belt->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(0));
-  // m_aimer->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(4));
-  // m_shooter->Set(m_utilityJoystick.GetRawAxis(1)); 
+  if (m_gamerJoystick.GetRawButtonPressed(PenguinConstants::Joysticks::Gamer::Buttons::RIGHT_BUMPER)) {
+    m_shooterSystem.EnterManualMode();
+  }
 
-  m_shooterSystem.RunShooterIf(m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::A));
-  // m_shooterSystem.RunIntakeIf(m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::B));
-  m_shooterSystem.Intake(m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::B));
-  // m_shooterSystem.RunBeltIf(m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::Y));
+  if (m_shooterSystem.InManualMode()) {
+    m_shooterSystem.m_intake.Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(PenguinConstants::Joysticks::Gamer::Axes::RIGHT_Y));
+    m_shooterSystem.m_belt.Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(PenguinConstants::Joysticks::Gamer::Axes::LEFT_X));
+    m_shooterSystem.m_aimer.Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(PenguinConstants::Joysticks::Gamer::Axes::RIGHT_X));
+    m_shooterSystem.m_shooter.Set(m_utilityJoystick.GetRawAxis(PenguinConstants::Joysticks::Gamer::Axes::LEFT_Y));
+  }
 
-  if (m_gamerJoystick.GetRawButtonPressed(PenguinConstants::Joysticks::Gamer::LEFT_BUMPER)) {
-    m_shooterSystem.m_ballCount--;
+  // m_elevator->Set(ControlMode::PercentOutput, m_gamerJoystick.GetRawAxis(5)); // TODO: elevator button-press
+
+  const bool shoot = m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::Buttons::A);
+  const bool intake = m_gamerJoystick.GetRawButton(PenguinConstants::Joysticks::Gamer::Buttons::B);
+  if (shoot || intake) {
+    if (shoot) {
+      m_shooterSystem.Shoot(true);
+    } else if (intake) {
+      m_shooterSystem.Intake(true);
+      // m_shooterSystem.RunIntakeIf(true);
+    }
+  } else {
+    m_shooterSystem.DontRun();
+  }
+
+  if (PenguinConstants::DEV_TESTING) {
+    if (m_gamerJoystick.GetRawButtonPressed(PenguinConstants::Joysticks::Gamer::Buttons::LEFT_BUMPER)) {
+      m_shooterSystem.m_ballCount--;
+    }
   }
 
   { // Heston elevator stuff
     //set elevator positions
-    if(m_leftJoystick.GetRawButtonPressed(2)) {
+    if (m_leftJoystick.GetRawButtonPressed(2)) {
       m_controller.SetGoal(2_m);
-    }
-    else if(m_leftJoystick.GetRawButtonPressed(3)) {
+    } else if (m_leftJoystick.GetRawButtonPressed(3)) {
       m_controller.SetGoal(0_m);
     }
   }
