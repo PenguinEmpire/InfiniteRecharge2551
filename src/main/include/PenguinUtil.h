@@ -113,7 +113,7 @@ namespace PenguinConstants {
     constexpr int SWERVE_FR_ENCODER = 2;
     constexpr int SWERVE_BL_ENCODER = 0;
     constexpr int SWERVE_BR_ENCODER = 1;
-  }
+  } //AnalogIn namespace
 
   namespace DIO {
     constexpr int BELT_ENCODER_A = 1;
@@ -155,7 +155,7 @@ namespace PenguinConstants {
       constexpr units::volt_t kS = 0.00116 * (1_V);
       constexpr units::unit_t<kv_unit> kV = 0.187 * units::unit_t<kv_unit>(1);
       constexpr units::unit_t<ka_unit> kA = 0.0867 * units::unit_t<ka_unit>(1);
-    }
+    } //Characterization namespace
 
     constexpr double GEAR_RATIO = 30 / 24;
     
