@@ -47,13 +47,13 @@ namespace PenguinUtil {
     return approxEqual(value, reference, reference * percentTolerance / 100);
   }
  
-  inline constexpr double PI = wpi::math::pi; // TODO: inline only on functions?
-  inline constexpr double TWO_PI = 2.0 * wpi::math::pi;
-  inline constexpr units::radian_t PI_RAD = units::radian_t(PI);
-  inline constexpr units::radian_t TWO_PI_RAD = units::radian_t(TWO_PI);
-  inline constexpr frc::Rotation2d ZERO_ROT = frc::Rotation2d();
-  inline const frc::Rotation2d PI_ROT = frc::Rotation2d(PI_RAD);
-  inline const frc::Rotation2d TWO_PI_ROT = frc::Rotation2d(TWO_PI_RAD);
+  constexpr double PI = wpi::math::pi; // TODO: inline only on functions?
+  constexpr double TWO_PI = 2.0 * wpi::math::pi;
+  constexpr units::radian_t PI_RAD = units::radian_t(PI);
+  constexpr units::radian_t TWO_PI_RAD = units::radian_t(TWO_PI);
+  constexpr frc::Rotation2d ZERO_ROT = frc::Rotation2d();
+  const frc::Rotation2d PI_ROT = frc::Rotation2d(PI_RAD);
+  const frc::Rotation2d TWO_PI_ROT = frc::Rotation2d(TWO_PI_RAD);
 
   inline units::radian_t arbitraryTwoPiRangeNorm(units::radian_t value, units::radian_t mid) {
     units::radian_t ret = value;
